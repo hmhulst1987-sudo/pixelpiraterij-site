@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-mono: var(--font-mono);
+}
+
+html, body {
+  background: #050505;
+  color: #4ADE80;
+  font-family: var(--font-mono), "JetBrains Mono", monospace;
+  -webkit-font-smoothing: antialiased;
+}
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #050505; }
+::-webkit-scrollbar-thumb { background: rgba(74, 222, 128, 0.3); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(74, 222, 128, 0.5); }
