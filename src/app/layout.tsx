@@ -1,31 +1,48 @@
-import type { Metadata } from "next";
-import { JetBrains_Mono } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import { IBM_Plex_Mono, Manrope, Space_Grotesk } from "next/font/google";
+import type { ReactNode } from "react";
+import { LocaleHtmlSync } from "@/components/locale-html-sync";
+import { ThemeBootScript } from "@/components/theme-boot-script";
 import "./globals.css";
 
-const mono = JetBrains_Mono({
-  variable: "--font-mono",
+const display = Space_Grotesk({
+  variable: "--font-display",
   subsets: ["latin"],
 });
 
+const sans = Manrope({
+  variable: "--font-sans",
+  subsets: ["latin"],
+});
+
+const mono = IBM_Plex_Mono({
+  variable: "--font-mono",
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+});
+
 export const metadata: Metadata = {
-  title: "Pixel Piraterij — Premium Web Heists",
+  metadataBase: new URL("https://pixelpiraterij.nl"),
+  title: "PixelPiraterij | Routes, studio en systeemlagen",
   description:
-    "Headless Next.js websites, custom Stripe e-commerce en private VPS hosting. Geen WordPress ellende.",
+    "PixelPiraterij bundelt studio, template-routes, apps, docs en systeemlagen in een leesbare opbouw voor merken die meer nodig hebben dan een generieke site.",
   icons: { icon: "/favicon.ico" },
 };
 
-export const viewport = {
+export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#050505",
+  themeColor: "#efe2d2",
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{ children: React.ReactNode }>) {
+}: Readonly<{ children: ReactNode }>) {
   return (
-    <html lang="nl" className={`${mono.variable} h-full`}>
-      <body className="min-h-full antialiased bg-[#050505] text-green-500 font-mono">
+    <html lang="nl" data-theme="sand" suppressHydrationWarning className={`${display.variable} ${sans.variable} ${mono.variable} h-full`}>
+      <body className="min-h-full antialiased">
+        <ThemeBootScript />
+        <LocaleHtmlSync />
         {children}
       </body>
     </html>
