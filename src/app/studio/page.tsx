@@ -53,7 +53,7 @@ export default function StudioPage() {
         <SectionHeader
           index="02"
           title="Hoe die studioroute er in het echt uitziet."
-          body="Niet als theorie, maar als verschillende soorten surfaces die allemaal bewijzen dat identity, worldbuilding en productdiscipline hier samen kunnen vallen."
+          body="Niet als theorie, maar als verschillende soorten surfaces die allemaal bewijzen dat identiteit, worldbuilding en productdiscipline hier samen kunnen vallen."
         />
         <ShowcaseGrid items={studioShowcases} />
       </section>
@@ -62,7 +62,7 @@ export default function StudioPage() {
         <SectionHeader
           index="03"
           title="Het werk heeft een ritme nodig, geen eenmalige sprint."
-          body="De build wordt sterker wanneer verkennen, kaderen, opleveren en managed support verbonden blijven. Zo blijft een maatwerk-surface ook na livegang bruikbaar."
+          body="De build wordt sterker wanneer verkennen, kaderen, opleveren en de supportlaag verbonden blijven. Zo blijft een maatwerk-surface ook na livegang bruikbaar."
         />
         <ProcessBoard steps={processSteps} />
       </section>

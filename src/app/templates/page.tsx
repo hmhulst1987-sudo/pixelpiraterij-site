@@ -50,7 +50,7 @@ export default function TemplatesPage() {
             snelwegen.
           </>
         }
-        body="Templates binnen PixelPiraterij zijn er om sterkere startposities te creeren, niet zwakkere uitkomsten. Het zijn gecureerde lanceersystemen die snel kunnen bewegen en tegelijk leesbaar binnen hetzelfde systeem moeten blijven."
+        body="Templates binnen PixelPiraterij zijn er om sterkere startposities te creëren, niet zwakkere uitkomsten. Het zijn gecureerde lanceersystemen die snel kunnen bewegen en tegelijk leesbaar binnen hetzelfde systeem moeten blijven."
         primaryCta={{ href: "/contact", label: "Vraag een template-route aan" }}
         secondaryCta={{ href: "/", label: "Terug naar de routekaart" }}
         aside={

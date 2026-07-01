@@ -24,7 +24,7 @@ export default function CasesPage() {
     },
     {
       label: "Conversie",
-      text: "De hospitality-richtingen bewijzen dat rust, smaak en commerciele logica prima samen kunnen bestaan. Niet schreeuwerig, wel doelgericht.",
+      text: "De hospitality-richtingen bewijzen dat rust, smaak en commerciële logica prima samen kunnen bestaan. Niet schreeuwerig, wel doelgericht.",
     },
     {
       label: "Narratief",
@@ -61,7 +61,7 @@ export default function CasesPage() {
             capRight="Selectie"
             problemKicker="Oud probleem"
             stanceKicker="Nieuwe houding"
-            problemTitle="Een gigantisch portfolio creeert niet automatisch vertrouwen."
+            problemTitle="Een gigantisch portfolio creëert niet automatisch vertrouwen."
             problemBody="Wanneer alles tegelijk wordt gepresenteerd, moet de kijker nog steeds zelf uitzoeken wat het eigenlijk bewijst."
             stanceTitle="Bewijs moet selectief, gestructureerd en zakelijk relevant zijn."
             stanceBody="PixelPiraterij cureert cases op capability, zodat elke case een argument wordt in plaats van een screenshot."

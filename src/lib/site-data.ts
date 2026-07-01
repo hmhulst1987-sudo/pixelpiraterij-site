@@ -64,6 +64,7 @@ export const siteNavByLocale: Record<Locale, NavItem[]> = {
   nl: [
     { href: "/#templates", label: "Templates" },
     { href: "/#apps", label: "Apps" },
+    { href: "/cases", label: "Cases" },
     { href: "/#docs", label: "Docs" },
     { href: "/#lab", label: "Lab" },
     { href: "/studio", label: "Studio" },
@@ -71,6 +72,7 @@ export const siteNavByLocale: Record<Locale, NavItem[]> = {
   en: [
     { href: "/en#templates", label: "Templates" },
     { href: "/en#apps", label: "Apps" },
+    { href: "/en/cases", label: "Cases" },
     { href: "/en#docs", label: "Docs" },
     { href: "/en#lab", label: "Lab" },
     { href: "/en/studio", label: "Studio" },
@@ -155,7 +157,7 @@ export const audienceSegments: Segment[] = [
     note: "Voor cultuurgedreven merken die sfeer, controle en release-klare infrastructuur op één plek nodig hebben.",
     bullets: [
       "Identity-led layouts en campagne-oppervlakken",
-      "Managed hosting voor pieken, drops en releases",
+      "Beheerde hosting voor pieken, drops en releases",
       "Een sterkere wereld dan een aangekleed thema",
     ],
   },
@@ -330,7 +332,7 @@ export const proofCases: ProofCase[] = [
     lane: "Software-facing systems",
     name: "EvaQuant en LumenOS",
     summary:
-      "Niet alleen een mooie schil, maar ook productlogica: dashboards, planmatigheid, interfacehierarchie en softwarepatronen die laten zien dat er echte systeemdiepte onder de studio zit.",
+      "Niet alleen een mooie schil, maar ook productlogica: dashboards, planmatigheid, interfacehiërarchie en softwarepatronen die laten zien dat er echte systeemdiepte onder de studio zit.",
     proof:
       "Bewijst dat PixelPiraterij ook kan denken in producten, dashboards en tool-achtige omgevingen waar structuur zwaarder telt dan decoratie.",
     bullets: [
@@ -513,7 +515,7 @@ export const hostingShowcases: ShowcaseItem[] = [
     bullets: [
       "Duidelijke tier-logica",
       "Geschikt voor terugkerende stewardship in plaats van losse reddingsacties",
-      "Verbindt infrastructuur aan commerciele helderheid",
+      "Verbindt infrastructuur aan commerciële helderheid",
     ],
     visual: {
       src: "/cases/evaquant-pricing.png",
@@ -604,7 +606,7 @@ export const templateShowcases: ShowcaseItem[] = [
     label: "Doelgroep-richting",
     title: "Templates worden pas sterk als ze al vanaf het begin voor een echte doelgroep zijn gekaderd.",
     body:
-      "Le Radel bewijst dat een rustige, natuurgedreven hospitality-richting heel anders moet voelen dan een founder-tool of labelsite. De template moet dus het juiste vertrekpunt kiezen, niet alleen een layout.",
+      "Le Radel bewijst dat een rustige, natuurgedreven hospitality-richting heel anders moet voelen dan een founder-tool of labelsite. De template moet dus het juiste vertrekpunt kiezen, niet alleen een lay-out.",
     bullets: [
       "Doelgroep bepaalt de sfeer en flow",
       "Sterkere starts dan een generieke skin",
@@ -736,7 +738,7 @@ export const studioShowcases: ShowcaseItem[] = [
     body:
       "EvaQuant laat zien dat PixelPiraterij ook interfaces kan bouwen waar hiërarchie, tooling-gevoel en systeemlogica net zo belangrijk zijn als branding.",
     bullets: [
-      "Duidelijke interfacehierarchie",
+      "Duidelijke interfacehiërarchie",
       "Geschikt voor product- en dashboardachtige omgevingen",
       "Bewijs dat design en systeemdenken hier samen optrekken",
     ],
