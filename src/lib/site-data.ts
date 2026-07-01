@@ -986,6 +986,72 @@ export const packageTiersEn: PackageTier[] = [
   },
 ];
 
+export const templateRoutePackages: PackageTier[] = [
+  {
+    name: "Route Start",
+    price: "Vanaf €95 / maand",
+    subtitle: "De snelle PixelPiraterij-route voor klanten die een sterke basis willen zonder volledig maatwerktraject.",
+    features: [
+      "Eén gecureerde templatefundering",
+      "Editor voor sfeer, content, kleuren en beelden",
+      "Hosting, livegang en basisbeheer inbegrepen",
+    ],
+  },
+  {
+    name: "Route Plus",
+    price: "+ €20 tot €25 / module / maand",
+    subtitle: "Voor klanten die boven op de basis extra functionaliteit nodig hebben zonder de route te verzwaren.",
+    features: [
+      "Reservering, aanvraag, menu of agenda als pluslaag",
+      "Modules alleen waar ze logisch zijn voor de routefamilie",
+      "Snelle uitbreiding zonder opnieuw te beginnen",
+    ],
+  },
+  {
+    name: "Route Custom",
+    price: "Opschalen naar maatwerk",
+    subtitle: "Wanneer een klant buiten de templatekaders groeit, schuift de route logisch door naar studio- of custom werk.",
+    features: [
+      "Meer pagina's, meer logica of zwaardere flows",
+      "Doorgroei zonder de basis opnieuw op te bouwen",
+      "Heldere brug naar premium maatwerk",
+    ],
+  },
+];
+
+export const templateRoutePackagesEn: PackageTier[] = [
+  {
+    name: "Route Start",
+    price: "From €95 / month",
+    subtitle: "The fast PixelPiraterij route for clients who want a strong foundation without a full custom build.",
+    features: [
+      "One curated template foundation",
+      "Editor for atmosphere, content, colors and imagery",
+      "Hosting, launch and core upkeep included",
+    ],
+  },
+  {
+    name: "Route Plus",
+    price: "+ €20 to €25 / module / month",
+    subtitle: "For clients who need added functionality on top of the base route without turning it into a bloated system.",
+    features: [
+      "Booking, inquiry, menu or agenda as add-on layers",
+      "Modules offered only where they fit the route family",
+      "Fast expansion without starting over",
+    ],
+  },
+  {
+    name: "Route Custom",
+    price: "Scale into custom work",
+    subtitle: "When a client outgrows the template boundaries, the route can move cleanly into studio or custom work.",
+    features: [
+      "More pages, deeper logic or heavier flows",
+      "Growth without rebuilding the base from scratch",
+      "A clear bridge into premium custom work",
+    ],
+  },
+];
+
 export const templateCategories = [
   {
     title: "Founders en productlanceringen",

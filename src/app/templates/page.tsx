@@ -1,38 +1,87 @@
-import { CtaDock, Footer, ManifestAside, PageHero, SectionHeader, ShowcaseGrid, SiteFrame, Topbar } from "@/components/site-shell";
-import { templateCategories, templateShowcases } from "@/lib/site-data";
+import { CtaDock, Footer, ManifestAside, PackageGrid, PageHero, SectionHeader, ShowcaseGrid, SiteFrame, Topbar } from "@/components/site-shell";
+import { templateRoutePackages, templateShowcases } from "@/lib/site-data";
 
 export default function TemplatesPage() {
   const templateRules = [
     {
-      title: "Snelheid zonder standaardgevoel",
-      body: "Een template hoort tijd te winnen zonder het merk in een generieke vorm te duwen. De winst zit in versnellen, niet in afvlakken.",
+      title: "Vrijheid in sfeer, niet in chaos",
+      body: "De editor moet ruimte geven voor kleur, beeld, toon en ritme, zonder dat de fundering van de site uit elkaar valt.",
     },
     {
-      title: "Betere starts, geen eindproduct",
-      body: "De template is het fundament, niet het plafond. Het moet een route openen naar iets sterkers, niet de ambitie vroegtijdig vastzetten.",
+      title: "Een route, geen goedkope builder",
+      body: "PixelPiraterij verkoopt geen lege canvas-ervaring. De klant start vanuit een sterke route die al klopt voor het soort merk of zaak.",
     },
     {
-      title: "Structuur die kan doorgroeien",
-      body: "Pages, componenten en flows moeten later kunnen uitbouwen naar portals, builders of productlagen. Anders win je alleen vandaag en verlies je morgen.",
+      title: "Modules boven op de basis",
+      body: "Reservering, aanvraag, menu of agenda horen niet standaard overal in te zitten. Ze worden logisch toegevoegd waar de route erom vraagt.",
     },
     {
-      title: "Eerlijk over wat al staat",
-      body: "PixelPiraterij hoeft de builder niet groter te verkopen dan hij nu is. Juist door duidelijk te zijn over de volgorde wordt de route geloofwaardiger.",
+      title: "Doorgroeien zonder opnieuw te beginnen",
+      body: "Als een klant groter wordt, moet de route kunnen opschuiven naar meer pagina's, meer logica of uiteindelijk maatwerk zonder dat alles opnieuw hoeft.",
+    },
+  ];
+
+  const templateFamilies = [
+    {
+      title: "Artist / maker",
+      body: "Voor artiesten, fotografen, labels en culturele makers die snel een eigen wereld willen neerzetten zonder generiek portfolio-gevoel.",
+    },
+    {
+      title: "Hospitality / stay",
+      body: "Voor camping, stay, retreat en kleinschalige hospitality-routes waar sfeer, vertrouwen en een rustige boekingsflow leidend zijn.",
+    },
+    {
+      title: "Small service / food",
+      body: "Voor koffiebar, lunchzaak, salon of kleine servicebusiness waar presentatie, aanbod en een heldere contact- of reserveringsroute samen moeten vallen.",
+    },
+  ];
+
+  const moduleSignals = [
+    {
+      label: "Reservering",
+      text: "Voor hospitality, tafelboekingen of plekken die met beschikbaarheid, aanvraag of planning werken. Denk aan pluslagen vanaf ongeveer €20 tot €25 per maand.",
+    },
+    {
+      label: "Aanvraag",
+      text: "Voor intake, offerte of booking-achtige flows wanneer contact niet alleen een formulier moet zijn, maar een echte instaproute.",
+    },
+    {
+      label: "Menu / aanbod",
+      text: "Voor food, services of kleinere commerciële routes waar aanbod snel leesbaar en makkelijk aanpasbaar moet blijven zonder een maatwerkshop te worden.",
+    },
+    {
+      label: "Agenda / gallery",
+      text: "Voor artiesten, makers en culturele routes waar events, releases, beelden of updates een extra laag boven op de basisroute vormen.",
+    },
+  ];
+
+  const routeLayers = [
+    {
+      label: "Basisroute",
+      text: "Templatefundering, editor voor sfeer en content, live zetten en een snelle instap die niet generiek voelt.",
+    },
+    {
+      label: "Modules",
+      text: "Optionele functionele lagen die aansluiten op het type route, zonder dat elke template meteen volgepropt hoeft te worden.",
+    },
+    {
+      label: "Custom vervolg",
+      text: "Wanneer de route buiten de templatekaders groeit, schuift het project door naar zwaarder studio- of maatwerkwerk in plaats van krampachtig doorbouwen in het verkeerde model.",
     },
   ];
 
   const rolloutSignals = [
     {
       label: "Nu",
-      text: "Template-gedragen systemen, gecureerde richtingen en snellere launch-logica die al direct inzetbaar zijn voor echte trajecten.",
+      text: "Gecureerde template-routes per type zaak of maker, met een editor voor kleur, sfeer, content en basisopbouw.",
     },
     {
       label: "Hierna",
-      text: "Gestructureerde edit-, preview- en publishflows binnen de PixelPiraterij-wereld zodat de stap van template naar builder logisch wordt in plaats van geforceerd.",
+      text: "Modulelogica per routefamilie, zodat reservering, aanvraag, menu of agenda als extra laag kunnen worden toegevoegd zonder de basis kapot te maken.",
     },
     {
       label: "Later",
-      text: "Een vollere multi-tenant builderlaag zodra de productlaag, gebruikslogica en operationele ritmes zichzelf eerst hebben bewezen in de praktijk.",
+      text: "Sterkere preview-, publish- en beheerflows zodra deze route zich commercieel en operationeel eerst bewezen heeft in de praktijk.",
     },
   ];
 
@@ -40,29 +89,31 @@ export default function TemplatesPage() {
     <SiteFrame>
       <Topbar />
       <PageHero
-        kicker="Templates en builder-richting"
+        kicker="Template route met editor"
         title={
           <>
-            Slimme starts,
+            Snelle routes,
             <br />
-            geen goedkope
+            eigen sfeer,
             <br />
-            snelwegen.
+            geen standaard
+            <br />
+            builder.
           </>
         }
-        body="Templates binnen PixelPiraterij zijn er om sterkere startposities te creëren, niet zwakkere uitkomsten. Het zijn gecureerde lanceersystemen die snel kunnen bewegen en tegelijk leesbaar binnen hetzelfde systeem moeten blijven."
+        body="Deze route is bedoeld voor klanten die snel live willen zonder in generieke troep te eindigen. Je start vanuit een sterke PixelPiraterij-fundering en trekt die daarna via een editor naar je eigen wereld met kleur, sfeer, content en relevante modules."
         primaryCta={{ href: "/contact", label: "Vraag een template-route aan" }}
         secondaryCta={{ href: "/", label: "Terug naar de routekaart" }}
         aside={
           <ManifestAside
-            capLeft="Template-logica"
-            capRight="Builder-pad"
+            capLeft="Route-start"
+            capRight="Editor-pad"
             problemKicker="Oud probleem"
             stanceKicker="Nieuwe houding"
-            problemTitle="Templates falen wanneer ze identiteit uitwissen."
-            problemBody="Snel wordt meestal generiek wanneer het systeem eronder alleen bedoeld is om moeite te besparen in plaats van richting te verbeteren."
-            stanceTitle="Een sterk template moet de weg verkorten, niet het resultaat afvlakken."
-            stanceBody="PixelPiraterij gebruikt templates als gecureerde startsystemen, met builder-logica die pas verder groeit wanneer deze route zich eerst in de praktijk bewijst."
+            problemTitle="Snelle websites voelen vaak alsof elk merk dezelfde mal heeft gekregen."
+            problemBody="Dan win je tijd, maar verlies je sfeer, onderscheid en geloofwaardigheid. Zeker zodra een klant niet volledig maatwerk zoekt maar wel iets eigens wil neerzetten."
+            stanceTitle="De template-route moet een sterke basis geven en daarna ruimte laten voor een eigen wereld."
+            stanceBody="Niet vrij bouwen vanaf nul, maar starten vanuit een bewezen route en die via editor, thema en modules naar de juiste beleving trekken."
           />
         }
       />
@@ -70,13 +121,13 @@ export default function TemplatesPage() {
       <section className="section-block">
         <SectionHeader
           index="01"
-          title="Templates worden gegroepeerd op waar ze het meeste helpen."
-          body="Het doel is niet om mensen te overspoelen met skins. Het doel is om elke doelgroep een betere route te geven naar een sterkere build."
+          title="Niet elke klant heeft maatwerk nodig, maar ook niet elke klant kan met een generiek template wegkomen."
+          body="Daarom wordt de template-route opgebouwd per type merk of zaak. Niet als losse skins, maar als sterke starts die al kloppen voor hun context."
         />
         <div className="segment-grid">
-          {templateCategories.map((item) => (
+          {templateFamilies.map((item) => (
             <article key={item.title} className="segment-card">
-              <p className="section-tag">Template-richting</p>
+              <p className="section-tag">Templatefamilie</p>
               <h3 className="segment-title">{item.title}</h3>
               <p className="route-note">{item.body}</p>
             </article>
@@ -87,8 +138,8 @@ export default function TemplatesPage() {
       <section className="section-block">
         <SectionHeader
           index="02"
-          title="Wat een goede template-start nu al zichtbaar moet bewijzen."
-          body="Niet als abstract principe, maar in echte surfaces: suite-logica, doelgroepkadering en productdiscipline. Zo voelt de builder-richting ineens geloofwaardig in plaats van uitgesteld."
+          title="De basisroute verkoopt de sfeer. Modules verkopen de functie."
+          body="Een Le Radel-achtige route kan opnieuw voor een andere camping werken, maar net zo goed voor een andere hospitality- of servicecontext. De fundering blijft sterk, de laag erboven wordt aangepast op doel en gebruik."
         />
         <ShowcaseGrid items={templateShowcases} />
       </section>
@@ -96,8 +147,8 @@ export default function TemplatesPage() {
       <section className="section-block">
         <SectionHeader
           index="03"
-          title="Wat templates hier wel moeten doen."
-          body="Niet elke snelle route is meteen slim. De kracht van dit systeem zit in betere startposities, meer structuur en een route die later nog verder open kan."
+          title="Wat binnen de editor mag bewegen en wat juist vast moet blijven."
+          body="De klant moet veel kunnen vormen, maar niet de kwaliteitslat omver trekken. Zo blijft het snel, bruikbaar en onderscheidend tegelijk."
         />
         <div className="segment-grid">
           {templateRules.map((item) => (
@@ -113,8 +164,49 @@ export default function TemplatesPage() {
       <section className="section-block">
         <SectionHeader
           index="04"
-          title="Builder komt na capability, niet ervoor."
-          body="De volgende laag is een gestructureerde editor-, preview- en publishflow bovenop deze template-systemen. We schalen die belofte pas zodra de productlaag echt staat."
+          title="Functionele modules horen erbovenop te komen, niet verstopt in elk template."
+          body="Reservering, aanvraag, menu of agenda zijn geen universele standaardlaag. Ze worden aangeboden waar ze commercieel en praktisch logisch zijn."
+        />
+        <div className="stack-board">
+          {moduleSignals.map((item) => (
+            <article key={item.label} className="stack-row">
+              <p className="stack-label">{item.label}</p>
+              <p className="stack-text">{item.text}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="section-block">
+        <SectionHeader
+          index="05"
+          title="Deze route moet kunnen doorgroeien zonder opnieuw te beginnen."
+          body="De template-route is de snelle instap. Daarna moet de klant logisch kunnen opschalen naar modules, extra diepte of uiteindelijk maatwerk."
+        />
+        <div className="stack-board">
+          {routeLayers.map((item) => (
+            <article key={item.label} className="stack-row">
+              <p className="stack-label">{item.label}</p>
+              <p className="stack-text">{item.text}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="section-block">
+        <SectionHeader
+          index="06"
+          title="Zo leest het aanbod commercieel het helderst."
+          body="De basisroute blijft simpel. Functionele pluslagen komen er logisch bovenop en maatwerk blijft de volgende stap zodra iemand buiten het systeem groeit."
+        />
+        <PackageGrid items={templateRoutePackages} />
+      </section>
+
+      <section className="section-block">
+        <SectionHeader
+          index="07"
+          title="Zo bouwen we de productlaag op zonder hem groter te verkopen dan hij nu is."
+          body="We beginnen met een gecureerde editorroute en laten pas daarna preview-, module- en publishlogica verder uitgroeien. Daarmee blijft het geloofwaardig en commercieel bruikbaar."
         />
         <div className="stack-board">
           {rolloutSignals.map((item) => (
@@ -127,8 +219,8 @@ export default function TemplatesPage() {
       </section>
 
       <CtaDock
-        title="Als je snelheid wilt zonder in template-eenvormigheid te belanden, is dit de juiste route."
-        body="Deze pagina moet bewijzen dat snelheid, structuur en merkgevoel hier samen kunnen gaan, voordat de diepere builderlaag verder wordt opengezet."
+        title="Als je snel live wilt zonder dat het generiek of goedkoop aanvoelt, is dit de juiste route."
+        body="De template-route vult het gat tussen een standaard template en volledig maatwerk. Eerst een sterke basis, daarna de juiste modules en pas daarna zwaarder custom werk als dat nodig blijkt."
         primary={{ href: "/contact", label: "Praat over een launch-route" }}
         secondary={{ href: "/studio", label: "Zie hoe dit aansluit op de studio" }}
       />
