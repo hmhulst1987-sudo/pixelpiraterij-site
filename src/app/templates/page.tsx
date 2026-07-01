@@ -1,4 +1,5 @@
 import { CtaDock, Footer, ManifestAside, PackageGrid, PageHero, SectionHeader, ShowcaseGrid, SiteFrame, Topbar } from "@/components/site-shell";
+import { TemplateRouteEditorDemo } from "@/components/template-route-editor-demo";
 import { templateRoutePackages, templateShowcases } from "@/lib/site-data";
 
 export default function TemplatesPage() {
@@ -138,6 +139,15 @@ export default function TemplatesPage() {
       <section className="section-block">
         <SectionHeader
           index="02"
+          title="Zo kan de eerste editorroute meteen tastbaar worden."
+          body="Niet als vrije builder zonder richting, maar als een gestructureerde editor waar route, sfeer en modules samen al een geloofwaardige site-opbouw vormen."
+        />
+        <TemplateRouteEditorDemo />
+      </section>
+
+      <section className="section-block">
+        <SectionHeader
+          index="03"
           title="De basisroute verkoopt de sfeer. Modules verkopen de functie."
           body="Een Le Radel-achtige route kan opnieuw voor een andere camping werken, maar net zo goed voor een andere hospitality- of servicecontext. De fundering blijft sterk, de laag erboven wordt aangepast op doel en gebruik."
         />
@@ -146,7 +156,7 @@ export default function TemplatesPage() {
 
       <section className="section-block">
         <SectionHeader
-          index="03"
+          index="04"
           title="Wat binnen de editor mag bewegen en wat juist vast moet blijven."
           body="De klant moet veel kunnen vormen, maar niet de kwaliteitslat omver trekken. Zo blijft het snel, bruikbaar en onderscheidend tegelijk."
         />
@@ -163,7 +173,7 @@ export default function TemplatesPage() {
 
       <section className="section-block">
         <SectionHeader
-          index="04"
+          index="05"
           title="Functionele modules horen erbovenop te komen, niet verstopt in elk template."
           body="Reservering, aanvraag, menu of agenda zijn geen universele standaardlaag. Ze worden aangeboden waar ze commercieel en praktisch logisch zijn."
         />
@@ -179,7 +189,7 @@ export default function TemplatesPage() {
 
       <section className="section-block">
         <SectionHeader
-          index="05"
+          index="06"
           title="Deze route moet kunnen doorgroeien zonder opnieuw te beginnen."
           body="De template-route is de snelle instap. Daarna moet de klant logisch kunnen opschalen naar modules, extra diepte of uiteindelijk maatwerk."
         />
@@ -195,7 +205,7 @@ export default function TemplatesPage() {
 
       <section className="section-block">
         <SectionHeader
-          index="06"
+          index="07"
           title="Zo leest het aanbod commercieel het helderst."
           body="De basisroute blijft simpel. Functionele pluslagen komen er logisch bovenop en maatwerk blijft de volgende stap zodra iemand buiten het systeem groeit."
         />
@@ -204,7 +214,7 @@ export default function TemplatesPage() {
 
       <section className="section-block">
         <SectionHeader
-          index="07"
+          index="08"
           title="Zo bouwen we de productlaag op zonder hem groter te verkopen dan hij nu is."
           body="We beginnen met een gecureerde editorroute en laten pas daarna preview-, module- en publishlogica verder uitgroeien. Daarmee blijft het geloofwaardig en commercieel bruikbaar."
         />
