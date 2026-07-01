@@ -167,7 +167,7 @@ export default function Home() {
         <SectionHeader
           index="01"
           title="Gebruik het deel van het systeem dat past bij de klus."
-          body="Niet elk merk heeft direct een volledig flagship-traject nodig. Soms is een template-route genoeg, soms is een live app of docs-laag waardevoller."
+          body="Niet elk merk hoeft met een volledig maatwerksysteem te beginnen. Soms is een template-route genoeg, soms is een live app of docs-laag waardevoller."
         />
         <OfferRail items={routeLayers} />
       </section>

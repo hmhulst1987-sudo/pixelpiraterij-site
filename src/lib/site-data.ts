@@ -125,7 +125,7 @@ export const homeOffers: Offer[] = [
 export const homeOffersEn: Offer[] = [
   {
     id: "01",
-    title: "Flagship build",
+    title: "Custom system",
     note: "Custom front lines for brands that cannot afford to look borrowed.",
   },
   {
@@ -491,7 +491,7 @@ export const hostingShowcases: ShowcaseItem[] = [
     label: "Operator zicht",
     title: "Achter de schermen hoort net zoveel structuur te zitten als aan de voorkant.",
     body:
-      "EvaQuant toont het soort dashboarddiscipline dat belangrijk is voor monitoring, statusbewustzijn en systeemvertrouwen. Ook managed hosting verkoopt uiteindelijk rust via zicht en controle.",
+      "EvaQuant toont het soort dashboarddiscipline dat belangrijk is voor monitoring, statusbewustzijn en systeemvertrouwen. Ook deze systeemlaag verkoopt uiteindelijk rust via zicht en controle.",
     bullets: [
       "Monitoring en statusgevoel als productlaag",
       "Duidelijke datahierarchie in plaats van blinde afhankelijkheid",
@@ -829,7 +829,7 @@ export const aboutShowcases: ShowcaseItem[] = [
     label: "Niet oppervlakkig",
     title: "De studio probeert het gat tussen branding en operatie te dichten.",
     body:
-      "EvaQuant en de managed hosting-richting maken duidelijk dat de ambitie niet stopt bij een mooie homepage. Er hoort ook systeemlogica en zicht achter te zitten.",
+      "EvaQuant en de systeemrichting maken duidelijk dat de ambitie niet stopt bij een mooie homepage. Er hoort ook systeemlogica en zicht achter te zitten.",
     bullets: [
       "Merklaag en systeemlaag horen bij elkaar",
       "Tooling-gevoel en operationele rust versterken de voorkant",
@@ -885,7 +885,7 @@ export const aboutShowcasesEn: ShowcaseItem[] = [
     label: "Not superficial",
     title: "The studio exists to close the gap between branding and operations.",
     body:
-      "EvaQuant and the managed hosting direction make it clear that the ambition does not stop at a beautiful homepage. There also needs to be system logic and visibility behind it.",
+      "EvaQuant and the system direction make it clear that the ambition does not stop at a beautiful homepage. There also needs to be system logic and visibility behind it.",
     bullets: [
       "Brand layer and system layer belong together",
       "Tooling feel and operational calm reinforce the front end",

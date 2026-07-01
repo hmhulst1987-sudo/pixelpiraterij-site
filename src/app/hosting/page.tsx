@@ -102,7 +102,7 @@ export default function HostingPage() {
         <SectionHeader
           index="03"
           title="Wat deze laag concreet oplost."
-          body="De waarde van managed hosting zit niet in technische terminologie, maar in minder stress, minder stilstand en veel meer grip nadat de site live is."
+          body="De waarde van deze systeemlaag zit niet in technische terminologie, maar in minder stress, minder stilstand en veel meer grip nadat de site live is."
         />
         <div className="stack-board">
           {operatingSignals.map((item) => (

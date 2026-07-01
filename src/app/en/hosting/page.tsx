@@ -100,7 +100,7 @@ export default function EnglishHostingPage() {
         <SectionHeader
           index="03"
           title="What this layer solves in practice."
-          body="The value of managed hosting is not technical jargon. It is less stress, less downtime and far more control once the site is live."
+          body="The value of this system layer is not technical jargon. It is less stress, less downtime and far more control once the site is live."
         />
         <div className="stack-board">
           {operatingSignals.map((item) => (
