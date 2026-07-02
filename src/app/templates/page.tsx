@@ -139,8 +139,8 @@ export default function TemplatesPage() {
       <section className="section-block">
         <SectionHeader
           index="02"
-          title="Zo kan de eerste editorroute meteen tastbaar worden."
-          body="Niet als vrije builder zonder richting, maar als een gestructureerde editor waar route, sfeer en modules samen al een geloofwaardige site-opbouw vormen."
+          title="Zo kan de eerste builderlaag meteen tastbaar worden."
+          body="Niet als vrije builder zonder richting, maar als een gestructureerde editor die al een opslaanbare route-config en een losse renderer oplevert."
         />
         <TemplateRouteEditorDemo />
       </section>
