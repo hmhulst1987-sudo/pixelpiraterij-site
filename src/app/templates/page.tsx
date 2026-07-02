@@ -74,15 +74,15 @@ export default function TemplatesPage() {
   const rolloutSignals = [
     {
       label: "Nu",
-      text: "Gecureerde template-routes per type zaak of maker, met een editor voor kleur, sfeer, content en basisopbouw.",
+      text: "Gecureerde template-routes per type zaak of maker, met een editor voor kleur, sfeer, content, routegebonden modules en flow-preview.",
     },
     {
       label: "Hierna",
-      text: "Modulelogica per routefamilie, zodat reservering, aanvraag, menu of agenda als extra laag kunnen worden toegevoegd zonder de basis kapot te maken.",
+      text: "Publish-, intake- en beheerstappen per routefamilie, zodat een gekozen flow ook echt door kan lopen naar livegang en opvolging.",
     },
     {
       label: "Later",
-      text: "Sterkere preview-, publish- en beheerflows zodra deze route zich commercieel en operationeel eerst bewezen heeft in de praktijk.",
+      text: "Sterkere koppelingen, beheerlagen en eventueel beperkte self-serve stukken zodra deze route zich commercieel en operationeel eerst bewezen heeft in de praktijk.",
     },
   ];
 

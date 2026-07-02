@@ -779,6 +779,75 @@ html[data-theme="night"] .contraband-card {
   line-height: 1.7;
 }
 
+.route-editor-module-impact-label {
+  margin-top: 0.8rem;
+  color: var(--color-brass);
+  font-family: var(--font-mono), "IBM Plex Mono", monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.route-editor-module-impact {
+  margin-top: 0.28rem;
+  color: var(--color-soft);
+  font-size: 0.86rem;
+  line-height: 1.6;
+}
+
+.route-editor-strategy-card,
+.route-editor-flow-card {
+  border: 1px solid var(--color-line);
+  border-radius: 1.35rem;
+  background:
+    linear-gradient(135deg, rgba(201, 86, 52, 0.08), transparent 46%),
+    rgba(255, 255, 255, 0.18);
+  padding: 1rem;
+}
+
+.route-editor-strategy-text,
+.route-editor-strategy-copy,
+.route-editor-flow-copy {
+  color: var(--color-muted);
+  font-size: 0.94rem;
+  line-height: 1.72;
+}
+
+.route-editor-strategy-grid,
+.route-editor-flow-grid {
+  display: grid;
+  gap: 0.8rem;
+  margin-top: 0.95rem;
+}
+
+.route-editor-strategy-pane,
+.route-editor-flow-pane,
+.route-editor-operator-note {
+  border: 1px solid var(--color-line);
+  border-radius: 1.1rem;
+  background: rgba(255, 255, 255, 0.24);
+  padding: 0.95rem;
+}
+
+.route-editor-strategy-title,
+.route-editor-flow-title {
+  margin-top: 0.45rem;
+  color: var(--color-heading);
+  font-family: var(--font-display), "Space Grotesk", sans-serif;
+  font-size: 1.3rem;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.route-editor-badge-list--dark {
+  margin-top: 0.7rem;
+}
+
+.route-editor-badge--paper {
+  background: rgba(255, 255, 255, 0.34);
+  color: var(--color-heading);
+}
+
 .route-editor-preview {
   min-height: 100%;
 }
@@ -887,6 +956,62 @@ html[data-theme="night"] .contraband-card {
 
 .route-editor-badge.is-module {
   background: rgba(201, 86, 52, 0.2);
+}
+
+.route-editor-badge--field {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.route-editor-flow-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.route-editor-flow-title {
+  color: #fff8f1;
+}
+
+.route-editor-flow-cta {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid rgba(201, 86, 52, 0.34);
+  border-radius: 999px;
+  background: rgba(201, 86, 52, 0.16);
+  padding: 0.55rem 0.8rem;
+  color: #fff8f1;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.route-editor-step-list {
+  display: grid;
+  gap: 0.65rem;
+  margin-top: 0.75rem;
+}
+
+.route-editor-step-item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.7rem;
+  align-items: center;
+  color: #fff4e8;
+  font-size: 0.9rem;
+}
+
+.route-editor-step-index {
+  display: inline-flex;
+  width: 1.65rem;
+  height: 1.65rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff8f1;
+  font-size: 0.74rem;
+  font-family: var(--font-mono), "IBM Plex Mono", monospace;
 }
 
 .route-editor-pricebar {
@@ -1343,6 +1468,11 @@ html[data-theme="night"] .btn-secondary:focus-visible {
   .route-editor-summary-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     align-items: start;
+  }
+
+  .route-editor-strategy-grid,
+  .route-editor-flow-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .stack-row {
