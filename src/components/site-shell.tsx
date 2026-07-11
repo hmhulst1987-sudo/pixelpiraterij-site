@@ -6,6 +6,7 @@ import type { ReactNode } from "react";
 import { ThemeSwitch } from "@/components/theme-switch";
 import {
   chromeCopy,
+  localeLabels,
   processSteps,
   siteNavByLocale,
   type CaseItem,
@@ -18,15 +19,39 @@ import {
   type ShowcaseItem,
 } from "@/lib/site-data";
 
+const prefixedLocales: Locale[] = ["en", "fr", "es"];
+export const allLocales: Locale[] = ["nl", "en", "fr", "es"];
+
+export function getLocaleFromPathname(pathname: string): Locale {
+  const firstSegment = pathname.split("/")[1];
+  return (prefixedLocales as string[]).includes(firstSegment) ? (firstSegment as Locale) : "nl";
+}
+
+function stripLocalePrefix(pathname: string, locale: Locale): string {
+  if (locale === "nl") {
+    return pathname;
+  }
+
+  const stripped = pathname.replace(new RegExp(`^/${locale}`), "");
+  return stripped || "/";
+}
+
+export function getLocalizedHref(pathname: string, targetLocale: Locale): string {
+  const locale = getLocaleFromPathname(pathname);
+  const bare = stripLocalePrefix(pathname, locale);
+
+  if (targetLocale === "nl") {
+    return bare;
+  }
+
+  return bare === "/" ? `/${targetLocale}` : `/${targetLocale}${bare}`;
+}
+
 function isActivePath(pathname: string, href: string) {
   const cleanHref = href.split("#")[0] || "/";
 
-  if (cleanHref === "/") {
-    return pathname === "/";
-  }
-
-  if (cleanHref === "/en") {
-    return pathname === "/en";
+  if (cleanHref === "/" || prefixedLocales.some((locale) => cleanHref === `/${locale}`)) {
+    return pathname === cleanHref;
   }
 
   return pathname === cleanHref || pathname.startsWith(`${cleanHref}/`);
@@ -43,16 +68,16 @@ export function SiteFrame({ children }: { children: ReactNode }) {
 
 export function Topbar() {
   const pathname = usePathname();
-  const locale: Locale = pathname.startsWith("/en") ? "en" : "nl";
-  const otherLocaleHref =
-    locale === "en" ? pathname.replace(/^\/en/, "") || "/" : pathname === "/" ? "/en" : `/en${pathname}`;
+  const locale = getLocaleFromPathname(pathname);
   const nav = siteNavByLocale[locale];
   const chrome = chromeCopy[locale];
+  const homeHref = locale === "nl" ? "/" : `/${locale}`;
+  const contactHref = getLocalizedHref("/contact", locale);
 
   return (
     <header className="topbar-shell">
       <div className="topbar-inner">
-        <Link href={locale === "en" ? "/en" : "/"} className="brand-lockup" aria-label="PixelPiraterij home">
+        <Link href={homeHref} className="brand-lockup" aria-label="PixelPiraterij home">
           <div className="brand-mark">
             <img src="/pixelpiraterij-mark.svg" alt="PixelPiraterij merkicoon" className="brand-mark-image" />
           </div>
@@ -76,14 +101,17 @@ export function Topbar() {
         ))}
         <ThemeSwitch />
         <div className="locale-switch" aria-label="Language switch">
-          <Link href={locale === "nl" ? pathname : otherLocaleHref} className={`locale-pill${locale === "nl" ? " is-active" : ""}`}>
-            {chrome.localeLabelNl}
-          </Link>
-          <Link href={locale === "en" ? pathname : otherLocaleHref} className={`locale-pill${locale === "en" ? " is-active" : ""}`}>
-            {chrome.localeLabelEn}
-          </Link>
+          {allLocales.map((item) => (
+            <Link
+              key={item}
+              href={getLocalizedHref(pathname, item)}
+              className={`locale-pill${locale === item ? " is-active" : ""}`}
+            >
+              {localeLabels[item]}
+            </Link>
+          ))}
         </div>
-        <Link href={locale === "en" ? "/en/contact" : "/contact"} className="topbar-cta">
+        <Link href={contactHref} className="topbar-cta">
           {chrome.contactCta}
         </Link>
       </div>
@@ -415,11 +443,10 @@ export function CtaDock({
 
 export function Footer() {
   const pathname = usePathname();
-  const locale: Locale = pathname.startsWith("/en") ? "en" : "nl";
-  const otherLocaleHref =
-    locale === "en" ? pathname.replace(/^\/en/, "") || "/" : pathname === "/" ? "/en" : `/en${pathname}`;
+  const locale = getLocaleFromPathname(pathname);
   const nav = siteNavByLocale[locale];
   const chrome = chromeCopy[locale];
+  const contactHref = getLocalizedHref("/contact", locale);
 
   return (
     <footer className="footer-grid">
@@ -440,14 +467,17 @@ export function Footer() {
           </Link>
         ))}
         <div className="locale-switch" aria-label="Language switch">
-          <Link href={locale === "nl" ? pathname : otherLocaleHref} className={`locale-pill${locale === "nl" ? " is-active" : ""}`}>
-            {chrome.localeLabelNl}
-          </Link>
-          <Link href={locale === "en" ? pathname : otherLocaleHref} className={`locale-pill${locale === "en" ? " is-active" : ""}`}>
-            {chrome.localeLabelEn}
-          </Link>
+          {allLocales.map((item) => (
+            <Link
+              key={item}
+              href={getLocalizedHref(pathname, item)}
+              className={`locale-pill${locale === item ? " is-active" : ""}`}
+            >
+              {localeLabels[item]}
+            </Link>
+          ))}
         </div>
-        <Link href={locale === "en" ? "/en/contact" : "/contact"} className="topbar-cta">
+        <Link href={contactHref} className="topbar-cta">
           {chrome.contactCta}
         </Link>
       </div>
