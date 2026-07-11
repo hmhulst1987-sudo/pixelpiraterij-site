@@ -350,7 +350,7 @@ export const audienceSegmentsEs: Segment[] = [
 
 export const featuredCases: CaseItem[] = [
   {
-    lane: "Identity-led commerce",
+    lane: "Identiteitsgedreven commerce",
     name: "KunstvanVB",
     proof: "Laat editorial polish, premium kadering en sterkere visuele regie zien over een volledige merklaag.",
   },
@@ -442,7 +442,7 @@ export const featuredCasesEs: CaseItem[] = [
 
 export const proofCases: ProofCase[] = [
   {
-    lane: "Identity-led commerce",
+    lane: "Identiteitsgedreven commerce",
     name: "KunstvanVB",
     summary:
       "Een eigen merkwereld met genoeg karakter om niet generiek te voelen, maar wel genoeg controle om als zakelijke laag te blijven werken.",
@@ -463,7 +463,7 @@ export const proofCases: ProofCase[] = [
     ],
   },
   {
-    lane: "Hospitality systems",
+    lane: "Hospitality-systemen",
     name: "Sjoerd, Le Radel en rustige conversie",
     summary:
       "Van luxe branding tot een natuurlijke campingroute: hier zit de kracht in rust, vertrouwen en een omgeving die niet hoeft te schreeuwen om overtuigend te zijn.",
@@ -492,7 +492,7 @@ export const proofCases: ProofCase[] = [
     ],
   },
   {
-    lane: "Culture and narrative",
+    lane: "Cultuur en narratief",
     name: "Hermes Records en vage.blog",
     summary:
       "Twee verschillende culturele richtingen die allebei laten zien dat sfeer hier geen filter is, maar een bruikbaar onderdeel van positionering en wereldbouw.",
@@ -521,7 +521,7 @@ export const proofCases: ProofCase[] = [
     ],
   },
   {
-    lane: "Software-facing systems",
+    lane: "Softwaregerichte systemen",
     name: "EvaQuant, LumenOS en WattNetjes",
     summary:
       "Niet alleen een mooie schil, maar ook productlogica: dashboards, planmatigheid, interfacehiërarchie en softwarepatronen die laten zien dat er echte systeemdiepte onder de studio zit.",
