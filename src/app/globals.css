@@ -1724,6 +1724,14 @@ html[data-theme="night"] .matrix-row {
   grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
 }
 
+.proof-visual-board.has-trio {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+}
+
+.proof-visual-board.has-trio .proof-visual-frame.is-primary {
+  grid-column: 1 / -1;
+}
+
 .proof-visual-frame,
 .showcase-visual {
   position: relative;

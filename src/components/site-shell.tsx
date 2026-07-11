@@ -287,11 +287,12 @@ export function ProofCaseGrid({ items }: { items: ProofCase[] }) {
   return (
     <div className="proof-case-grid">
       {items.map((item) => {
-        const hasPair = item.visuals.length > 1;
+        const boardClass =
+          item.visuals.length === 2 ? " has-pair" : item.visuals.length > 2 ? " has-trio" : "";
 
         return (
           <article key={item.name} className="proof-case-card">
-            <div className={`proof-visual-board${hasPair ? " has-pair" : ""}`}>
+            <div className={`proof-visual-board${boardClass}`}>
               {item.visuals.map((visual, index) => (
                 <div
                   key={`${item.name}-${visual.src}`}

@@ -522,7 +522,7 @@ export const proofCases: ProofCase[] = [
   },
   {
     lane: "Software-facing systems",
-    name: "EvaQuant en LumenOS",
+    name: "EvaQuant, LumenOS en WattNetjes",
     summary:
       "Niet alleen een mooie schil, maar ook productlogica: dashboards, planmatigheid, interfacehiërarchie en softwarepatronen die laten zien dat er echte systeemdiepte onder de studio zit.",
     proof:
@@ -531,6 +531,7 @@ export const proofCases: ProofCase[] = [
       "Dashboardlogica en datahierarchie",
       "Productachtige interfaces met duidelijke routes",
       "Bewijs van softwarediscipline achter de merklaag",
+      "Data-gedreven infrastructuurverhalen, van trading tot energie",
     ],
     visuals: [
       {
@@ -543,6 +544,13 @@ export const proofCases: ProofCase[] = [
       {
         src: "/cases/lumenos-reference.png",
         alt: "LumenOS hero visual met gebruiker achter laptop in donkere setting.",
+        fit: "cover",
+        position: "center top",
+        tone: "dark",
+      },
+      {
+        src: "/cases/wattnetjes-hero.png",
+        alt: "WattNetjes hero met satellietbeeld van Utrecht en energiestatistieken.",
         fit: "cover",
         position: "center top",
         tone: "dark",
@@ -633,7 +641,7 @@ export const proofCasesEn: ProofCase[] = [
   },
   {
     lane: "Software-facing systems",
-    name: "EvaQuant and LumenOS",
+    name: "EvaQuant, LumenOS and WattNetjes",
     summary:
       "Not just a polished shell, but product logic: dashboards, planning discipline, interface hierarchy and software patterns that prove there is real system depth under the studio.",
     proof:
@@ -642,6 +650,7 @@ export const proofCasesEn: ProofCase[] = [
       "Dashboard logic and data hierarchy",
       "Product-facing interfaces with clear routing",
       "Evidence of software discipline behind the brand layer",
+      "Data-driven infrastructure stories, from trading to energy",
     ],
     visuals: [
       {
@@ -654,6 +663,13 @@ export const proofCasesEn: ProofCase[] = [
       {
         src: "/cases/lumenos-reference.png",
         alt: "LumenOS hero visual with a user behind a laptop in a dark setting.",
+        fit: "cover",
+        position: "center top",
+        tone: "dark",
+      },
+      {
+        src: "/cases/wattnetjes-hero.png",
+        alt: "WattNetjes hero with a satellite image of Utrecht and energy statistics.",
         fit: "cover",
         position: "center top",
         tone: "dark",
@@ -744,7 +760,7 @@ export const proofCasesFr: ProofCase[] = [
   },
   {
     lane: "Systèmes orientés logiciel",
-    name: "EvaQuant et LumenOS",
+    name: "EvaQuant, LumenOS et WattNetjes",
     summary:
       "Pas seulement une belle coquille, mais aussi une logique produit : tableaux de bord, planification, hiérarchie d'interface et patterns logiciels qui prouvent une réelle profondeur système sous le studio.",
     proof:
@@ -753,6 +769,7 @@ export const proofCasesFr: ProofCase[] = [
       "Logique de tableau de bord et hiérarchie des données",
       "Interfaces orientées produit avec des parcours clairs",
       "Preuve de discipline logicielle derrière la couche de marque",
+      "Récits d'infrastructure orientés données, du trading à l'énergie",
     ],
     visuals: [
       {
@@ -765,6 +782,13 @@ export const proofCasesFr: ProofCase[] = [
       {
         src: "/cases/lumenos-reference.png",
         alt: "Visuel hero LumenOS avec un utilisateur derrière un ordinateur portable dans un cadre sombre.",
+        fit: "cover",
+        position: "center top",
+        tone: "dark",
+      },
+      {
+        src: "/cases/wattnetjes-hero.png",
+        alt: "Visuel hero WattNetjes avec une image satellite d'Utrecht et des statistiques énergétiques.",
         fit: "cover",
         position: "center top",
         tone: "dark",
@@ -855,7 +879,7 @@ export const proofCasesEs: ProofCase[] = [
   },
   {
     lane: "Sistemas orientados a software",
-    name: "EvaQuant y LumenOS",
+    name: "EvaQuant, LumenOS y WattNetjes",
     summary:
       "No solo una cáscara bonita, también lógica de producto: dashboards, disciplina de planificación, jerarquía de interfaz y patrones de software que demuestran una profundidad de sistema real bajo el estudio.",
     proof:
@@ -864,6 +888,7 @@ export const proofCasesEs: ProofCase[] = [
       "Lógica de dashboard y jerarquía de datos",
       "Interfaces orientadas a producto con rutas claras",
       "Evidencia de disciplina de software detrás de la capa de marca",
+      "Relatos de infraestructura basados en datos, del trading a la energía",
     ],
     visuals: [
       {
@@ -876,6 +901,13 @@ export const proofCasesEs: ProofCase[] = [
       {
         src: "/cases/lumenos-reference.png",
         alt: "Visual hero de LumenOS con un usuario detrás de un portátil en un entorno oscuro.",
+        fit: "cover",
+        position: "center top",
+        tone: "dark",
+      },
+      {
+        src: "/cases/wattnetjes-hero.png",
+        alt: "Visual hero de WattNetjes con una imagen satelital de Utrecht y estadísticas energéticas.",
         fit: "cover",
         position: "center top",
         tone: "dark",
