@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
@@ -296,11 +297,14 @@ export function ProofCaseGrid({ items }: { items: ProofCase[] }) {
                   key={`${item.name}-${visual.src}`}
                   className={`proof-visual-frame${index === 0 ? " is-primary" : ""}${visual.tone === "light" ? " is-light" : ""}`}
                 >
-                  <div className="safe-visual-card" aria-label={visual.alt}>
-                    <span className="safe-visual-kicker">{item.lane}</span>
-                    <span className="safe-visual-title">{item.name}</span>
-                    <span className="safe-visual-note">Approved visual pending</span>
-                  </div>
+                  <Image
+                    src={visual.src}
+                    alt={visual.alt}
+                    fill
+                    sizes="(min-width: 1024px) 40vw, 100vw"
+                    className={`proof-image${visual.fit === "contain" ? " is-contain" : ""}`}
+                    style={visual.position ? { objectPosition: visual.position } : undefined}
+                  />
                 </div>
               ))}
             </div>
@@ -333,11 +337,14 @@ export function ShowcaseGrid({ items }: { items: ShowcaseItem[] }) {
       {items.map((item) => (
         <article key={item.title} className="showcase-card">
           <div className={`showcase-visual${item.visual.tone === "light" ? " is-light" : ""}`}>
-            <div className="safe-visual-card" aria-label={item.visual.alt}>
-              <span className="safe-visual-kicker">{item.label}</span>
-              <span className="safe-visual-title">{item.title}</span>
-              <span className="safe-visual-note">Branded route panel</span>
-            </div>
+            <Image
+              src={item.visual.src}
+              alt={item.visual.alt}
+              fill
+              sizes="(min-width: 1024px) 50vw, 100vw"
+              className={`showcase-image${item.visual.fit === "contain" ? " is-contain" : ""}`}
+              style={item.visual.position ? { objectPosition: item.visual.position } : undefined}
+            />
           </div>
 
           <div className="showcase-copy">
