@@ -77,7 +77,7 @@ export const routeConfigStorageKey = "pp-template-route-config-v1";
 export const routeFamilies: RouteFamily[] = [
   {
     slug: "artist",
-    basePrice: 95,
+    basePrice: 79,
     moduleSlugs: ["inquiry", "gallery", "agenda", "newsletter"],
     recommendedModuleSlugs: ["inquiry", "gallery"],
     defaults: {
@@ -143,7 +143,7 @@ export const routeFamilies: RouteFamily[] = [
   },
   {
     slug: "hospitality",
-    basePrice: 95,
+    basePrice: 79,
     moduleSlugs: ["reservation", "inquiry", "menu", "newsletter"],
     recommendedModuleSlugs: ["reservation", "newsletter"],
     defaults: {
@@ -223,7 +223,7 @@ export const routeFamilies: RouteFamily[] = [
   },
   {
     slug: "service",
-    basePrice: 95,
+    basePrice: 79,
     moduleSlugs: ["reservation", "inquiry", "menu", "newsletter"],
     recommendedModuleSlugs: ["menu", "inquiry"],
     defaults: {
@@ -306,7 +306,7 @@ export const routeFamilies: RouteFamily[] = [
 export const routeModules: RouteModule[] = [
   {
     slug: "reservation",
-    price: 25,
+    price: 15,
     flowMode: "reservation",
     copy: {
       nl: {
@@ -323,7 +323,7 @@ export const routeModules: RouteModule[] = [
   },
   {
     slug: "inquiry",
-    price: 20,
+    price: 12,
     flowMode: "inquiry",
     copy: {
       nl: {
@@ -340,7 +340,7 @@ export const routeModules: RouteModule[] = [
   },
   {
     slug: "menu",
-    price: 20,
+    price: 12,
     copy: {
       nl: {
         label: "Menu / aanbod",
@@ -356,7 +356,7 @@ export const routeModules: RouteModule[] = [
   },
   {
     slug: "agenda",
-    price: 20,
+    price: 10,
     copy: {
       nl: {
         label: "Agenda / events",
@@ -372,7 +372,7 @@ export const routeModules: RouteModule[] = [
   },
   {
     slug: "gallery",
-    price: 15,
+    price: 10,
     copy: {
       nl: {
         label: "Gallery / media",
@@ -388,7 +388,7 @@ export const routeModules: RouteModule[] = [
   },
   {
     slug: "newsletter",
-    price: 15,
+    price: 10,
     copy: {
       nl: {
         label: "Nieuwsbrief capture",
@@ -419,6 +419,22 @@ export const themeOptions: ThemeOption[] = [
     label: {
       nl: "Forest calm",
       en: "Forest calm",
+    },
+  },
+  {
+    slug: "clay",
+    className: "is-clay",
+    label: {
+      nl: "Clay dusk",
+      en: "Clay dusk",
+    },
+  },
+  {
+    slug: "sea",
+    className: "is-sea",
+    label: {
+      nl: "Sea glass",
+      en: "Sea glass",
     },
   },
   {

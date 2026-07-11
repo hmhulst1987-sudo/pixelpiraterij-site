@@ -54,7 +54,7 @@ export default function HostingPage() {
         }
         body="PixelPiraterij behandelt hosting als onderdeel van het systeem, niet als een saaie bijzaak. Monitoring, back-ups, support, updates en performance-zorg zorgen dat het merk ook na livegang blijft draaien."
         primaryCta={{ href: "/contact", label: "Vraag een systeemblauwdruk aan" }}
-        secondaryCta={{ href: "/", label: "Terug naar de routekaart" }}
+        secondaryCta={{ href: "/cases", label: "Zie wat dit ondersteunt" }}
         aside={
           <ManifestAside
             capLeft="Managed laag"
@@ -144,7 +144,7 @@ export default function HostingPage() {
         title="Als de site ertoe doet, doet het systeem achter de site dat ook."
         body="Hosting mag onzichtbaar blijven voor de eindklant, maar nooit onzichtbaar zijn in het aanbod. Juist daar zitten de rust, continuiteit en geloofwaardigheid waar veel merken op afhaken."
         primary={{ href: "/contact", label: "Vraag een systeemblauwdruk aan" }}
-        secondary={{ href: "/", label: "Terug naar de routekaart" }}
+        secondary={{ href: "/templates", label: "Bekijk de lichtere route" }}
       />
       <Footer />
     </SiteFrame>

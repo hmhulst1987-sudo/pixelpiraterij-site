@@ -1,5 +1,7 @@
+import Link from "next/link";
+
 import { CtaDock, Footer, ManifestAside, PackageGrid, PageHero, SectionHeader, ShowcaseGrid, SiteFrame, Topbar } from "@/components/site-shell";
-import { TemplateRouteEditorDemo } from "@/components/template-route-editor-demo";
+import { routeFamilies } from "@/lib/template-route-builder";
 import { templateRoutePackages, templateShowcases } from "@/lib/site-data";
 
 export default function TemplatesPage() {
@@ -40,7 +42,7 @@ export default function TemplatesPage() {
   const moduleSignals = [
     {
       label: "Reservering",
-      text: "Voor hospitality, tafelboekingen of plekken die met beschikbaarheid, aanvraag of planning werken. Denk aan pluslagen vanaf ongeveer €20 tot €25 per maand.",
+      text: "Voor hospitality, tafelboekingen of plekken die met beschikbaarheid, aanvraag of planning werken. Denk aan pluslagen vanaf ongeveer €10 tot €15 per maand.",
     },
     {
       label: "Aanvraag",
@@ -86,6 +88,24 @@ export default function TemplatesPage() {
     },
   ];
 
+  const pricingGuides = [
+    {
+      label: "Standaard inbegrepen",
+      title: "De basisroute is al een complete live start",
+      body: "Hosting, livegang, basisbeheer en de editor horen bij de instap. Dit is dus niet een kale template waar daarna nog van alles verplicht bij moet.",
+    },
+    {
+      label: "Pluslagen",
+      title: "Extra modules starten alleen als ze echt iets oplossen",
+      body: "Reservering, aanvraag, menu of agenda komen pas erbij wanneer de route ze nodig heeft. Je betaalt dus niet standaard voor functies die ongebruikt blijven.",
+    },
+    {
+      label: "Maatwerk later",
+      title: "Custom werk begint pas wanneer de route het systeem echt ontgroeit",
+      body: "Zwaardere logica, meer pagina's of complexere flows schuiven pas door naar maatwerk zodra dat aantoonbaar nodig is. Niet eerder.",
+    },
+  ];
+
   return (
     <SiteFrame>
       <Topbar />
@@ -103,8 +123,8 @@ export default function TemplatesPage() {
           </>
         }
         body="Deze route is bedoeld voor klanten die snel live willen zonder in generieke troep te eindigen. Je start vanuit een sterke PixelPiraterij-fundering en trekt die daarna via een editor naar je eigen wereld met kleur, sfeer, content en relevante modules."
-        primaryCta={{ href: "/contact", label: "Vraag een template-route aan" }}
-        secondaryCta={{ href: "/", label: "Terug naar de routekaart" }}
+        primaryCta={{ href: "/templates/builder", label: "Open de builder-workspace" }}
+        secondaryCta={{ href: "/contact", label: "Vraag een template-route aan" }}
         aside={
           <ManifestAside
             capLeft="Route-start"
@@ -139,10 +159,32 @@ export default function TemplatesPage() {
       <section className="section-block">
         <SectionHeader
           index="02"
-          title="Zo kan de eerste builderlaag meteen tastbaar worden."
-          body="Niet als vrije builder zonder richting, maar als een gestructureerde editor die al een opslaanbare route-config en een losse renderer oplevert."
+          title="De builder opent als begeleide workspace, niet als vrije speeltuin."
+          body="Je kiest eerst de juiste routefamilie. Daarna ga je pas de workspace in, inclusief pakketlaag, domein-intake en modulelogica."
         />
-        <TemplateRouteEditorDemo />
+        <div className="segment-grid">
+          {routeFamilies.map((family) => {
+            const copy = family.defaults.nl;
+
+            return (
+              <article key={family.slug} className="segment-card">
+                <p className="section-tag">Builder-start</p>
+                <h3 className="segment-title">{copy.label}</h3>
+                <p className="route-note">{copy.audience}</p>
+                <ul className="feature-list">
+                  {copy.sections.slice(0, 4).map((section) => (
+                    <li key={section} className="feature-item">
+                      {section}
+                    </li>
+                  ))}
+                </ul>
+                <Link href={`/templates/builder?family=${family.slug}#workspace`} className="btn-secondary">
+                  Open deze workspace
+                </Link>
+              </article>
+            );
+          })}
+        </div>
       </section>
 
       <section className="section-block">
@@ -177,7 +219,7 @@ export default function TemplatesPage() {
           title="Functionele modules horen erbovenop te komen, niet verstopt in elk template."
           body="Reservering, aanvraag, menu of agenda zijn geen universele standaardlaag. Ze worden aangeboden waar ze commercieel en praktisch logisch zijn."
         />
-        <div className="stack-board">
+        <div className="stack-board stack-board--clean">
           {moduleSignals.map((item) => (
             <article key={item.label} className="stack-row">
               <p className="stack-label">{item.label}</p>
@@ -193,7 +235,7 @@ export default function TemplatesPage() {
           title="Deze route moet kunnen doorgroeien zonder opnieuw te beginnen."
           body="De template-route is de snelle instap. Daarna moet de klant logisch kunnen opschalen naar modules, extra diepte of uiteindelijk maatwerk."
         />
-        <div className="stack-board">
+        <div className="stack-board stack-board--clean">
           {routeLayers.map((item) => (
             <article key={item.label} className="stack-row">
               <p className="stack-label">{item.label}</p>
@@ -206,9 +248,25 @@ export default function TemplatesPage() {
       <section className="section-block">
         <SectionHeader
           index="07"
-          title="Zo leest het aanbod commercieel het helderst."
-          body="De basisroute blijft simpel. Functionele pluslagen komen er logisch bovenop en maatwerk blijft de volgende stap zodra iemand buiten het systeem groeit."
+          title="Eerst de basisroute, daarna alleen de pluslagen die echt nodig zijn."
+          body="Je betaalt hier niet meteen voor een compleet maatwerksysteem. De start blijft compact, extra modules komen alleen erbij waar ze echt iets oplossen en custom werk begint pas zodra de route daar aantoonbaar uit groeit."
         />
+        <div className="signal-panel">
+          <p className="section-tag">Informatielaag</p>
+          <h3 className="stack-title">Je koopt hier niet blind een pakket, maar een route die pas zwaarder wordt als dat logisch is.</h3>
+          <p className="stack-copy">
+            Daardoor blijft de instap helder, blijven extra kosten uitlegbaar en voelt het verschil tussen basis, pluslaag en vervolg ook echt eerlijk.
+          </p>
+        </div>
+        <div className="system-grid">
+          {pricingGuides.map((item) => (
+            <article key={item.title} className="system-card">
+              <p className="section-tag">{item.label}</p>
+              <h3 className="system-title">{item.title}</h3>
+              <p className="system-body">{item.body}</p>
+            </article>
+          ))}
+        </div>
         <PackageGrid items={templateRoutePackages} />
       </section>
 
@@ -218,7 +276,7 @@ export default function TemplatesPage() {
           title="Zo bouwen we de productlaag op zonder hem groter te verkopen dan hij nu is."
           body="We beginnen met een gecureerde editorroute en laten pas daarna preview-, module- en publishlogica verder uitgroeien. Daarmee blijft het geloofwaardig en commercieel bruikbaar."
         />
-        <div className="stack-board">
+        <div className="stack-board stack-board--clean">
           {rolloutSignals.map((item) => (
             <article key={item.label} className="stack-row">
               <p className="stack-label">{item.label}</p>
@@ -231,7 +289,7 @@ export default function TemplatesPage() {
       <CtaDock
         title="Als je snel live wilt zonder dat het generiek of goedkoop aanvoelt, is dit de juiste route."
         body="De template-route vult het gat tussen een standaard template en volledig maatwerk. Eerst een sterke basis, daarna de juiste modules en pas daarna zwaarder custom werk als dat nodig blijkt."
-        primary={{ href: "/contact", label: "Praat over een launch-route" }}
+        primary={{ href: "/templates/builder", label: "Open de builder-workspace" }}
         secondary={{ href: "/studio", label: "Zie hoe dit aansluit op de studio" }}
       />
       <Footer />

@@ -1,4 +1,7 @@
+import Link from "next/link";
+
 import { CtaDock, Footer, ManifestAside, PageHero, SectionHeader, ShowcaseGrid, SiteFrame, Topbar } from "@/components/site-shell";
+import { routeFamilies } from "@/lib/template-route-builder";
 import { templateCategoriesEn, templateShowcasesEn } from "@/lib/site-data";
 
 export default function EnglishTemplatesPage() {
@@ -51,8 +54,8 @@ export default function EnglishTemplatesPage() {
           </>
         }
         body="Templates inside PixelPiraterij are there to create stronger starting positions, not weaker outcomes. They are curated launch systems that can move quickly while still reading as part of the same wider system."
-        primaryCta={{ href: "/en/contact", label: "Request a template route" }}
-        secondaryCta={{ href: "/en", label: "Back to the route map" }}
+        primaryCta={{ href: "/en/templates/builder", label: "Open the builder workspace" }}
+        secondaryCta={{ href: "/en/contact", label: "Request a template route" }}
         aside={
           <ManifestAside
             capLeft="Template logic"
@@ -85,6 +88,37 @@ export default function EnglishTemplatesPage() {
       <section className="section-block">
         <SectionHeader
           index="02"
+          title="The builder opens as a guided workspace, not a free-for-all tool."
+          body="First you choose the route family. Only then do you move into the workspace with package access, domain intake and module logic."
+        />
+        <div className="segment-grid">
+          {routeFamilies.map((family) => {
+            const copy = family.defaults.en;
+
+            return (
+              <article key={family.slug} className="segment-card">
+                <p className="section-tag">Builder start</p>
+                <h3 className="segment-title">{copy.label}</h3>
+                <p className="route-note">{copy.audience}</p>
+                <ul className="feature-list">
+                  {copy.sections.slice(0, 4).map((section) => (
+                    <li key={section} className="feature-item">
+                      {section}
+                    </li>
+                  ))}
+                </ul>
+                <Link href={`/en/templates/builder?family=${family.slug}#workspace`} className="btn-secondary">
+                  Open this workspace
+                </Link>
+              </article>
+            );
+          })}
+        </div>
+      </section>
+
+      <section className="section-block">
+        <SectionHeader
+          index="03"
           title="What a strong template-backed start should already prove on sight."
           body="Not as an abstract promise, but through real surfaces: suite logic, audience framing and product discipline. That is what makes the future builder direction feel credible instead of deferred."
         />
@@ -93,7 +127,7 @@ export default function EnglishTemplatesPage() {
 
       <section className="section-block">
         <SectionHeader
-          index="03"
+          index="04"
           title="What templates should actually do here."
           body="Not every fast route is automatically a smart one. The strength of this system lies in better starting positions, more structure and a road that can still open wider later."
         />
@@ -110,7 +144,7 @@ export default function EnglishTemplatesPage() {
 
       <section className="section-block">
         <SectionHeader
-          index="04"
+          index="05"
           title="Builder comes after capability, not before it."
           body="The next layer is a structured editor, preview and publishing flow on top of these template systems. We only scale that promise once the product layer is real."
         />
@@ -127,7 +161,7 @@ export default function EnglishTemplatesPage() {
       <CtaDock
         title="If you want speed without ending up in template sameness, this is the right route."
         body="This page needs to prove that speed, structure and brand character can live together before the deeper builder layer opens any further."
-        primary={{ href: "/en/contact", label: "Talk about a launch route" }}
+        primary={{ href: "/en/templates/builder", label: "Open the builder workspace" }}
         secondary={{ href: "/en/studio", label: "See how this connects to the studio" }}
         locale="en"
       />

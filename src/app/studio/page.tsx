@@ -18,7 +18,7 @@ export default function StudioPage() {
         }
         body="De studio is de zwaardere route binnen PixelPiraterij: maatwerk-surfaces, campagne-opzetten en productnabije omgevingen voor merken die identiteit, structuur en operationele volwassenheid tegelijk nodig hebben."
         primaryCta={{ href: "/contact", label: "Open de blauwdrukroute" }}
-        secondaryCta={{ href: "/", label: "Terug naar de routekaart" }}
+        secondaryCta={{ href: "/cases", label: "Bekijk relevante cases" }}
         aside={
           <ManifestAside
             capLeft="Studiologica"
@@ -69,7 +69,7 @@ export default function StudioPage() {
 
       <CtaDock
         title="Als het zwaardere werk nodig is, hoort het ook duidelijk als studioroute gekaderd te worden."
-        body="We kunnen starten vanuit een maatwerk-briefing, een scherpere route binnen een bestaand merk of een template-route die later doorbouwt naar iets eigens."
+        body="We kunnen starten vanuit een maatwerk-briefing, een scherpere route binnen een bestaand merk of een template-route die later doorbouwt naar iets eigens. `.online` helpt daarna pas met tastbare demo's en routevoorbeelden."
         primary={{ href: "/contact", label: "Start de studioroute" }}
       />
       <Footer />

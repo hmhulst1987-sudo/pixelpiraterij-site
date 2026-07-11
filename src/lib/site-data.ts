@@ -53,6 +53,9 @@ export type PackageTier = {
   price: string;
   subtitle: string;
   features: string[];
+  stageLabel?: string;
+  badge?: string;
+  priceNote?: string;
 };
 
 export type ProcessStep = {
@@ -62,45 +65,45 @@ export type ProcessStep = {
 
 export const siteNavByLocale: Record<Locale, NavItem[]> = {
   nl: [
-    { href: "/#templates", label: "Templates" },
-    { href: "/#apps", label: "Apps" },
-    { href: "/cases", label: "Cases" },
-    { href: "/#docs", label: "Docs" },
-    { href: "/#lab", label: "Lab" },
     { href: "/studio", label: "Studio" },
+    { href: "/cases", label: "Cases" },
+    { href: "/hosting", label: "Hosting" },
+    { href: "/templates", label: "Templates" },
+    { href: "/about", label: "Over" },
+    { href: "/contact", label: "Contact" },
   ],
   en: [
-    { href: "/en#templates", label: "Templates" },
-    { href: "/en#apps", label: "Apps" },
-    { href: "/en/cases", label: "Cases" },
-    { href: "/en#docs", label: "Docs" },
-    { href: "/en#lab", label: "Lab" },
     { href: "/en/studio", label: "Studio" },
+    { href: "/en/cases", label: "Cases" },
+    { href: "/en/hosting", label: "Hosting" },
+    { href: "/en/templates", label: "Templates" },
+    { href: "/en/about", label: "About" },
+    { href: "/en/contact", label: "Contact" },
   ],
 };
 
 export const chromeCopy = {
   nl: {
-    studioLabel: "Systeemwereld",
-    topbarStatus: "Templates, live utilities, gidsen en experimentele routes onder een leesbare PixelPiraterij-opbouw.",
-    contactCta: "Open studio",
+    studioLabel: "Studio en systemen",
+    topbarStatus: "Maatwerk-sites, template-routes, hosting en systeemlagen voor merken die professioneel willen groeien zonder generieke tussenlaag.",
+    contactCta: "Start briefing",
     segmentLabel: "Route",
     packageLabel: "Pakket",
     nextMoveLabel: "Volgende stap",
     footerBlurb:
-      "PixelPiraterij verbindt studio, systeemlagen, template-routes en productdiepte voor merken die meer nodig hebben dan een generieke online aanwezigheid.",
+      "PixelPiraterij bouwt merkwaardige sites, template-routes en beheerde systeemlagen voor merken die presentatie, betrouwbaarheid en doorgroei serieus nemen.",
     localeLabelNl: "NL",
     localeLabelEn: "EN",
   },
   en: {
-    studioLabel: "System world",
-    topbarStatus: "Templates, live utilities, guides and experimental routes under one readable PixelPiraterij system.",
-    contactCta: "Open studio",
+    studioLabel: "Studio and systems",
+    topbarStatus: "Custom sites, template routes, hosting and system layers for brands that want to grow professionally without settling for generic delivery.",
+    contactCta: "Start brief",
     segmentLabel: "Route",
     packageLabel: "Package",
     nextMoveLabel: "Next move",
     footerBlurb:
-      "PixelPiraterij connects studio work, system layers, template routes and product depth for brands that need more than a generic online presence.",
+      "PixelPiraterij builds distinctive sites, template routes and managed system layers for brands that take presentation, reliability and growth seriously.",
     localeLabelNl: "NL",
     localeLabelEn: "EN",
   },
@@ -989,32 +992,39 @@ export const packageTiersEn: PackageTier[] = [
 export const templateRoutePackages: PackageTier[] = [
   {
     name: "Route Start",
-    price: "Vanaf €95 / maand",
-    subtitle: "De snelle PixelPiraterij-route voor klanten die een sterke basis willen zonder volledig maatwerktraject.",
+    price: "Vanaf €79 / maand",
+    subtitle: "De complete basisroute met hosting, livegang en editor. Bedoeld als echte start, niet als kale instap die direct om extra werk vraagt.",
+    stageLabel: "Basis",
+    priceNote: "Alles wat nodig is om serieus live te gaan zit hier al in.",
     features: [
-      "Eén gecureerde templatefundering",
+      "Eén sterke routefundering die al commercieel klopt",
       "Editor voor sfeer, content, kleuren en beelden",
       "Hosting, livegang en basisbeheer inbegrepen",
     ],
   },
   {
     name: "Route Plus",
-    price: "+ €20 tot €25 / module / maand",
-    subtitle: "Voor klanten die boven op de basis extra functionaliteit nodig hebben zonder de route te verzwaren.",
+    price: "Meestal + €10 tot €15 / module / maand",
+    subtitle: "Alleen de extra laag die echt nodig is. Geen bundel vol functies waar de klant niets aan heeft.",
+    stageLabel: "Pluslaag",
+    badge: "Alleen indien nodig",
+    priceNote: "Je betaalt per gekozen module, niet standaard voor alles tegelijk.",
     features: [
-      "Reservering, aanvraag, menu of agenda als pluslaag",
-      "Modules alleen waar ze logisch zijn voor de routefamilie",
-      "Snelle uitbreiding zonder opnieuw te beginnen",
+      "Reservering, aanvraag, menu of agenda als losse pluslaag",
+      "Je kiest alleen wat past bij de routefamilie",
+      "Snelle uitbreiding zonder meteen richting maatwerk te schuiven",
     ],
   },
   {
     name: "Route Custom",
-    price: "Opschalen naar maatwerk",
-    subtitle: "Wanneer een klant buiten de templatekaders groeit, schuift de route logisch door naar studio- of custom werk.",
+    price: "Pas wanneer de route eruit groeit",
+    subtitle: "Maatwerk is een vervolgstap, geen verborgen verplichting vanaf dag één.",
+    stageLabel: "Vervolg",
+    priceNote: "Dit begint pas zodra de route aantoonbaar meer logica of diepte nodig heeft.",
     features: [
       "Meer pagina's, meer logica of zwaardere flows",
       "Doorgroei zonder de basis opnieuw op te bouwen",
-      "Heldere brug naar premium maatwerk",
+      "Heldere brug naar premium maatwerk wanneer het echt nodig is",
     ],
   },
 ];
@@ -1022,32 +1032,39 @@ export const templateRoutePackages: PackageTier[] = [
 export const templateRoutePackagesEn: PackageTier[] = [
   {
     name: "Route Start",
-    price: "From €95 / month",
-    subtitle: "The fast PixelPiraterij route for clients who want a strong foundation without a full custom build.",
+    price: "From €79 / month",
+    subtitle: "The complete base route with hosting, launch and editor access. Meant as a real start, not as a stripped entry that immediately creates extra work.",
+    stageLabel: "Base",
+    priceNote: "Everything needed for a serious go-live is already included here.",
     features: [
-      "One curated template foundation",
+      "One strong route foundation that already works commercially",
       "Editor for atmosphere, content, colors and imagery",
       "Hosting, launch and core upkeep included",
     ],
   },
   {
     name: "Route Plus",
-    price: "+ €20 to €25 / module / month",
-    subtitle: "For clients who need added functionality on top of the base route without turning it into a bloated system.",
+    price: "Usually + €10 to €15 / module / month",
+    subtitle: "Only the extra layer that is actually needed. No bundled feature pile the client will never use.",
+    stageLabel: "Add-on",
+    badge: "Only when needed",
+    priceNote: "You pay per selected module, not for everything by default.",
     features: [
-      "Booking, inquiry, menu or agenda as add-on layers",
-      "Modules offered only where they fit the route family",
-      "Fast expansion without starting over",
+      "Booking, inquiry, menu or agenda as separate add-on layers",
+      "Choose only what fits the route family",
+      "Fast expansion without jumping into custom too early",
     ],
   },
   {
     name: "Route Custom",
-    price: "Scale into custom work",
-    subtitle: "When a client outgrows the template boundaries, the route can move cleanly into studio or custom work.",
+    price: "Only when the route truly outgrows the system",
+    subtitle: "Custom work is the next step, not a hidden obligation from day one.",
+    stageLabel: "Next step",
+    priceNote: "This only starts once the route clearly needs more logic or depth.",
     features: [
       "More pages, deeper logic or heavier flows",
       "Growth without rebuilding the base from scratch",
-      "A clear bridge into premium custom work",
+      "A clear bridge into premium custom work when it is genuinely needed",
     ],
   },
 ];

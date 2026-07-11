@@ -23,10 +23,38 @@ const mono = IBM_Plex_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://pixelpiraterij.nl"),
-  title: "PixelPiraterij | Routes, studio en systeemlagen",
+  title: "PixelPiraterij | Websites, hosting en maatwerk dat niet generiek voelt",
   description:
-    "PixelPiraterij bundelt studio, template-routes, apps, docs en systeemlagen in een leesbare opbouw voor merken die meer nodig hebben dan een generieke site.",
-  icons: { icon: "/favicon.ico" },
+    "PixelPiraterij bouwt onderscheidende websites, managed hosting en maatwerk-routes voor merken die meer nodig hebben dan een generieke leverancier.",
+  openGraph: {
+    type: "website",
+    locale: "nl_NL",
+    url: "https://pixelpiraterij.nl",
+    siteName: "PixelPiraterij",
+    title: "PixelPiraterij | Websites, hosting en maatwerk dat niet generiek voelt",
+    description:
+      "PixelPiraterij bouwt onderscheidende websites, managed hosting en maatwerk-routes voor merken die meer nodig hebben dan een generieke leverancier.",
+    images: [
+      {
+        url: "/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: "PixelPiraterij social preview",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "PixelPiraterij | Websites, hosting en maatwerk dat niet generiek voelt",
+    description:
+      "PixelPiraterij bouwt onderscheidende websites, managed hosting en maatwerk-routes voor merken die meer nodig hebben dan een generieke leverancier.",
+    images: ["/twitter-image"],
+  },
+  icons: {
+    icon: "/pixelpiraterij-mark.svg",
+    shortcut: "/pixelpiraterij-mark.svg",
+    apple: "/pixelpiraterij-mark.svg",
+  },
 };
 
 export const viewport: Viewport = {

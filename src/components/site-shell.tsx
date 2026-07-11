@@ -53,7 +53,9 @@ export function Topbar() {
     <header className="topbar-shell">
       <div className="topbar-inner">
         <Link href={locale === "en" ? "/en" : "/"} className="brand-lockup" aria-label="PixelPiraterij home">
-          <div className="brand-mark">PP</div>
+          <div className="brand-mark">
+            <img src="/pixelpiraterij-mark.svg" alt="PixelPiraterij merkicoon" className="brand-mark-image" />
+          </div>
           <div className="space-y-1">
             <p className="topbar-label">{chrome.studioLabel}</p>
             <p className="text-lg font-semibold text-white">PixelPiraterij</p>
@@ -81,7 +83,7 @@ export function Topbar() {
             {chrome.localeLabelEn}
           </Link>
         </div>
-        <Link href={locale === "en" ? "/en/studio" : "/studio"} className="topbar-cta">
+        <Link href={locale === "en" ? "/en/contact" : "/contact"} className="topbar-cta">
           {chrome.contactCta}
         </Link>
       </div>
@@ -354,9 +356,13 @@ export function PackageGrid({
     <div className="package-grid">
       {items.map((tier) => (
         <article key={tier.name} className="package-card">
-          <p className="section-tag">{chrome.packageLabel}</p>
+          <div className="package-topline">
+            <p className="section-tag">{tier.stageLabel ?? chrome.packageLabel}</p>
+            {tier.badge ? <span className="package-badge">{tier.badge}</span> : null}
+          </div>
           <h3 className="segment-title">{tier.name}</h3>
           <p className="package-price">{tier.price}</p>
+          {tier.priceNote ? <p className="package-note">{tier.priceNote}</p> : null}
           <p className="route-note">{tier.subtitle}</p>
           <ul className="feature-list">
             {tier.features.map((feature) => (
@@ -441,8 +447,8 @@ export function Footer() {
             {chrome.localeLabelEn}
           </Link>
         </div>
-        <Link href={locale === "en" ? "/en/studio" : "/studio"} className="topbar-cta">
-          {locale === "en" ? "Open studio" : "Open studio"}
+        <Link href={locale === "en" ? "/en/contact" : "/contact"} className="topbar-cta">
+          {chrome.contactCta}
         </Link>
       </div>
     </footer>

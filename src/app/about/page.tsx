@@ -20,7 +20,7 @@ export default function AboutPage() {
         }
         body="PixelPiraterij bestaat omdat te veel digitale merken nog steeds moeten kiezen tussen generieke builders, gezichtsloze hosting en studio's die mooi werk afleveren zonder operationele diepte."
         primaryCta={{ href: "/contact", label: "Open de blauwdrukroute" }}
-        secondaryCta={{ href: "/", label: "Terug naar de routekaart" }}
+        secondaryCta={{ href: "/cases", label: "Bekijk het bewijs" }}
         aside={
           <ManifestAside
             capLeft="Positionering"
@@ -75,7 +75,7 @@ export default function AboutPage() {
 
       <CtaDock
         title="De naam blijft omdat de houding blijft: onafhankelijk, scherp en niet bereid om generiek werk te shippen."
-        body="Wat verandert, is de volwassenheid van het systeem eromheen."
+        body="Wat verandert, is de volwassenheid van het systeem eromheen. De verkooplaag leeft op `.nl`, de tastbare route-laag op `.online` en de suite-laag in de hub."
         primary={{ href: "/contact", label: "Bespreek de volgende route" }}
       />
       <Footer />

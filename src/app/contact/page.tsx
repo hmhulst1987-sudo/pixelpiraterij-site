@@ -56,7 +56,7 @@ export default function ContactPage() {
         }
         body="Als het merk een studioroute, een template-route of een sterkere systeemlaag nodig heeft, is de beste eerste stap om de situatie helder te kaderen en daarvandaan terug te werken."
         primaryCta={{ href: "mailto:inbox@pixelpiraterij.nl", label: "inbox@pixelpiraterij.nl" }}
-        secondaryCta={{ href: "/templates", label: "Bekijk het template-pad" }}
+        secondaryCta={{ href: "/cases", label: "Bekijk cases en richting" }}
         aside={
           <ManifestAside
             capLeft="Intake"
@@ -117,11 +117,40 @@ export default function ContactPage() {
         </div>
       </section>
 
+      <section className="section-block">
+        <SectionHeader
+          index="04"
+          title="Wat er na de eerste intake gebeurt."
+          body="`.nl` bepaalt de commerciële route. Pas daarna wordt duidelijk of `.online` nodig is voor tastbare template- of capability-demonstraties, of dat de hub relevant is voor app- en softwarelagen."
+        />
+        <div className="stack-board">
+          {[
+            {
+              label: "Voordeur",
+              text: "Hier bepalen we of het traject vooral draait om verkoop, positionering, cases, aanbod of een sterkere merklaag.",
+            },
+            {
+              label: ".online",
+              text: "Die laag gebruiken we alleen wanneer live template-routes, featureproof of showroommateriaal helpen om de volgende stap zichtbaar te maken.",
+            },
+            {
+              label: "Hub",
+              text: "De hub komt pas in beeld wanneer apps, webversies, downloads of suite-logica onderdeel van de route worden.",
+            },
+          ].map((item) => (
+            <article key={item.label} className="stack-row">
+              <p className="stack-label">{item.label}</p>
+              <p className="stack-text">{item.text}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
       <CtaDock
         title="Als het project ertoe doet, laten we de route dan eerst goed kaderen voordat we de verkeerde surface aanraken."
         body="Mail, blauwdruk-aanvraag of direct gesprek, zolang de route maar in helderheid begint en niet opnieuw in losse onderdelen uit elkaar valt."
         primary={{ href: "mailto:inbox@pixelpiraterij.nl", label: "Stuur de eerste briefing" }}
-        secondary={{ href: "/", label: "Terug naar de routekaart" }}
+        secondary={{ href: "/", label: "Terug naar PixelPiraterij.nl" }}
       />
       <Footer />
     </SiteFrame>
