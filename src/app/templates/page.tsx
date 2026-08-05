@@ -3,6 +3,7 @@ import Link from "next/link";
 import { CtaDock, Footer, ManifestAside, PackageGrid, PageHero, SectionHeader, ShowcaseGrid, SiteFrame, Topbar } from "@/components/site-shell";
 import { routeFamilies } from "@/lib/template-route-builder";
 import { templateRoutePackages, templateShowcases } from "@/lib/site-data";
+import { CheckoutButton } from "@/components/checkout-button";
 
 export default function TemplatesPage() {
   const templateRules = [
@@ -268,6 +269,9 @@ export default function TemplatesPage() {
           ))}
         </div>
         <PackageGrid items={templateRoutePackages} />
+        <div className="mt-8">
+          <CheckoutButton product="template-route-start">Start Template Route</CheckoutButton>
+        </div>
       </section>
 
       <section className="section-block">

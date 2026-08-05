@@ -115,6 +115,7 @@ export function Topbar() {
         <Link href={contactHref} className="topbar-cta">
           {chrome.contactCta}
         </Link>
+        <Link href="/legal" className="topbar-link">Legal</Link>
       </div>
     </header>
   );

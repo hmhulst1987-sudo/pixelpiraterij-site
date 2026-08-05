@@ -1,5 +1,6 @@
 import { CtaDock, Footer, ManifestAside, PageHero, PackageGrid, SectionHeader, ShowcaseGrid, SiteFrame, Topbar } from "@/components/site-shell";
 import { hostingShowcases, packageTiers } from "@/lib/site-data";
+import { CheckoutButton } from "@/components/checkout-button";
 
 export default function HostingPage() {
   const operatingSignals = [
@@ -121,6 +122,10 @@ export default function HostingPage() {
           body="Het doel is een systeem van managed plannen dat stabiliteit geeft aan de klant en terugkerende kracht aan de studio. Niet pas reageren als iets kapot is, maar structureel beter draaien."
         />
         <PackageGrid items={packageTiers} />
+        <div className="mt-8 grid gap-4 md:grid-cols-2">
+          <CheckoutButton product="harbor-starter">Start Harbor Starter</CheckoutButton>
+          <CheckoutButton product="route-studio">Start Route Studio</CheckoutButton>
+        </div>
       </section>
 
       <section className="section-block">
