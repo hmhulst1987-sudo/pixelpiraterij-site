@@ -42,7 +42,7 @@ export default function TemplatesPage() {
   const moduleSignals = [
     {
       label: "Reservering",
-      text: "Voor hospitality, tafelboekingen of plekken die met beschikbaarheid, aanvraag of planning werken. Denk aan pluslagen vanaf ongeveer €10 tot €15 per maand.",
+      text: "Voor hospitality, tafelboekingen of plekken die met beschikbaarheid, aanvraag of planning werken. Denk aan pluslagen vanaf ongeveer €7,50 tot €12,50 per maand.",
     },
     {
       label: "Aanvraag",

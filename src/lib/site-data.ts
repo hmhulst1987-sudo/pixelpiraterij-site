@@ -1819,7 +1819,7 @@ export const aboutShowcasesEs: ShowcaseItem[] = [
 export const packageTiers: PackageTier[] = [
   {
     name: "Harbor Starter",
-    price: "Vanaf €75 / maand",
+    price: "€29 / maand",
     subtitle: "Managed hosting en rustige regie voor kleinere flagship-sites.",
     features: [
       "Eén managed site",
@@ -1829,7 +1829,7 @@ export const packageTiers: PackageTier[] = [
   },
   {
     name: "Route Studio",
-    price: "Vanaf €275 / maand",
+    price: "€79 / maand",
     subtitle: "Voor merken die hosting nodig hebben plus een sterkere systeemlaag rond de site.",
     features: [
       "Priority monitoring en performance-zorg",
@@ -1852,7 +1852,7 @@ export const packageTiers: PackageTier[] = [
 export const packageTiersEn: PackageTier[] = [
   {
     name: "Harbor Starter",
-    price: "From €75 / month",
+    price: "€29 / month",
     subtitle: "Managed hosting and calm oversight for smaller flagship sites.",
     features: [
       "One managed site",
@@ -1862,7 +1862,7 @@ export const packageTiersEn: PackageTier[] = [
   },
   {
     name: "Route Studio",
-    price: "From €275 / month",
+    price: "€79 / month",
     subtitle: "For brands that need hosting plus a stronger system layer around the site.",
     features: [
       "Priority monitoring and performance care",
@@ -1885,7 +1885,7 @@ export const packageTiersEn: PackageTier[] = [
 export const packageTiersFr: PackageTier[] = [
   {
     name: "Harbor Starter",
-    price: "À partir de 75 € / mois",
+    price: "29 € / mois",
     subtitle: "Hébergement géré et supervision posée pour les sites flagship plus petits.",
     features: [
       "Un site géré",
@@ -1895,7 +1895,7 @@ export const packageTiersFr: PackageTier[] = [
   },
   {
     name: "Route Studio",
-    price: "À partir de 275 € / mois",
+    price: "79 € / mois",
     subtitle: "Pour les marques qui ont besoin d'hébergement plus une couche système plus forte autour du site.",
     features: [
       "Monitoring prioritaire et attention à la performance",
@@ -1918,7 +1918,7 @@ export const packageTiersFr: PackageTier[] = [
 export const packageTiersEs: PackageTier[] = [
   {
     name: "Harbor Starter",
-    price: "Desde 75 € / mes",
+    price: "29 € / mes",
     subtitle: "Hosting gestionado y supervisión serena para sitios flagship más pequeños.",
     features: [
       "Un sitio gestionado",
@@ -1928,7 +1928,7 @@ export const packageTiersEs: PackageTier[] = [
   },
   {
     name: "Route Studio",
-    price: "Desde 275 € / mes",
+    price: "79 € / mes",
     subtitle: "Para marcas que necesitan hosting más una capa de sistema más fuerte alrededor del sitio.",
     features: [
       "Monitoreo prioritario y cuidado del rendimiento",
@@ -1951,10 +1951,10 @@ export const packageTiersEs: PackageTier[] = [
 export const templateRoutePackages: PackageTier[] = [
   {
     name: "Route Start",
-    price: "Vanaf €79 / maand",
+    price: "€39 / maand + €199 livegang",
     subtitle: "De complete basisroute met hosting, livegang en editor. Bedoeld als echte start, niet als kale instap die direct om extra werk vraagt.",
     stageLabel: "Basis",
-    priceNote: "Alles wat nodig is om serieus live te gaan zit hier al in.",
+    priceNote: "Eenmalige inrichting en livegang €199; daarna maandelijks opzegbaar.",
     features: [
       "Eén sterke routefundering die al commercieel klopt",
       "Editor voor sfeer, content, kleuren en beelden",
@@ -1963,7 +1963,7 @@ export const templateRoutePackages: PackageTier[] = [
   },
   {
     name: "Route Plus",
-    price: "Meestal + €10 tot €15 / module / maand",
+    price: "Meestal + €7,50 tot €12,50 / module / maand",
     subtitle: "Alleen de extra laag die echt nodig is. Geen bundel vol functies waar de klant niets aan heeft.",
     stageLabel: "Pluslaag",
     badge: "Alleen indien nodig",
@@ -1991,10 +1991,10 @@ export const templateRoutePackages: PackageTier[] = [
 export const templateRoutePackagesEn: PackageTier[] = [
   {
     name: "Route Start",
-    price: "From €79 / month",
+    price: "€39 / month + €199 launch",
     subtitle: "The complete base route with hosting, launch and editor access. Meant as a real start, not as a stripped entry that immediately creates extra work.",
     stageLabel: "Base",
-    priceNote: "Everything needed for a serious go-live is already included here.",
+    priceNote: "One-time setup and launch €199; monthly cancellation afterwards.",
     features: [
       "One strong route foundation that already works commercially",
       "Editor for atmosphere, content, colors and imagery",
@@ -2003,7 +2003,7 @@ export const templateRoutePackagesEn: PackageTier[] = [
   },
   {
     name: "Route Plus",
-    price: "Usually + €10 to €15 / module / month",
+    price: "Usually + €7.50 to €12.50 / module / month",
     subtitle: "Only the extra layer that is actually needed. No bundled feature pile the client will never use.",
     stageLabel: "Add-on",
     badge: "Only when needed",
@@ -2031,10 +2031,10 @@ export const templateRoutePackagesEn: PackageTier[] = [
 export const templateRoutePackagesFr: PackageTier[] = [
   {
     name: "Route Start",
-    price: "À partir de 79 € / mois",
+    price: "39 € / mois + 199 € de lancement",
     subtitle: "La route de base complète avec hébergement, mise en ligne et éditeur. Pensée comme un vrai départ, pas comme une entrée réduite qui crée aussitôt du travail supplémentaire.",
     stageLabel: "Base",
-    priceNote: "Tout ce qu'il faut pour une mise en ligne sérieuse est déjà inclus ici.",
+    priceNote: "Configuration et lancement uniques à 199 € ; résiliation mensuelle ensuite.",
     features: [
       "Une fondation de route solide qui fonctionne déjà commercialement",
       "Éditeur pour l'ambiance, le contenu, les couleurs et les images",
@@ -2043,7 +2043,7 @@ export const templateRoutePackagesFr: PackageTier[] = [
   },
   {
     name: "Route Plus",
-    price: "En général + 10 à 15 € / module / mois",
+    price: "En général + 7,50 à 12,50 € / module / mois",
     subtitle: "Seulement la couche supplémentaire réellement nécessaire. Pas un empilement de fonctionnalités que le client n'utilisera jamais.",
     stageLabel: "Couche plus",
     badge: "Seulement si nécessaire",
@@ -2071,10 +2071,10 @@ export const templateRoutePackagesFr: PackageTier[] = [
 export const templateRoutePackagesEs: PackageTier[] = [
   {
     name: "Route Start",
-    price: "Desde 79 € / mes",
+    price: "39 € / mes + 199 € de lanzamiento",
     subtitle: "La ruta base completa con hosting, lanzamiento y acceso al editor. Pensada como un inicio real, no como una entrada recortada que enseguida genera trabajo extra.",
     stageLabel: "Base",
-    priceNote: "Todo lo necesario para un lanzamiento serio ya está incluido aquí.",
+    priceNote: "Configuración y lanzamiento únicos por 199 €; cancelación mensual después.",
     features: [
       "Una base de ruta sólida que ya funciona comercialmente",
       "Editor para atmósfera, contenido, colores e imágenes",
@@ -2083,7 +2083,7 @@ export const templateRoutePackagesEs: PackageTier[] = [
   },
   {
     name: "Route Plus",
-    price: "Normalmente + 10 a 15 € / módulo / mes",
+    price: "Normalmente + 7,50 a 12,50 € / módulo / mes",
     subtitle: "Solo la capa extra que realmente hace falta. Sin un paquete inflado de funciones que el cliente nunca usará.",
     stageLabel: "Capa adicional",
     badge: "Solo si es necesario",
