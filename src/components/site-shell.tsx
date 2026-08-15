@@ -20,8 +20,8 @@ import {
   type ShowcaseItem,
 } from "@/lib/site-data";
 
-const prefixedLocales: Locale[] = ["en", "fr", "es"];
-export const allLocales: Locale[] = ["nl", "en", "fr", "es"];
+const prefixedLocales: Locale[] = ["en", "fr", "es", "de"];
+export const allLocales: Locale[] = ["nl", "en", "fr", "es", "de"];
 
 export function getLocaleFromPathname(pathname: string): Locale {
   const firstSegment = pathname.split("/")[1];

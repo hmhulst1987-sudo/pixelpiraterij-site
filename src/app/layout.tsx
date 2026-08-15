@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { IBM_Plex_Mono, Manrope, Space_Grotesk } from "next/font/google";
 import type { ReactNode } from "react";
+import { LocaleBootRedirect } from "@/components/locale-boot-redirect";
 import { LocaleHtmlSync } from "@/components/locale-html-sync";
 import { ThemeBootScript } from "@/components/theme-boot-script";
 import "./globals.css";
@@ -71,6 +72,7 @@ export default function RootLayout({
       <body className="min-h-full antialiased">
         <ThemeBootScript />
         <LocaleHtmlSync />
+        <LocaleBootRedirect />
         {children}
       </body>
     </html>

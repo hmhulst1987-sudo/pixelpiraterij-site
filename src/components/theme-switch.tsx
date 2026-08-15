@@ -16,8 +16,7 @@ export function ThemeSwitch() {
 
   useEffect(() => {
     const stored = window.localStorage.getItem(THEME_KEY);
-    const system: ThemeChoice = window.matchMedia("(prefers-color-scheme: dark)").matches ? "night" : "sand";
-    const resolved = stored === "night" || stored === "sand" ? stored : system;
+    const resolved: ThemeChoice = stored === "night" || stored === "sand" ? stored : "sand";
     setTheme(resolved);
     document.documentElement.dataset.theme = resolved;
   }, []);

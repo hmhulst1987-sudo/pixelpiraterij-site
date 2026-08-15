@@ -5,8 +5,7 @@ export function ThemeBootScript() {
       const key = "pp-theme";
       try {
         const stored = window.localStorage.getItem(key);
-        const system = window.matchMedia("(prefers-color-scheme: dark)").matches ? "night" : "sand";
-        const theme = stored === "night" || stored === "sand" ? stored : system;
+        const theme = stored === "night" || stored === "sand" ? stored : "sand";
         root.dataset.theme = theme;
       } catch (error) {
         root.dataset.theme = "sand";

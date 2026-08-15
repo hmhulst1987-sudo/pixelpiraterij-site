@@ -1,4 +1,4 @@
-export type Locale = "nl" | "en" | "fr" | "es";
+export type Locale = "nl" | "en" | "fr" | "es" | "de";
 
 export type NavItem = {
   href: string;
@@ -96,6 +96,14 @@ export const siteNavByLocale: Record<Locale, NavItem[]> = {
     { href: "/es/about", label: "Nosotros" },
     { href: "/es/contact", label: "Contacto" },
   ],
+  de: [
+    { href: "/de/studio", label: "Studio" },
+    { href: "/de/cases", label: "Cases" },
+    { href: "/de/hosting", label: "Hosting" },
+    { href: "/de/templates", label: "Templates" },
+    { href: "/de/about", label: "Über uns" },
+    { href: "/de/contact", label: "Kontakt" },
+  ],
 };
 
 export const chromeCopy = {
@@ -147,6 +155,18 @@ export const chromeCopy = {
     localeLabelNl: "NL",
     localeLabelEn: "EN",
   },
+  de: {
+    studioLabel: "Studio und Systeme",
+    topbarStatus: "Individuelle Websites, Template-Routen, Hosting und Systemebenen für Marken, die professionell wachsen wollen, ohne sich mit generischer Lieferung zufriedenzugeben.",
+    contactCta: "Briefing starten",
+    segmentLabel: "Route",
+    packageLabel: "Paket",
+    nextMoveLabel: "Nächster Schritt",
+    footerBlurb:
+      "PixelPiraterij baut unverwechselbare Websites, Template-Routen und verwaltete Systemebenen für Marken, die Präsentation, Zuverlässigkeit und Wachstum ernst nehmen.",
+    localeLabelNl: "NL",
+    localeLabelEn: "EN",
+  },
 } as const;
 
 export const localeLabels: Record<Locale, string> = {
@@ -154,6 +174,7 @@ export const localeLabels: Record<Locale, string> = {
   en: "EN",
   fr: "FR",
   es: "ES",
+  de: "DE",
 };
 
 export const homeOffers: Offer[] = [
@@ -225,6 +246,24 @@ export const homeOffersEs: Offer[] = [
     id: "03",
     title: "Capa de sistema",
     note: "Hosting, portales y profundidad operativa que mantienen todo bajo control.",
+  },
+];
+
+export const homeOffersDe: Offer[] = [
+  {
+    id: "01",
+    title: "Flagship-Traject",
+    note: "Maßgeschneiderte Frontlinien für Marken, die sich keinen geliehenen Auftritt leisten können.",
+  },
+  {
+    id: "02",
+    title: "Template-Start",
+    note: "Kuratierte Startsysteme, die schneller vorankommen als der Bau ab einer leeren Leinwand.",
+  },
+  {
+    id: "03",
+    title: "Systemebene",
+    note: "Hosting, Portale und operative Tiefe, die das Ganze unter Kontrolle halten.",
   },
 ];
 
@@ -348,6 +387,36 @@ export const audienceSegmentsEs: Segment[] = [
   },
 ];
 
+export const audienceSegmentsDe: Segment[] = [
+  {
+    title: "Gründer und digitale Produkte",
+    note: "Für Teams, die eine ernsthafte Web-Ebene brauchen, ohne Energie an schwaches Hosting oder generische Launch-Tools zu verschwenden.",
+    bullets: [
+      "Schärfere Launch-Flächen und produktorientierte Seiten",
+      "Infrastruktur, die technische Reibung verringert",
+      "Raum, um zu Portalen, Tools und Systemebenen zu wachsen",
+    ],
+  },
+  {
+    title: "Kreativstudios und Labels",
+    note: "Für kulturgetriebene Marken, die Atmosphäre, Kontrolle und release-fertige Infrastruktur an einem Ort brauchen.",
+    bullets: [
+      "Identity-geführte Layouts und Kampagnenflächen",
+      "Verwaltetes Hosting für Spitzen, Drops und Releases",
+      "Eine stärkere Welt als ein aufgehübschtes Theme",
+    ],
+  },
+  {
+    title: "Hospitality und Premium-Services",
+    note: "Für Marken, die Vertrauen, Ruhe und Premium-Anziehungskraft brauchen statt billiges Broschürenverhalten.",
+    bullets: [
+      "Premium-Präsentation mit Vertrauen an erster Stelle",
+      "Bewusstsein für Buchung und Konversion",
+      "Fortlaufendes Hosting und Site-Betreuung",
+    ],
+  },
+];
+
 export const featuredCases: CaseItem[] = [
   {
     lane: "Identiteitsgedreven commerce",
@@ -437,6 +506,29 @@ export const featuredCasesEs: CaseItem[] = [
     lane: "Sistemas orientados a software",
     name: "LumenOS, EvaQuant y utilidades",
     proof: "Muestra pensamiento de producto, lógica de dashboard y patrones de software más afinados detrás de la capa visual.",
+  },
+];
+
+export const featuredCasesDe: CaseItem[] = [
+  {
+    lane: "Identitätsgetriebener Commerce",
+    name: "KunstvanVB",
+    proof: "Zeigt redaktionellen Feinschliff, Premium-Rahmung und stärkere visuelle Regie über eine vollständige Markenebene.",
+  },
+  {
+    lane: "Hospitality-Systeme",
+    name: "Sjoerd und Couvert-Richtungen",
+    proof: "Zeigt ruhige Konversion, räumliche Anziehungskraft und eine verfeinerte Route in die Hospitality-Weblogik.",
+  },
+  {
+    lane: "Kultur und Narrativ",
+    name: "Hermes Records und vage.blog",
+    proof: "Zeigt, dass narrative Atmosphäre und Benutzbarkeit sich gegenseitig stärken können, statt zu konkurrieren.",
+  },
+  {
+    lane: "Softwareorientierte Systeme",
+    name: "LumenOS, EvaQuant und Utilities",
+    proof: "Zeigt Produktdenken, Dashboard-Logik und schärfere Softwaremuster hinter der visuellen Ebene.",
   },
 ];
 
@@ -916,6 +1008,125 @@ export const proofCasesEs: ProofCase[] = [
   },
 ];
 
+export const proofCasesDe: ProofCase[] = [
+  {
+    lane: "Identitätsgetriebener Commerce",
+    name: "KunstvanVB",
+    summary:
+      "Eine Markenwelt mit genug Charakter, um sich nicht generisch anzufühlen, aber mit genug Kontrolle, um als glaubwürdige geschäftliche Ebene zu funktionieren.",
+    proof:
+      "Beweist, dass PixelPiraterij nicht nur Seiten gestaltet, sondern Markenspannung, Ton und Wiedererkennung mit echter Kontrolle prägen kann.",
+    bullets: [
+      "Eine Markenebene mit klar eigener Handschrift",
+      "Sofort wiedererkennbare visuelle Sprache",
+      "Eine starke Basis für Premium-Rahmung und Commerce",
+    ],
+    visuals: [
+      {
+        src: "/cases/kunstvanvb-wordmark.png",
+        alt: "KunstvanVB-Wordmark und Markenaufbau auf dunklem Hintergrund.",
+        fit: "contain",
+        tone: "dark",
+      },
+    ],
+  },
+  {
+    lane: "Hospitality-Systeme",
+    name: "Sjoerd, Le Radel und ruhige Konversion",
+    summary:
+      "Von Luxus-Branding bis zu einer naturnahen Camping-Route: Die Stärke liegt hier in Zurückhaltung, Vertrauen und einer Umgebung, die nicht schreien muss, um zu überzeugen.",
+    proof:
+      "Beweist, dass Hospitality keine Broschüren-Energie braucht, um kommerziell klar, glaubwürdig und einladend zu werden.",
+    bullets: [
+      "Ruhige Markenpräsentation mit Premium-Gefühl",
+      "Buchungsorientierte Führung ohne billigen Druck",
+      "Mehrere Hospitality-Töne unter einer gemeinsamen Qualitätslatte",
+    ],
+    visuals: [
+      {
+        src: "/cases/leradel-site.png",
+        alt: "Le Radel Camping-Website mit ruhiger grüner Oberfläche und klarer Reservierungsroute.",
+        fit: "cover",
+        position: "center top",
+        tone: "light",
+      },
+      {
+        src: "/cases/sjoerd-brand.png",
+        alt: "Sjoerd Hospitality-Branding auf dunklem Hintergrund mit goldener Typografie.",
+        fit: "cover",
+        position: "center 26%",
+        tone: "dark",
+      },
+    ],
+  },
+  {
+    lane: "Kultur und Narrativ",
+    name: "Hermes Records und vage.blog",
+    summary:
+      "Zwei unterschiedliche kulturelle Richtungen, die beide zeigen, dass Atmosphäre hier kein dekorativer Filter ist, sondern ein nutzbarer Teil von Positionierung und Weltenbau.",
+    proof:
+      "Beweist, dass PixelPiraterij Narrativ als funktionale Ebene für Release-Architektur, kulturellen Kontext und Markenerinnerung einsetzen kann.",
+    bullets: [
+      "Redaktionelle Spannung ohne Chaos",
+      "Kulturelle Interfaces mit eigener Welt",
+      "Narrativ, das Verkauf und Identität gleichzeitig trägt",
+    ],
+    visuals: [
+      {
+        src: "/cases/hermes-records.png",
+        alt: "Hermes Records Website mit dunklem redaktionellem Layout und Label-Positionierung.",
+        fit: "cover",
+        position: "center top",
+        tone: "dark",
+      },
+      {
+        src: "/cases/vage-blog.png",
+        alt: "vage.blog Visual mit Laptop vor neonartigen Lichtstreifen.",
+        fit: "cover",
+        position: "center center",
+        tone: "dark",
+      },
+    ],
+  },
+  {
+    lane: "Softwareorientierte Systeme",
+    name: "EvaQuant, LumenOS und WattNetjes",
+    summary:
+      "Nicht nur eine polierte Hülle, sondern auch Produktlogik: Dashboards, Planungsdisziplin, Interface-Hierarchie und Softwaremuster, die echte Systemtiefe unter dem Studio beweisen.",
+    proof:
+      "Beweist, dass PixelPiraterij auch in Produkten, Dashboards und werkzeugartigen Umgebungen denken kann, in denen Struktur mehr zählt als Dekoration.",
+    bullets: [
+      "Dashboard-Logik und Datenhierarchie",
+      "Produktartige Interfaces mit klaren Routen",
+      "Beweis für Software-Disziplin hinter der Markenebene",
+      "Datengetriebene Infrastrukturgeschichten, vom Trading bis zur Energie",
+    ],
+    visuals: [
+      {
+        src: "/cases/evaquant-dashboard.png",
+        alt: "EvaQuant-Dashboard mit Trading-Interface, Daten und Signalpanels.",
+        fit: "cover",
+        position: "left top",
+        tone: "dark",
+      },
+      {
+        src: "/cases/lumenos-reference.png",
+        alt: "LumenOS Hero-Visual mit Nutzer hinter Laptop in dunkler Umgebung.",
+        fit: "cover",
+        position: "center top",
+        tone: "dark",
+      },
+      {
+        src: "/cases/wattnetjes-hero.png",
+        alt: "WattNetjes Hero mit Satellitenbild von Utrecht und Energiestatistiken.",
+        fit: "cover",
+        position: "center top",
+        tone: "dark",
+      },
+    ],
+  },
+];
+
 export const hostingShowcases: ShowcaseItem[] = [
   {
     label: "Client surface",
@@ -1137,6 +1348,63 @@ export const hostingShowcasesEs: ShowcaseItem[] = [
     visual: {
       src: "/cases/evaquant-pricing.png",
       alt: "Precios de EvaQuant como ejemplo de una estructura de planes clara.",
+      fit: "cover",
+      position: "center top",
+      tone: "dark",
+    },
+  },
+];
+
+export const hostingShowcasesDe: ShowcaseItem[] = [
+  {
+    label: "Client-Oberfläche",
+    title: "Eine gehostete Website soll nicht nur gut aussehen. Sie soll sich auch ruhig und verlässlich anfühlen.",
+    body:
+      "Hosting wird erst wertvoll, wenn sich die Oberfläche nicht brüchig anfühlt. Le Radel zeigt, wie eine ruhige, helle Oberfläche nur glaubwürdig bleibt, wenn die technische Basis darunter nicht wankt.",
+    bullets: [
+      "Ruhige Oberfläche ohne fragiles Gefühl",
+      "Geeignet für echte Reservierungs- und Kontaktrouten",
+      "Zeigt, warum Zuverlässigkeit Teil der Markenerfahrung ist",
+    ],
+    visual: {
+      src: "/cases/leradel-site.png",
+      alt: "Le Radel Website als Beispiel für eine ruhige Hospitality-Oberfläche.",
+      fit: "cover",
+      position: "center top",
+      tone: "light",
+    },
+  },
+  {
+    label: "Operator-Sicht",
+    title: "Hinter den Kulissen sollte genauso viel Struktur stecken wie an der Oberfläche.",
+    body:
+      "EvaQuant zeigt die Art von Dashboard-Disziplin, die für Monitoring, Statusbewusstsein und Systemvertrauen wichtig ist. Auch verwaltetes Hosting verkauft am Ende Ruhe durch Sichtbarkeit und Kontrolle.",
+    bullets: [
+      "Monitoring und Statusgefühl als Produktebene",
+      "Klare Datenhierarchie statt blinder Abhängigkeit",
+      "Beweist, dass das Studio auch in Operations und Tooling denkt",
+    ],
+    visual: {
+      src: "/cases/evaquant-dashboard.png",
+      alt: "EvaQuant-Dashboard als Beispiel für Operator-Sicht und -Kontrolle.",
+      fit: "cover",
+      position: "left top",
+      tone: "dark",
+    },
+  },
+  {
+    label: "Planstruktur",
+    title: "Managed Hosting verkauft sich besser, wenn das Angebot so klar ist wie die Technik dahinter.",
+    body:
+      "Eine wiederkehrende Ebene muss sich explizit anfühlen: Was bekommt jemand jetzt, was wächst später mit, und warum ist diese Struktur geschäftlich sinnvoll. Diese Art von Planungsdisziplin schafft Vertrauen, noch bevor die erste Support-Anfrage kommt.",
+    bullets: [
+      "Klare Tier-Logik",
+      "Geeignet für wiederkehrende Betreuung statt einzelner Rettungsaktionen",
+      "Verbindet Infrastruktur mit kommerzieller Klarheit",
+    ],
+    visual: {
+      src: "/cases/evaquant-pricing.png",
+      alt: "EvaQuant-Pricing als Beispiel für klare Planstruktur.",
       fit: "cover",
       position: "center top",
       tone: "dark",
@@ -1368,6 +1636,62 @@ export const templateShowcasesEs: ShowcaseItem[] = [
   },
 ];
 
+export const templateShowcasesDe: ShowcaseItem[] = [
+  {
+    label: "Template-Suite",
+    title: "Ein Template-Start darf kompakt sein, solange die Route dahinter clever genug ist.",
+    body:
+      "Die PixelPiraterij-Suite zeigt, wie ein kleiner Einstiegspunkt trotzdem stimmig wirken kann, wenn Pricing, Unlock-Logik und Produktrichtung klar sind. Das ist nutzbare Geschwindigkeit, keine unordentliche Abkürzung.",
+    bullets: [
+      "Schneller Einstieg ohne billiges Gefühl",
+      "Geeignet für Suite- und Upsell-Logik",
+      "Zeigt, dass eine kompakte Route trotzdem premium wirken kann",
+    ],
+    visual: {
+      src: "/cases/pixelpiraterij-lifetime-bundle.png",
+      alt: "PixelPiraterij Lifetime-Bundle-Screen als kompaktes Template-Suite-Beispiel.",
+      fit: "contain",
+      tone: "light",
+    },
+  },
+  {
+    label: "Zielgruppen-Richtung",
+    title: "Templates werden erst stark, wenn sie von Anfang an für eine echte Zielgruppe gerahmt sind.",
+    body:
+      "Le Radel beweist, dass eine ruhige, naturnahe Hospitality-Richtung sich völlig anders anfühlen muss als ein Founder-Tool oder eine Label-Site. Das Template muss also den richtigen Ausgangspunkt wählen, nicht nur ein Layout.",
+    bullets: [
+      "Zielgruppe bestimmt Atmosphäre und Flow",
+      "Stärkere Startpunkte als eine generische Skin",
+      "Gibt Copy, CTAs und Seitenaufbau von Anfang an Richtung",
+    ],
+    visual: {
+      src: "/cases/leradel-site.png",
+      alt: "Le Radel Website als Beispiel für zielgruppenspezifische Template-Richtung.",
+      fit: "cover",
+      position: "center top",
+      tone: "light",
+    },
+  },
+  {
+    label: "Produktpfad",
+    title: "Der Builder muss jetzt noch nicht alles können, solange das Fundament später wirklich wachsen kann.",
+    body:
+      "LumenOS zeigt, wie eine produktorientierte Oberfläche schon jetzt Richtung, Klarheit und Interface-Disziplin tragen kann. Genau so soll die Builder-Ebene entstehen: aus echter Fähigkeit, nicht aus leeren Versprechen.",
+    bullets: [
+      "Template kann zu Produktlogik heranwachsen",
+      "Erst Klarheit und Struktur, Komplexität später",
+      "Beweist, dass Reihenfolge hier wichtiger ist als Hype",
+    ],
+    visual: {
+      src: "/cases/lumenos-reference.png",
+      alt: "LumenOS Hero als Beispiel für ein Template, das zu Produktlogik heranwachsen kann.",
+      fit: "cover",
+      position: "center top",
+      tone: "dark",
+    },
+  },
+];
+
 export const studioShowcases: ShowcaseItem[] = [
   {
     label: "Identity surface",
@@ -1585,6 +1909,62 @@ export const studioShowcasesEs: ShowcaseItem[] = [
     visual: {
       src: "/cases/evaquant-dashboard.png",
       alt: "Dashboard de EvaQuant como ejemplo de capacidad de estudio orientada a producto.",
+      fit: "cover",
+      position: "left top",
+      tone: "dark",
+    },
+  },
+];
+
+export const studioShowcasesDe: ShowcaseItem[] = [
+  {
+    label: "Identity-Oberfläche",
+    title: "Eine Flagship-Oberfläche soll sich anfühlen, als sei sie für genau diese Marke gebaut – und für keine andere.",
+    body:
+      "KunstvanVB beweist, wie eine eigene visuelle Sprache, klare Markenspannung und kontrollierte Präsentation zusammen eine Markenebene tragen können, die sich nie austauschbar anfühlt.",
+    bullets: [
+      "Maßgeschneiderter Auftritt statt Theme-Montage",
+      "Markenrahmen, die sofort Wiedererkennung aufbauen",
+      "Premium-Rahmung, die kommerziell nutzbar bleibt",
+    ],
+    visual: {
+      src: "/cases/kunstvanvb-wordmark.png",
+      alt: "KunstvanVB-Wordmark als Beispiel für identitätsgeführtes Oberflächendesign.",
+      fit: "contain",
+      tone: "dark",
+    },
+  },
+  {
+    label: "Kulturelle Welt",
+    title: "Das Studio baut nicht nur Seiten, sondern ganze Welten, in denen Ton und Richtung schon verankert sind.",
+    body:
+      "Hermes Records zeigt, dass eine kulturgetriebene Oberfläche gleichzeitig redaktionell, kommerziell und zukunftsfest sein kann, wenn die Struktur darunter stimmt.",
+    bullets: [
+      "Redaktionelles Layout mit echter Positionierung",
+      "Narrativ und Release-Logik in derselben Oberfläche",
+      "Zeigt, wie Atmosphäre funktional statt dekorativ wird",
+    ],
+    visual: {
+      src: "/cases/hermes-records.png",
+      alt: "Hermes Records als Beispiel für eine kulturelle Worldbuilding-Oberfläche.",
+      fit: "cover",
+      position: "center top",
+      tone: "dark",
+    },
+  },
+  {
+    label: "Produktebene",
+    title: "Eine Studio-Route wird viel stärker, wenn die Oberfläche auch Produktdisziplin verrät.",
+    body:
+      "EvaQuant zeigt, dass PixelPiraterij auch Interfaces bauen kann, in denen Hierarchie, Tooling-Gefühl und Systemlogik genauso wichtig sind wie Branding.",
+    bullets: [
+      "Klare Interface-Hierarchie",
+      "Geeignet für produkt- und dashboardartige Umgebungen",
+      "Beweis, dass Design und Systemdenken hier gemeinsam agieren",
+    ],
+    visual: {
+      src: "/cases/evaquant-dashboard.png",
+      alt: "EvaQuant-Dashboard als Beispiel für produktorientierte Studio-Fähigkeit.",
       fit: "cover",
       position: "left top",
       tone: "dark",
@@ -1816,6 +2196,62 @@ export const aboutShowcasesEs: ShowcaseItem[] = [
   },
 ];
 
+export const aboutShowcasesDe: ShowcaseItem[] = [
+  {
+    label: "Nicht generisch",
+    title: "Die Positionierung ist kein Moodboard, sondern zeigt sich in sichtbar unterschiedlichen Ergebnissen.",
+    body:
+      "Von KunstvanVB bis Le Radel ist zu sehen, dass PixelPiraterij nicht jedes Projekt in dieselbe KI-artige Optik zwingt, sondern zur passenden Oberfläche mit einer klaren Qualitätslatte führt.",
+    bullets: [
+      "Kein Ein-Stil-Zwang über völlig unterschiedliche Marken hinweg",
+      "Ein wiedererkennbarer Standard in Regie und Finish",
+      "Beweist, dass die rebellische Haltung hier kontrolliert bleibt",
+    ],
+    visual: {
+      src: "/cases/leradel-site.png",
+      alt: "Le Radel als Beispiel für ein ruhiges, nicht-generisches Markenergebnis.",
+      fit: "cover",
+      position: "center top",
+      tone: "light",
+    },
+  },
+  {
+    label: "Nicht oberflächlich",
+    title: "Das Studio will die Lücke zwischen Branding und Betrieb schließen.",
+    body:
+      "EvaQuant und die Systemrichtung machen deutlich, dass der Anspruch nicht bei einer schönen Homepage endet. Dahinter müssen auch Systemlogik und Übersicht stecken.",
+    bullets: [
+      "Markenebene und Systemebene gehören zusammen",
+      "Tooling-Gefühl und operative Ruhe stärken die Oberfläche",
+      "Zeigt, warum PixelPiraterij nicht wie ein klassisches Studio aufgebaut ist",
+    ],
+    visual: {
+      src: "/cases/evaquant-pricing.png",
+      alt: "EvaQuant-Pricing als Beispiel für System- und Angebotsdisziplin.",
+      fit: "cover",
+      position: "center top",
+      tone: "dark",
+    },
+  },
+  {
+    label: "Nicht zufällig",
+    title: "Der Name hält die Haltung fest, aber das Modell dahinter ist bewusst aufgebaut.",
+    body:
+      "Hermes Records, die Hospitality-Richtungen und die Template-Suite zeigen zusammen, dass dies keine losen Versuche sind, sondern Teile eines breiteren Operating-Modells.",
+    bullets: [
+      "Studio, Hosting und Template-Logik verstärken sich gegenseitig",
+      "Kulturelle und geschäftliche Routen können im selben System bestehen",
+      "Beweist, warum der Name rebellisch bleiben darf, ohne amateurhaft zu wirken",
+    ],
+    visual: {
+      src: "/cases/pixelpiraterij-lifetime-bundle.png",
+      alt: "PixelPiraterij-Suite als Beispiel für ein bewusst aufgebautes Operating-Modell.",
+      fit: "contain",
+      tone: "light",
+    },
+  },
+];
+
 export const packageTiers: PackageTier[] = [
   {
     name: "Harbor Starter",
@@ -1944,6 +2380,39 @@ export const packageTiersEs: PackageTier[] = [
       "Varios sitios o superficies de aplicación",
       "Ritmo y planificación de soporte más profundos",
       "Infraestructura moldeada en torno al propio negocio",
+    ],
+  },
+];
+
+export const packageTiersDe: PackageTier[] = [
+  {
+    name: "Harbor Starter",
+    price: "29 € / Monat",
+    subtitle: "Verwaltetes Hosting und ruhige Betreuung für kleinere Flagship-Sites.",
+    features: [
+      "Eine verwaltete Website",
+      "Basis-Updates, Backups und Uptime-Checks",
+      "Support und operative Betreuung mit Vertrauen an erster Stelle",
+    ],
+  },
+  {
+    name: "Route Studio",
+    price: "79 € / Monat",
+    subtitle: "Für Marken, die Hosting plus eine stärkere Systemebene rund um die Website brauchen.",
+    features: [
+      "Priority-Monitoring und Performance-Betreuung",
+      "Template-gestützte Erweiterungsrouten",
+      "Monatliche System-Betreuung",
+    ],
+  },
+  {
+    name: "Sovereign Fleet",
+    price: "Individueller Umfang",
+    subtitle: "Für Marken mit mehreren Oberflächen, Portalen und größerem Infrastrukturbedarf.",
+    features: [
+      "Mehrere Sites oder App-Oberflächen",
+      "Tieferer Support-Rhythmus und Planung",
+      "Infrastruktur, geformt um das Unternehmen selbst",
     ],
   },
 ];
@@ -2108,6 +2577,46 @@ export const templateRoutePackagesEs: PackageTier[] = [
   },
 ];
 
+export const templateRoutePackagesDe: PackageTier[] = [
+  {
+    name: "Route Start",
+    price: "39 € / Monat + 199 € Livegang",
+    subtitle: "Die komplette Basisroute mit Hosting, Livegang und Editor-Zugang. Gedacht als echter Start, nicht als kahler Einstieg, der sofort nach Zusatzarbeit verlangt.",
+    stageLabel: "Basis",
+    priceNote: "Einmalige Einrichtung und Livegang 199 €; danach monatlich kündbar.",
+    features: [
+      "Ein starkes Routenfundament, das schon kommerziell funktioniert",
+      "Editor für Atmosphäre, Inhalt, Farben und Bilder",
+      "Hosting, Livegang und Basisbetreuung inbegriffen",
+    ],
+  },
+  {
+    name: "Route Plus",
+    price: "Meist + 7,50 bis 12,50 € / Modul / Monat",
+    subtitle: "Nur die zusätzliche Ebene, die wirklich gebraucht wird. Kein Funktionsbündel, das der Kunde nie nutzen wird.",
+    stageLabel: "Plus-Ebene",
+    badge: "Nur wenn nötig",
+    priceNote: "Du zahlst pro gewähltem Modul, nicht standardmäßig für alles zusammen.",
+    features: [
+      "Reservierung, Anfrage, Menü oder Kalender als separate Plus-Ebene",
+      "Du wählst nur, was zur Routenfamilie passt",
+      "Schnelle Erweiterung, ohne gleich in Richtung Maßwerk zu wechseln",
+    ],
+  },
+  {
+    name: "Route Custom",
+    price: "Erst wenn die Route herauswächst",
+    subtitle: "Maßwerk ist ein nächster Schritt, keine versteckte Verpflichtung ab Tag eins.",
+    stageLabel: "Nächster Schritt",
+    priceNote: "Das beginnt erst, sobald die Route nachweislich mehr Logik oder Tiefe braucht.",
+    features: [
+      "Mehr Seiten, mehr Logik oder schwerere Abläufe",
+      "Weiterwachsen, ohne die Basis neu aufzubauen",
+      "Klare Brücke zu Premium-Maßwerk, wenn es wirklich nötig ist",
+    ],
+  },
+];
+
 export const templateCategories = [
   {
     title: "Founders en productlanceringen",
@@ -2165,6 +2674,21 @@ export const templateCategoriesEs = [
   {
     title: "Hospitality y servicios premium",
     body: "Calma respaldada por plantillas, presentación consciente de la conversión y un primer paso más fuerte hacia un posicionamiento premium.",
+  },
+];
+
+export const templateCategoriesDe = [
+  {
+    title: "Gründer und Produktlaunches",
+    body: "Landing-Systeme, vertrauensorientierte Produktseiten und rollout-freundliche Strukturen, die sich schnell bewegen, ohne von der Stange zu wirken.",
+  },
+  {
+    title: "Creatives und Labels",
+    body: "Release-Welten, redaktioneller Commerce und kulturelle Oberflächen, die Identität halten, ohne ihre Struktur zu verlieren.",
+  },
+  {
+    title: "Hospitality und Premium-Services",
+    body: "Template-getragene Ruhe, konversionsbewusste Präsentation und ein stärkerer erster Schritt in Richtung Premium-Positionierung.",
   },
 ];
 
@@ -2244,6 +2768,25 @@ export const operationalStackEs = [
   },
 ];
 
+export const operationalStackDe = [
+  {
+    label: "Designstudio",
+    text: "Maßgeschneiderte Oberflächen, Systemdenken und autorisierte Präsentation statt Theme-Montage.",
+  },
+  {
+    label: "Managed Hosting",
+    text: "Eine wiederkehrende Vertrauensebene mit Backups, Monitoring, Updates und menschlichem Support, fest im Angebot eingebaut.",
+  },
+  {
+    label: "Template-getragene Systeme",
+    text: "Wiederverwendbare Strukturen, die die Launchzeit verkürzen und trotzdem Raum für Maßwerk-Ergebnisse lassen.",
+  },
+  {
+    label: "Apps und Portale",
+    text: "Die Produktseite von PixelPiraterij, als Beweis für echte operative und softwareseitige Tiefe unter der Marke.",
+  },
+];
+
 export const studioCapabilities = [
   "Flagship-websites voor premium merken en producten",
   "Identity-led systemen voor creators, labels en hospitality",
@@ -2270,6 +2813,13 @@ export const studioCapabilitiesEs = [
   "Sistemas guiados por identidad para creadores, sellos y hospitality",
   "Portales, superficies orientadas a app y lógica de interfaz compartida",
   "Trabajo a medida respaldado por plantillas para ciclos de lanzamiento más rápidos",
+];
+
+export const studioCapabilitiesDe = [
+  "Flagship-Websites für Premium-Marken und -Produkte",
+  "Identity-geführte Systeme für Creators, Labels und Hospitality",
+  "Portale, app-orientierte Oberflächen und geteilte UI-Logik",
+  "Template-getragenes Maßwerk für schnellere Launch-Zyklen",
 ];
 
 export const processSteps: ProcessStep[] = [
@@ -2345,5 +2895,24 @@ export const processStepsEs: ProcessStep[] = [
   {
     step: "Sostener",
     body: "La capa de hosting y soporte mantiene el trabajo saludable después del lanzamiento y crea espacio para el siguiente paso de expansión.",
+  },
+];
+
+export const processStepsDe: ProcessStep[] = [
+  {
+    step: "Erkunden",
+    body: "Wir bringen das Geschäftsmodell, die Zielgruppe und die passende Route in Karte: Maßwerk, template-getragen oder eher systemlastig.",
+  },
+  {
+    step: "Einordnen",
+    body: "Wir legen fest, welche Oberfläche, Infrastruktur und welcher Beweis nötig sind, damit der Build nicht nur schön ist, sondern auch strategisch funktioniert.",
+  },
+  {
+    step: "Bauen",
+    body: "Design, Copy, Struktur und Code werden als ein System geformt, nicht als lose Agentur-Outputs, die später zusammengesetzt werden.",
+  },
+  {
+    step: "Fortführen",
+    body: "Die Hosting- und Support-Ebene hält die Arbeit nach der Livegang gesund und schafft Raum für den nächsten Erweiterungsschritt.",
   },
 ];
