@@ -335,6 +335,15 @@ export const audienceSegmentsEn: Segment[] = [
       "Ongoing hosting and site stewardship",
     ],
   },
+  {
+    title: "People with an idea that still needs a shape",
+    note: "For anyone without a ready-made route yet, but with a concept, a feeling or an ambition that needs to become visible and concrete.",
+    bullets: [
+      "An open route without a structure fixed in advance",
+      "Room to move from an idea toward a concrete design",
+      "A useful stepping stone into a sharper route once the idea takes shape",
+    ],
+  },
 ];
 
 export const audienceSegmentsFr: Segment[] = [
@@ -363,6 +372,15 @@ export const audienceSegmentsFr: Segment[] = [
       "Une présentation premium qui privilégie la confiance",
       "Une attention portée à la réservation et à la conversion",
       "Un hébergement et une gestion de site continus",
+    ],
+  },
+  {
+    title: "Des personnes avec une idée qui doit encore prendre forme",
+    note: "Pour qui n'a pas encore de route toute faite, mais a un concept, un ressenti ou une ambition qui doit devenir visible et concret.",
+    bullets: [
+      "Un parcours libre, sans structure fixée à l'avance",
+      "De la place pour passer d'une idée à une conception concrète",
+      "Un tremplin utile vers une route plus précise une fois l'idée prise forme",
     ],
   },
 ];
@@ -395,6 +413,15 @@ export const audienceSegmentsEs: Segment[] = [
       "Hosting continuo y cuidado permanente del sitio",
     ],
   },
+  {
+    title: "Personas con una idea que aún debe tomar forma",
+    note: "Para quien todavía no tiene una ruta lista, pero sí un concepto, una sensación o una ambición que necesita volverse visible y concreta.",
+    bullets: [
+      "Un trayecto libre sin una estructura fijada de antemano",
+      "Espacio para pasar de una idea a un diseño concreto",
+      "Un buen punto de partida hacia una ruta más definida en cuanto la idea tome forma",
+    ],
+  },
 ];
 
 export const audienceSegmentsDe: Segment[] = [
@@ -423,6 +450,15 @@ export const audienceSegmentsDe: Segment[] = [
       "Premium-Präsentation mit Vertrauen an erster Stelle",
       "Bewusstsein für Buchung und Konversion",
       "Fortlaufendes Hosting und Site-Betreuung",
+    ],
+  },
+  {
+    title: "Menschen mit einer Idee, die noch Form annehmen muss",
+    note: "Für alle, die noch keine fertige Route haben, aber ein Konzept, ein Gefühl oder eine Ambition, die sichtbar und konkret werden muss.",
+    bullets: [
+      "Eine freie Route ohne vorab festgelegte Struktur",
+      "Raum, um von einer Idee zu einem konkreten Entwurf zu kommen",
+      "Ein guter Einstieg in eine schärfere Route, sobald die Idee Form annimmt",
     ],
   },
 ];
@@ -465,13 +501,25 @@ export const featuredCases: CaseItem[] = [
   },
   {
     lane: "Softwaregerichte systemen",
-    name: "LumenOS, EvaQuant en utilities",
-    proof: "Laat productdenken, dashboardlogica en scherpere softwarepatronen achter de visuele laag zien.",
+    name: "EvaQuant en WattNetjes",
+    proof: "Laat dashboardlogica en datagedreven infrastructuurverhalen zien, van trading tot energie.",
     visual: {
       src: "/cases/evaquant-dashboard.png",
       alt: "EvaQuant dashboard met trading interface, data en signaalpanelen.",
       fit: "cover",
       position: "left top",
+      tone: "dark",
+    },
+  },
+  {
+    lane: "Product- en SaaS-interfaces",
+    name: "LumenOS",
+    proof: "Laat zien dat PixelPiraterij ook zelfstandige productinterfaces met eigen interactiepatronen kan bouwen, los van een marketingsite.",
+    visual: {
+      src: "/cases/lumenos-reference.png",
+      alt: "LumenOS hero visual met gebruiker achter laptop in donkere setting.",
+      fit: "cover",
+      position: "center top",
       tone: "dark",
     },
   },
@@ -515,13 +563,25 @@ export const featuredCasesEn: CaseItem[] = [
   },
   {
     lane: "Software-facing systems",
-    name: "LumenOS, EvaQuant and utilities",
-    proof: "Shows product thinking, dashboard logic and sharper software patterns behind the visual layer.",
+    name: "EvaQuant and WattNetjes",
+    proof: "Shows dashboard logic and data-driven infrastructure stories, from trading to energy.",
     visual: {
       src: "/cases/evaquant-dashboard.png",
       alt: "EvaQuant dashboard showing a trading interface, data and signal panels.",
       fit: "cover",
       position: "left top",
+      tone: "dark",
+    },
+  },
+  {
+    lane: "Product and SaaS interfaces",
+    name: "LumenOS",
+    proof: "Shows that PixelPiraterij can also build standalone product interfaces with their own interaction patterns, apart from a marketing site.",
+    visual: {
+      src: "/cases/lumenos-reference.png",
+      alt: "LumenOS hero visual with a user behind a laptop in a dark setting.",
+      fit: "cover",
+      position: "center top",
       tone: "dark",
     },
   },
@@ -565,13 +625,25 @@ export const featuredCasesFr: CaseItem[] = [
   },
   {
     lane: "Systèmes orientés logiciel",
-    name: "LumenOS, EvaQuant et utilitaires",
-    proof: "Montre la pensée produit, la logique de tableau de bord et des patterns logiciels plus fins derrière la couche visuelle.",
+    name: "EvaQuant et WattNetjes",
+    proof: "Montre la logique de tableau de bord et des récits d'infrastructure orientés données, du trading à l'énergie.",
     visual: {
       src: "/cases/evaquant-dashboard.png",
       alt: "Tableau de bord EvaQuant avec interface de trading, données et panneaux de signaux.",
       fit: "cover",
       position: "left top",
+      tone: "dark",
+    },
+  },
+  {
+    lane: "Interfaces produit et SaaS",
+    name: "LumenOS",
+    proof: "Montre que PixelPiraterij peut aussi construire des interfaces produit autonomes avec leurs propres schémas d'interaction, en dehors d'un site marketing.",
+    visual: {
+      src: "/cases/lumenos-reference.png",
+      alt: "Visuel hero LumenOS avec un utilisateur derrière un ordinateur portable dans un cadre sombre.",
+      fit: "cover",
+      position: "center top",
       tone: "dark",
     },
   },
@@ -615,13 +687,25 @@ export const featuredCasesEs: CaseItem[] = [
   },
   {
     lane: "Sistemas orientados a software",
-    name: "LumenOS, EvaQuant y utilidades",
-    proof: "Muestra pensamiento de producto, lógica de dashboard y patrones de software más afinados detrás de la capa visual.",
+    name: "EvaQuant y WattNetjes",
+    proof: "Muestra lógica de dashboard y relatos de infraestructura basados en datos, del trading a la energía.",
     visual: {
       src: "/cases/evaquant-dashboard.png",
       alt: "Dashboard de EvaQuant con interfaz de trading, datos y paneles de señales.",
       fit: "cover",
       position: "left top",
+      tone: "dark",
+    },
+  },
+  {
+    lane: "Interfaces de producto y SaaS",
+    name: "LumenOS",
+    proof: "Muestra que PixelPiraterij también puede construir interfaces de producto independientes con sus propios patrones de interacción, más allá de un sitio de marketing.",
+    visual: {
+      src: "/cases/lumenos-reference.png",
+      alt: "Visual hero de LumenOS con un usuario detrás de un portátil en un entorno oscuro.",
+      fit: "cover",
+      position: "center top",
       tone: "dark",
     },
   },
@@ -665,13 +749,25 @@ export const featuredCasesDe: CaseItem[] = [
   },
   {
     lane: "Softwareorientierte Systeme",
-    name: "LumenOS, EvaQuant und Utilities",
-    proof: "Zeigt Produktdenken, Dashboard-Logik und schärfere Softwaremuster hinter der visuellen Ebene.",
+    name: "EvaQuant und WattNetjes",
+    proof: "Zeigt Dashboard-Logik und datengetriebene Infrastrukturgeschichten, vom Trading bis zur Energie.",
     visual: {
       src: "/cases/evaquant-dashboard.png",
       alt: "EvaQuant-Dashboard mit Trading-Interface, Daten und Signalpanels.",
       fit: "cover",
       position: "left top",
+      tone: "dark",
+    },
+  },
+  {
+    lane: "Produkt- und SaaS-Interfaces",
+    name: "LumenOS",
+    proof: "Zeigt, dass PixelPiraterij auch eigenständige Produktinterfaces mit eigenen Interaktionsmustern bauen kann, losgelöst von einer Marketingseite.",
+    visual: {
+      src: "/cases/lumenos-reference.png",
+      alt: "LumenOS Hero-Visual mit Nutzer hinter Laptop in dunkler Umgebung.",
+      fit: "cover",
+      position: "center top",
       tone: "dark",
     },
   },
@@ -2652,6 +2748,18 @@ export const templateRoutePackagesEn: PackageTier[] = [
       "A clear bridge into premium custom work when it is genuinely needed",
     ],
   },
+  {
+    name: "Route Open",
+    price: "On request",
+    subtitle: "For an idea that has no fixed shape yet. An open route, fully custom-designed from the first conversation.",
+    stageLabel: "Custom",
+    priceNote: "Scope and investment are worked out together after an intake conversation.",
+    features: [
+      "Design from a blank canvas, not from a template",
+      "Fits when an idea still needs to be translated visually",
+      "Direct studio involvement instead of a fixed package",
+    ],
+  },
 ];
 
 export const templateRoutePackagesFr: PackageTier[] = [
@@ -2690,6 +2798,18 @@ export const templateRoutePackagesFr: PackageTier[] = [
       "Plus de pages, une logique plus profonde ou des flux plus lourds",
       "Croissance sans reconstruire la base depuis zéro",
       "Un pont clair vers le sur-mesure premium quand c'est réellement nécessaire",
+    ],
+  },
+  {
+    name: "Route Libre",
+    price: "Sur devis",
+    subtitle: "Pour une idée qui n'a pas encore de forme fixe. Une route libre, entièrement sur mesure dès le premier échange.",
+    stageLabel: "Sur mesure",
+    priceNote: "Le périmètre et l'investissement se déterminent ensemble après un premier échange.",
+    features: [
+      "Conception depuis une page blanche, pas depuis un template",
+      "Adapté quand une idée doit encore être traduite visuellement",
+      "Implication directe du studio plutôt qu'un forfait fixe",
     ],
   },
 ];
@@ -2732,6 +2852,18 @@ export const templateRoutePackagesEs: PackageTier[] = [
       "Un puente claro hacia el trabajo premium a medida cuando es realmente necesario",
     ],
   },
+  {
+    name: "Route Libre",
+    price: "Bajo consulta",
+    subtitle: "Para una idea que aún no tiene una forma fija. Una ruta libre, totalmente a medida desde la primera conversación.",
+    stageLabel: "A medida",
+    priceNote: "El alcance y la inversión se definen juntos tras una conversación de intake.",
+    features: [
+      "Diseño desde un lienzo en blanco, no desde una plantilla",
+      "Adecuado cuando una idea aún debe traducirse visualmente",
+      "Implicación directa del estudio en lugar de un paquete fijo",
+    ],
+  },
 ];
 
 export const templateRoutePackagesDe: PackageTier[] = [
@@ -2770,6 +2902,18 @@ export const templateRoutePackagesDe: PackageTier[] = [
       "Mehr Seiten, mehr Logik oder schwerere Abläufe",
       "Weiterwachsen, ohne die Basis neu aufzubauen",
       "Klare Brücke zu Premium-Maßwerk, wenn es wirklich nötig ist",
+    ],
+  },
+  {
+    name: "Route Frei",
+    price: "Auf Anfrage",
+    subtitle: "Für eine Idee, die noch keine feste Form hat. Eine freie Route, vollständig maßgeschneidert ab dem ersten Gespräch.",
+    stageLabel: "Maßgeschneidert",
+    priceNote: "Umfang und Investition werden gemeinsam nach einem Intake-Gespräch festgelegt.",
+    features: [
+      "Design ab einer leeren Fläche, nicht ab einer Vorlage",
+      "Passend, wenn eine Idee noch visuell übersetzt werden muss",
+      "Direkte Studio-Beteiligung statt eines festen Pakets",
     ],
   },
 ];
