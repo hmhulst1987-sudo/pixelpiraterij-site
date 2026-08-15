@@ -275,6 +275,18 @@ export function CaseMatrix({ items }: { items: CaseItem[] }) {
     <div className="matrix-board">
       {items.map((item) => (
         <article key={item.name} className="matrix-row">
+          {item.visual ? (
+            <div className={`matrix-visual${item.visual.tone === "light" ? " is-light" : ""}`}>
+              <Image
+                src={item.visual.src}
+                alt={item.visual.alt}
+                fill
+                sizes="(min-width: 1024px) 12vw, 40vw"
+                className={`matrix-image${item.visual.fit === "contain" ? " is-contain" : ""}`}
+                style={item.visual.position ? { objectPosition: item.visual.position } : undefined}
+              />
+            </div>
+          ) : null}
           <div className="matrix-lane">{item.lane}</div>
           <div className="matrix-name">{item.name}</div>
           <div className="matrix-proof">{item.proof}</div>

@@ -101,6 +101,15 @@ const philosophySegments: Segment[] = [
       "Eén ecosysteem met duidelijke rolverdeling per domein",
     ],
   },
+  {
+    title: "Niet elk idee past in een vast format",
+    note: "Sommige concepten hebben geen kant-en-klare structuur nodig, maar juist ruimte om vanaf nul vorm te krijgen. Daar hoort een open, op maat gemaakt traject bij.",
+    bullets: [
+      "Vrije invulling in plaats van een vooraf vastgelegd sjabloon",
+      "Denken vanuit het idee, niet vanuit een bestaande categorie",
+      "Nog steeds gebouwd met dezelfde regie en kwaliteitslat",
+    ],
+  },
 ];
 
 const contactSegments: Segment[] = [

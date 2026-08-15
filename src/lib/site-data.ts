@@ -21,6 +21,7 @@ export type CaseItem = {
   lane: string;
   name: string;
   proof: string;
+  visual?: ProofVisual;
 };
 
 export type ProofVisual = {
@@ -295,6 +296,15 @@ export const audienceSegments: Segment[] = [
       "Doorlopende hosting en site-stewardship",
     ],
   },
+  {
+    title: "Mensen met een idee dat nog vorm moet krijgen",
+    note: "Voor wie nog geen kant-en-klare route heeft, maar wel een concept, gevoel of ambitie die zichtbaar en concreet moet worden.",
+    bullets: [
+      "Vrij traject zonder vooraf vastgelegde structuur",
+      "Ruimte om vanuit een idee naar een concreet ontwerp te werken",
+      "Geschikt als opstap naar een scherpere route zodra het idee vorm krijgt",
+    ],
+  },
 ];
 
 export const audienceSegmentsEn: Segment[] = [
@@ -422,21 +432,48 @@ export const featuredCases: CaseItem[] = [
     lane: "Identiteitsgedreven commerce",
     name: "KunstvanVB",
     proof: "Laat editorial polish, premium kadering en sterkere visuele regie zien over een volledige merklaag.",
+    visual: {
+      src: "/cases/kunstvanvb-wordmark.png",
+      alt: "KunstvanVB wordmark en merkopbouw op donkere achtergrond.",
+      fit: "contain",
+      tone: "dark",
+    },
   },
   {
     lane: "Hospitality-systemen",
     name: "Sjoerd en Couvert-richtingen",
     proof: "Laat rustige conversie, ruimtelijke aantrekkingskracht en een verfijndere route naar hospitality-weblogica zien.",
+    visual: {
+      src: "/cases/sjoerd-brand.png",
+      alt: "Sjoerd hospitality branding op donkere achtergrond met goudkleurige typografie.",
+      fit: "cover",
+      position: "center 26%",
+      tone: "dark",
+    },
   },
   {
     lane: "Cultuur en narratief",
     name: "Hermes Records en vage.blog",
     proof: "Laat zien dat narratieve sfeer en bruikbaarheid elkaar niet hoeven tegen te werken.",
+    visual: {
+      src: "/cases/hermes-records.png",
+      alt: "Hermes Records site met donkere editorial layout en labelpositionering.",
+      fit: "cover",
+      position: "center top",
+      tone: "dark",
+    },
   },
   {
     lane: "Softwaregerichte systemen",
     name: "LumenOS, EvaQuant en utilities",
     proof: "Laat productdenken, dashboardlogica en scherpere softwarepatronen achter de visuele laag zien.",
+    visual: {
+      src: "/cases/evaquant-dashboard.png",
+      alt: "EvaQuant dashboard met trading interface, data en signaalpanelen.",
+      fit: "cover",
+      position: "left top",
+      tone: "dark",
+    },
   },
 ];
 
@@ -445,21 +482,48 @@ export const featuredCasesEn: CaseItem[] = [
     lane: "Identity-led commerce",
     name: "KunstvanVB",
     proof: "Shows editorial polish, premium framing and stronger visual control across a full brand surface.",
+    visual: {
+      src: "/cases/kunstvanvb-wordmark.png",
+      alt: "KunstvanVB wordmark and brand construction on a dark background.",
+      fit: "contain",
+      tone: "dark",
+    },
   },
   {
     lane: "Hospitality systems",
     name: "Sjoerd and Couvert directions",
     proof: "Shows calm conversion, spatial desire and a more refined route into hospitality web logic.",
+    visual: {
+      src: "/cases/sjoerd-brand.png",
+      alt: "Sjoerd hospitality branding on a dark background with gold typography.",
+      fit: "cover",
+      position: "center 26%",
+      tone: "dark",
+    },
   },
   {
     lane: "Culture and narrative",
     name: "Hermes Records and vage.blog",
     proof: "Shows that narrative atmosphere and usability can strengthen each other instead of competing for attention.",
+    visual: {
+      src: "/cases/hermes-records.png",
+      alt: "Hermes Records site with a dark editorial layout and label positioning.",
+      fit: "cover",
+      position: "center top",
+      tone: "dark",
+    },
   },
   {
     lane: "Software-facing systems",
     name: "LumenOS, EvaQuant and utilities",
     proof: "Shows product thinking, dashboard logic and sharper software patterns behind the visual layer.",
+    visual: {
+      src: "/cases/evaquant-dashboard.png",
+      alt: "EvaQuant dashboard showing a trading interface, data and signal panels.",
+      fit: "cover",
+      position: "left top",
+      tone: "dark",
+    },
   },
 ];
 
@@ -468,21 +532,48 @@ export const featuredCasesFr: CaseItem[] = [
     lane: "Commerce identitaire",
     name: "KunstvanVB",
     proof: "Montre un vernis éditorial, un cadrage premium et une direction visuelle plus forte sur l'ensemble d'une couche de marque.",
+    visual: {
+      src: "/cases/kunstvanvb-wordmark.png",
+      alt: "Wordmark KunstvanVB et construction de marque sur fond sombre.",
+      fit: "contain",
+      tone: "dark",
+    },
   },
   {
     lane: "Systèmes hospitality",
     name: "Sjoerd et directions Couvert",
     proof: "Montre une conversion posée, un attrait spatial et une route plus raffinée vers la logique web hospitality.",
+    visual: {
+      src: "/cases/sjoerd-brand.png",
+      alt: "Branding hospitality Sjoerd sur fond sombre avec typographie dorée.",
+      fit: "cover",
+      position: "center 26%",
+      tone: "dark",
+    },
   },
   {
     lane: "Culture et narratif",
     name: "Hermes Records et vage.blog",
     proof: "Montre que l'ambiance narrative et l'utilisabilité peuvent se renforcer plutôt que se concurrencer.",
+    visual: {
+      src: "/cases/hermes-records.png",
+      alt: "Site Hermes Records avec mise en page éditoriale sombre et positionnement de label.",
+      fit: "cover",
+      position: "center top",
+      tone: "dark",
+    },
   },
   {
     lane: "Systèmes orientés logiciel",
     name: "LumenOS, EvaQuant et utilitaires",
     proof: "Montre la pensée produit, la logique de tableau de bord et des patterns logiciels plus fins derrière la couche visuelle.",
+    visual: {
+      src: "/cases/evaquant-dashboard.png",
+      alt: "Tableau de bord EvaQuant avec interface de trading, données et panneaux de signaux.",
+      fit: "cover",
+      position: "left top",
+      tone: "dark",
+    },
   },
 ];
 
@@ -491,21 +582,48 @@ export const featuredCasesEs: CaseItem[] = [
     lane: "Comercio guiado por identidad",
     name: "KunstvanVB",
     proof: "Muestra un acabado editorial, un encuadre premium y un control visual más fuerte en toda una capa de marca.",
+    visual: {
+      src: "/cases/kunstvanvb-wordmark.png",
+      alt: "Wordmark de KunstvanVB y construcción de marca sobre fondo oscuro.",
+      fit: "contain",
+      tone: "dark",
+    },
   },
   {
     lane: "Sistemas de hospitality",
     name: "Sjoerd y direcciones Couvert",
     proof: "Muestra una conversión serena, atractivo espacial y una ruta más refinada hacia la lógica web de hospitality.",
+    visual: {
+      src: "/cases/sjoerd-brand.png",
+      alt: "Branding de hospitality Sjoerd sobre fondo oscuro con tipografía dorada.",
+      fit: "cover",
+      position: "center 26%",
+      tone: "dark",
+    },
   },
   {
     lane: "Cultura y narrativa",
     name: "Hermes Records y vage.blog",
     proof: "Muestra que la atmósfera narrativa y la usabilidad pueden reforzarse mutuamente en lugar de competir.",
+    visual: {
+      src: "/cases/hermes-records.png",
+      alt: "Sitio de Hermes Records con maquetación editorial oscura y posicionamiento de sello.",
+      fit: "cover",
+      position: "center top",
+      tone: "dark",
+    },
   },
   {
     lane: "Sistemas orientados a software",
     name: "LumenOS, EvaQuant y utilidades",
     proof: "Muestra pensamiento de producto, lógica de dashboard y patrones de software más afinados detrás de la capa visual.",
+    visual: {
+      src: "/cases/evaquant-dashboard.png",
+      alt: "Dashboard de EvaQuant con interfaz de trading, datos y paneles de señales.",
+      fit: "cover",
+      position: "left top",
+      tone: "dark",
+    },
   },
 ];
 
@@ -514,21 +632,48 @@ export const featuredCasesDe: CaseItem[] = [
     lane: "Identitätsgetriebener Commerce",
     name: "KunstvanVB",
     proof: "Zeigt redaktionellen Feinschliff, Premium-Rahmung und stärkere visuelle Regie über eine vollständige Markenebene.",
+    visual: {
+      src: "/cases/kunstvanvb-wordmark.png",
+      alt: "KunstvanVB-Wordmark und Markenaufbau auf dunklem Hintergrund.",
+      fit: "contain",
+      tone: "dark",
+    },
   },
   {
     lane: "Hospitality-Systeme",
     name: "Sjoerd und Couvert-Richtungen",
     proof: "Zeigt ruhige Konversion, räumliche Anziehungskraft und eine verfeinerte Route in die Hospitality-Weblogik.",
+    visual: {
+      src: "/cases/sjoerd-brand.png",
+      alt: "Sjoerd Hospitality-Branding auf dunklem Hintergrund mit goldener Typografie.",
+      fit: "cover",
+      position: "center 26%",
+      tone: "dark",
+    },
   },
   {
     lane: "Kultur und Narrativ",
     name: "Hermes Records und vage.blog",
     proof: "Zeigt, dass narrative Atmosphäre und Benutzbarkeit sich gegenseitig stärken können, statt zu konkurrieren.",
+    visual: {
+      src: "/cases/hermes-records.png",
+      alt: "Hermes Records Website mit dunklem redaktionellem Layout und Label-Positionierung.",
+      fit: "cover",
+      position: "center top",
+      tone: "dark",
+    },
   },
   {
     lane: "Softwareorientierte Systeme",
     name: "LumenOS, EvaQuant und Utilities",
     proof: "Zeigt Produktdenken, Dashboard-Logik und schärfere Softwaremuster hinter der visuellen Ebene.",
+    visual: {
+      src: "/cases/evaquant-dashboard.png",
+      alt: "EvaQuant-Dashboard mit Trading-Interface, Daten und Signalpanels.",
+      fit: "cover",
+      position: "left top",
+      tone: "dark",
+    },
   },
 ];
 
@@ -2453,6 +2598,18 @@ export const templateRoutePackages: PackageTier[] = [
       "Meer pagina's, meer logica of zwaardere flows",
       "Doorgroei zonder de basis opnieuw op te bouwen",
       "Heldere brug naar premium maatwerk wanneer het echt nodig is",
+    ],
+  },
+  {
+    name: "Route Vrij",
+    price: "Op aanvraag",
+    subtitle: "Voor een idee dat nog geen vaste vorm heeft. Een vrij traject, volledig op maat ontworpen vanaf het eerste gesprek.",
+    stageLabel: "Op maat",
+    priceNote: "Scope en investering worden samen bepaald na een intakegesprek.",
+    features: [
+      "Ontwerp vanaf een leeg canvas, niet vanaf een sjabloon",
+      "Geschikt wanneer een idee nog visueel vertaald moet worden",
+      "Directe regie vanuit de studio in plaats van een vast pakket",
     ],
   },
 ];

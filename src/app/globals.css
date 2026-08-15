@@ -1682,6 +1682,39 @@ html[data-theme="night"] .matrix-row {
   background: rgba(17, 23, 32, 0.78);
 }
 
+.matrix-visual {
+  position: relative;
+  overflow: hidden;
+  border-radius: calc(var(--radius-panel) - 0.35rem);
+  border: 1px solid var(--color-line);
+  aspect-ratio: 1 / 1;
+  width: 100%;
+  background:
+    radial-gradient(circle at top, rgba(255, 255, 255, 0.3), transparent 56%),
+    #e8dccb;
+}
+
+.matrix-visual.is-light {
+  background:
+    radial-gradient(circle at top, rgba(255, 255, 255, 0.56), transparent 50%),
+    #efe4d6;
+}
+
+html[data-theme="night"] .matrix-visual {
+  background:
+    radial-gradient(circle at top, rgba(255, 255, 255, 0.08), transparent 56%),
+    #0d121a;
+}
+
+.matrix-image {
+  object-fit: cover;
+}
+
+.matrix-image.is-contain {
+  object-fit: contain;
+  padding: 0.65rem;
+}
+
 .matrix-lane {
   color: var(--color-brass);
   font-size: 0.82rem;
@@ -1906,6 +1939,16 @@ html[data-theme="night"] .showcase-visual {
   background: var(--color-paper-strong);
 }
 
+.stack-row:first-child {
+  border-top-left-radius: calc(var(--radius-shell) - 1.3rem);
+  border-top-right-radius: calc(var(--radius-shell) - 1.3rem);
+}
+
+.stack-row:last-child {
+  border-bottom-left-radius: calc(var(--radius-shell) - 1.3rem);
+  border-bottom-right-radius: calc(var(--radius-shell) - 1.3rem);
+}
+
 .stack-board--clean .stack-row {
   padding: 1.2rem 1.35rem;
   background: transparent;
@@ -2090,7 +2133,7 @@ html[data-theme="night"] .btn-secondary:focus-visible {
   }
 
   .matrix-row {
-    grid-template-columns: 1.1fr 0.95fr 1.45fr;
+    grid-template-columns: 7.5rem 1.1fr 0.95fr 1.45fr;
     align-items: start;
   }
 
