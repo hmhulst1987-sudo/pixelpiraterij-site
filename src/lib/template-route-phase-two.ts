@@ -270,8 +270,8 @@ export function getWorkspaceLanes(workspace: TemplateRouteWorkspace) {
       label: workspace.locale === "nl" ? "Domein screenen" : "Screen domain",
       text:
         workspace.locale === "nl"
-          ? "Alleen format- en intakecontrole, nog geen live registratie."
-          : "Format and intake screening only, not live registration yet.",
+          ? "Live check bij de registry, met de jaarprijs erbij."
+          : "Live check against the registry, with the yearly price.",
     },
     {
       slug: "unlock",

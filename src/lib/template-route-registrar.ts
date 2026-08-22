@@ -205,8 +205,8 @@ export function evaluateRegistrarPreparation(workspace: TemplateRouteWorkspace):
     warnings,
     nextStep:
       locale === "nl"
-        ? "Volgende stap is echte provider-auth, live beschikbaarheidslookup en registratiequeue."
-        : "Next step is real provider auth, live availability lookup and registration queue.",
+        ? "De beschikbaarheid is al live gecontroleerd. Wat rest is jouw akkoord op de registratie."
+        : "Availability has already been checked live. What remains is your go-ahead on the registration.",
     provider: profile.provider,
     fieldStatus,
     payloadPreview: buildProviderPayload(workspace, profile),
@@ -251,9 +251,10 @@ export function buildProviderPayload(workspace: TemplateRouteWorkspace, profile:
   return {
     ...basePayload,
     providerPayload: {
-      endpoint: "/v1beta/domains/register",
+      // De REST-API v1beta weigert onze hash (code 902); de XML-API accepteert hem.
+      endpoint: "https://api.openprovider.eu/ (createDomainRequest)",
       mode: "reseller_register",
-      contactStrategy: "create_or_attach_contact",
+      contactStrategy: "create_customer_then_register",
     },
   };
 }
