@@ -70,6 +70,7 @@ export const siteNavByLocale: Record<Locale, NavItem[]> = {
     { href: "/cases", label: "Cases" },
     { href: "/hosting", label: "Hosting" },
     { href: "/templates", label: "Templates" },
+    { href: "/domeinen", label: "Domeinen" },
     { href: "/about", label: "Over" },
     { href: "/contact", label: "Contact" },
   ],
