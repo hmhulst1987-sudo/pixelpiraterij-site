@@ -3,7 +3,7 @@ import { fetchCostCents } from "@/lib/openprovider";
 export const offeredExtensions = ["nl", "com", "eu", "online", "be", "de"] as const;
 export type OfferedExtension = (typeof offeredExtensions)[number];
 
-const defaultMarkupCents = 450;
+const defaultMarkupCents = 300;
 const defaultVatPercent = 21;
 const priceCacheMs = 6 * 60 * 60 * 1000;
 

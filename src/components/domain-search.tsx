@@ -23,6 +23,8 @@ type Copy = {
   exVat: string;
   select: string;
   selected: string;
+  order: string;
+  ordering: string;
   empty: string;
   hint: string;
 };
@@ -39,6 +41,8 @@ const dutch: Copy = {
   exVat: "excl. btw",
   select: "Vastzetten",
   selected: "Gekozen",
+  order: "Vastleggen",
+  ordering: "Bezig...",
   empty: "Typ een naam en ik kijk direct bij de registry welke extensies nog vrij zijn.",
   hint: "Prijzen zijn per jaar, inclusief btw. Verlengen gaat tegen hetzelfde tarief.",
 };
@@ -58,7 +62,28 @@ export function DomainSearch({
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<DomainResult[] | null>(null);
   const [pending, setPending] = useState(false);
+  const [ordering, setOrdering] = useState("");
   const [error, setError] = useState("");
+
+  async function order(domain: string) {
+    if (ordering) return;
+    setOrdering(domain);
+    setError("");
+
+    try {
+      const response = await fetch("/api/domains/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ domain }),
+      });
+      const payload = await response.json();
+      if (!response.ok || !payload.url) throw new Error(payload.error || "Bestellen lukte niet.");
+      window.location.assign(payload.url);
+    } catch (failure) {
+      setError(failure instanceof Error ? failure.message : "Bestellen lukte niet.");
+      setOrdering("");
+    }
+  }
 
   async function search(event: React.FormEvent) {
     event.preventDefault();
@@ -148,6 +173,17 @@ export function DomainSearch({
                         onClick={() => onSelect(result)}
                       >
                         {isSelected ? copy.selected : copy.select}
+                      </button>
+                    ) : null}
+
+                    {isFree && !onSelect ? (
+                      <button
+                        type="button"
+                        className="btn-primary"
+                        onClick={() => order(result.domain)}
+                        disabled={Boolean(ordering)}
+                      >
+                        {ordering === result.domain ? copy.ordering : copy.order}
                       </button>
                     ) : null}
                   </div>

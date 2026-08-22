@@ -189,6 +189,140 @@ export async function checkAvailability(candidates: DomainParts[]): Promise<Avai
   });
 }
 
+export type Registrant = {
+  firstName: string;
+  lastName: string;
+  companyName: string;
+  email: string;
+  phone: string;
+  street: string;
+  houseNumber: string;
+  houseNumberSuffix: string;
+  postalCode: string;
+  city: string;
+  state: string;
+  country: string;
+};
+
+const dialCodes: Record<string, string> = {
+  NL: "+31",
+  BE: "+32",
+  DE: "+49",
+  FR: "+33",
+  GB: "+44",
+  ES: "+34",
+  IT: "+39",
+  AT: "+43",
+  LU: "+352",
+};
+
+/**
+ * Openprovider wants the phone in three parts and rejects an empty area code
+ * (error 133). Taking the first national digit as the area code is accepted for
+ * NL, BE, DE and FR alike, so we do not need a per-country numbering plan.
+ */
+export function splitPhone(
+  phone: string,
+  country: string,
+): { countryCode: string; areaCode: string; subscriberNumber: string } {
+  const digits = phone.replace(/[^\d+]/g, "");
+  let countryCode = dialCodes[country.toUpperCase()] ?? "+31";
+  let national = digits;
+
+  if (digits.startsWith("+")) {
+    const known = Object.values(dialCodes)
+      .sort((a, b) => b.length - a.length)
+      .find((code) => digits.startsWith(code));
+
+    countryCode = known ?? digits.slice(0, 3);
+    national = digits.slice(countryCode.length);
+  }
+
+  national = national.replace(/^0+/, "");
+
+  return { countryCode, areaCode: national.slice(0, 1), subscriberNumber: national.slice(1) };
+}
+
+/** Splits "Kerkstraat 12 b" into street, number and suffix. */
+export function splitAddressLine(line: string): { street: string; houseNumber: string; suffix: string } {
+  const match = line.trim().match(/^(.*?)[\s,]+(\d+)\s*([a-zA-Z0-9-]*)$/);
+  if (!match) return { street: line.trim(), houseNumber: "", suffix: "" };
+  return { street: match[1].trim(), houseNumber: match[2], suffix: match[3].trim() };
+}
+
+function tag(name: string, value: string): string {
+  return value ? `<${name}>${escapeXml(value)}</${name}>` : "";
+}
+
+export async function createCustomer(registrant: Registrant): Promise<string> {
+  const phone = splitPhone(registrant.phone, registrant.country);
+
+  const inner =
+    tag("companyName", registrant.companyName) +
+    `<name>${tag("firstName", registrant.firstName)}${tag("lastName", registrant.lastName)}</name>` +
+    `<address>` +
+    tag("street", registrant.street) +
+    tag("number", registrant.houseNumber) +
+    tag("suffix", registrant.houseNumberSuffix) +
+    tag("zipcode", registrant.postalCode) +
+    tag("city", registrant.city) +
+    tag("state", registrant.state) +
+    tag("country", registrant.country.toUpperCase()) +
+    `</address>` +
+    `<phone>${tag("countryCode", phone.countryCode)}${tag("areaCode", phone.areaCode)}` +
+    `${tag("subscriberNumber", phone.subscriberNumber)}</phone>` +
+    tag("email", registrant.email);
+
+  const data = await call("createCustomerRequest", inner);
+  const handle = textOf(data, "handle") || firstDescendant(data, "handle")?.text.trim() || "";
+
+  if (!handle) throw new OpenproviderError("api", null, "Openprovider returned no customer handle.");
+  return handle;
+}
+
+/** Guards against a retried webhook registering the same domain twice. */
+export async function isInAccount(name: string, extension: string): Promise<boolean> {
+  const data = await call(
+    "searchDomainRequest",
+    `${tag("domainNamePattern", name)}${tag("extension", extension)}<limit>10</limit>`,
+  );
+
+  return allDescendants(data, "domain").some((entry) => {
+    const entryName = textOf(entry, "name").toLowerCase();
+    const entryExtension = textOf(entry, "extension").toLowerCase();
+    return entryName === name.toLowerCase() && entryExtension === extension.toLowerCase();
+  });
+}
+
+export type RegistrationResult = { domain: string; handle: string };
+
+export async function registerDomain(options: {
+  name: string;
+  extension: string;
+  handle: string;
+  years: number;
+  nameservers: string[];
+}): Promise<RegistrationResult> {
+  const nameservers = options.nameservers.filter(Boolean);
+  const nameserverBlock = nameservers.length
+    ? `<nameServers><array>${nameservers
+        .map((host) => `<item>${tag("name", host)}</item>`)
+        .join("")}</array></nameServers>`
+    : "";
+
+  const inner =
+    `<domain>${tag("name", options.name)}${tag("extension", options.extension)}</domain>` +
+    `<period>${Math.max(1, Math.trunc(options.years))}</period>` +
+    tag("ownerHandle", options.handle) +
+    tag("adminHandle", options.handle) +
+    tag("techHandle", options.handle) +
+    nameserverBlock +
+    `<autorenew>on</autorenew>`;
+
+  await call("createDomainRequest", inner);
+  return { domain: `${options.name}.${options.extension}`, handle: options.handle };
+}
+
 export async function fetchCostCents(extension: string): Promise<number | null> {
   // The price endpoint rejects a bare extension, so it gets a throwaway name.
   const data = await call(
