@@ -10,7 +10,7 @@ import { createDefaultLaunchProfile, normalizeLaunchProfile, type LaunchProfile 
 
 export type RoutePackageSlug = "kickstart" | "route_plus" | "managed_launch";
 export type WorkspaceStage = "draft" | "intake" | "gated" | "launch_ready";
-export type DomainIntakeStatus = "idle" | "checking" | "invalid" | "manual_review" | "ready_for_lookup";
+export type DomainIntakeStatus = "idle" | "checking" | "invalid" | "taken" | "manual_review" | "ready_for_lookup";
 
 export type RoutePackageTier = {
   slug: RoutePackageSlug;
@@ -188,7 +188,11 @@ export function getWorkspaceStage(workspace: TemplateRouteWorkspace): WorkspaceS
     return "gated";
   }
 
-  if (workspace.domainIntake.status === "invalid" || workspace.domainIntake.status === "manual_review") {
+  if (
+    workspace.domainIntake.status === "invalid" ||
+    workspace.domainIntake.status === "taken" ||
+    workspace.domainIntake.status === "manual_review"
+  ) {
     return "intake";
   }
 
@@ -216,6 +220,12 @@ export function getWorkspaceOperatorNote(workspace: TemplateRouteWorkspace) {
     return workspace.locale === "nl"
       ? "Deze domeinwens vraagt eerst operatorcontrole voordat een registrar-lookup zinvol is."
       : "This domain request needs operator review before a registrar lookup makes sense.";
+  }
+
+  if (workspace.domainIntake.status === "taken") {
+    return workspace.locale === "nl"
+      ? "Deze naam is al vergeven. Kies een andere naam of extensie voordat de route verder gaat."
+      : "This name is already taken. Pick another name or extension before the route continues.";
   }
 
   if (workspace.domainIntake.status === "invalid") {
@@ -329,6 +339,7 @@ export function parseWorkspace(value: string, locale: Locale) {
           status:
             parsed.domainIntake?.status === "checking" ||
             parsed.domainIntake?.status === "invalid" ||
+            parsed.domainIntake?.status === "taken" ||
             parsed.domainIntake?.status === "manual_review" ||
             parsed.domainIntake?.status === "ready_for_lookup"
               ? parsed.domainIntake.status

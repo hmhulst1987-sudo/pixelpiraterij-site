@@ -28,7 +28,7 @@ async function withAvailability(
     if (result?.status === "taken") {
       return {
         ...evaluation,
-        status: "invalid" as const,
+        status: "taken" as const,
         message:
           locale === "nl"
             ? `${evaluation.normalizedDomain} is al bezet.`
@@ -71,7 +71,7 @@ export async function POST(request: Request) {
     const evaluation = await withAvailability(evaluateDomainCandidate(domain, locale), locale);
 
     return NextResponse.json({
-      success: evaluation.status !== "invalid",
+      success: evaluation.status !== "invalid" && evaluation.status !== "taken",
       ...evaluation,
       checkedAt: new Date().toISOString(),
     });

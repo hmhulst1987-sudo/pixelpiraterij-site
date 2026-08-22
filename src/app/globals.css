@@ -928,6 +928,7 @@ html[data-theme="night"] .contraband-card {
 
 .route-editor-domain-card.is-manual_review,
 .route-editor-domain-card.is-invalid,
+.route-editor-domain-card.is-taken,
 .route-editor-domain-card.is-needs_review,
 .route-editor-domain-card.is-blocked {
   border-color: rgba(173, 67, 39, 0.2);

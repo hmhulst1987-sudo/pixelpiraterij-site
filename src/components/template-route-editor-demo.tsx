@@ -204,6 +204,7 @@ export function TemplateRouteEditorDemo({
         idle: "Nog niet gescreend",
         checking: "Server-side screening",
         invalid: "Formaat klopt niet",
+        taken: "Al bezet",
         manual_review: "Handmatige controle nodig",
         ready_for_lookup: "Beschikbaar",
       } satisfies Record<DomainIntakeStatus, string>,
@@ -329,6 +330,7 @@ export function TemplateRouteEditorDemo({
         idle: "Not screened yet",
         checking: "Server-side screening",
         invalid: "Format is invalid",
+        taken: "Already taken",
         manual_review: "Manual review needed",
         ready_for_lookup: "Available",
       } satisfies Record<DomainIntakeStatus, string>,
@@ -522,6 +524,7 @@ export function TemplateRouteEditorDemo({
           status:
             payload.status === "checking" ||
             payload.status === "invalid" ||
+            payload.status === "taken" ||
             payload.status === "manual_review" ||
             payload.status === "ready_for_lookup"
               ? payload.status
