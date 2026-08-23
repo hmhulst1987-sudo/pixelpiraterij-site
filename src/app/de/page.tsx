@@ -23,6 +23,7 @@ import {
   type ProcessStep,
   type Segment,
 } from "@/lib/site-data";
+import { DomainSection } from "@/components/domain-section";
 
 const processFlow: ProcessStep[] = [
   {
@@ -135,9 +136,11 @@ export default function GermanHomePage() {
         <SegmentGrid segments={audienceSegmentsDe} locale="de" />
       </section>
 
+      <DomainSection locale="de" index="03" />
+
       <section className="section-block">
         <SectionHeader
-          index="03"
+          index="04"
           title="Fertige Arbeit soll als Beweis dienen, nicht als lose Portfolio-Feed."
           body="Die Cases zeigen unterschiedliche Arten von Stärke: identitätsgeführten Commerce, Hospitality, kulturelle Routen und softwareorientierte Systeme."
         />
@@ -146,7 +149,7 @@ export default function GermanHomePage() {
 
       <section className="section-block">
         <SectionHeader
-          index="04"
+          index="05"
           title="Ein paar Routes zeigen schon jetzt, wie breit diese Fähigkeit wirklich ist."
           body="Von Markenwelten bis Hospitality und von kulturellen Interfaces bis Dashboards: Diese Beispiele machen die aktuelle Qualitätslatte greifbar."
         />
@@ -155,7 +158,7 @@ export default function GermanHomePage() {
 
       <section className="section-block">
         <SectionHeader
-          index="05"
+          index="06"
           title="Die Systemebene darunter soll im Angebot ebenfalls sichtbar sein."
           body="Hosting, Templates und App- oder Portal-Routen sind keine Randnotizen. Sie sind Teil davon, wie eine Marke online professionell funktionsfähig bleibt."
         />
@@ -164,7 +167,7 @@ export default function GermanHomePage() {
 
       <section className="section-block">
         <SectionHeader
-          index="06"
+          index="07"
           title="Preisrichtung und Einstiegspunkte sollen verständlich wirken."
           body="Nicht alles muss als volles Maßwerk starten. Deshalb machen wir sichtbar, wo eine starke Basisroute beginnt, welche Zusatzebenen sinnvoll sind und wann ein Projekt zu schwererem Maßwerk wird."
         />
@@ -173,7 +176,7 @@ export default function GermanHomePage() {
 
       <section className="section-block">
         <SectionHeader
-          index="07"
+          index="08"
           title="Wohin es als Nächstes geht."
           body="`.nl` bleibt die kommerzielle Vordertür. Danach öffnen `.online` und der Hub die nächste Ebene: greifbare Routen, Live-Funktionen, Apps und Produktumgebungen."
         />
@@ -182,7 +185,7 @@ export default function GermanHomePage() {
 
       <section className="section-block">
         <SectionHeader
-          index="08"
+          index="09"
           title="Unser Prozess soll von Klarheit zu Wachstum führen."
           body="Wir wollen nicht nur etwas Attraktives ausliefern. Wir wollen eine Route aufbauen, die logisch skalieren kann, sobald Marke oder Produkt weiterwachsen."
         />

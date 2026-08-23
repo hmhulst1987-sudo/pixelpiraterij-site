@@ -23,6 +23,7 @@ import {
   type ProcessStep,
   type Segment,
 } from "@/lib/site-data";
+import { DomainSection } from "@/components/domain-section";
 
 const processFlow: ProcessStep[] = [
   {
@@ -204,9 +205,11 @@ export default function Home() {
         <OfferRail items={homeOffers} />
       </section>
 
+      <DomainSection locale="nl" index="03" />
+
       <section className="section-block">
         <SectionHeader
-          index="03"
+          index="04"
           title="Gemaakt werk moet als bewijs functioneren, niet als losse portfoliofeed."
           body="De cases laten verschillende soorten kracht zien: identity-led commerce, hospitality, cultuurgedreven routes en softwaregerichte systemen."
         />
@@ -215,7 +218,7 @@ export default function Home() {
 
       <section className="section-block">
         <SectionHeader
-          index="04"
+          index="05"
           title="De systeemlaag eronder hoort ook zichtbaar in het aanbod te zitten."
           body="Hosting, templates en app- of portaalroutes zijn geen losse bijzaken. Ze maken deel uit van hoe een merk professioneel online blijft functioneren."
         />
@@ -224,7 +227,7 @@ export default function Home() {
 
       <section className="section-block">
         <SectionHeader
-          index="05"
+          index="06"
           title="Waarom deze studio niet als een generieke leverancier hoort te voelen."
           body="De kern is niet alleen een mooie site maken. De kern is presentatie, infrastructuur en doorgroei zo verbinden dat het werk geloofwaardig en houdbaar blijft."
         />
@@ -233,7 +236,7 @@ export default function Home() {
 
       <section className="section-block">
         <SectionHeader
-          index="06"
+          index="07"
           title="Prijsrichting en instap moeten duidelijk voelen."
           body="Niet alles hoeft direct maatwerk te zijn. Daarom maken we zichtbaar waar een sterke basisroute begint, welke pluslagen logisch zijn en wanneer een traject zwaarder maatwerk wordt."
         />
@@ -242,7 +245,7 @@ export default function Home() {
 
       <section className="section-block">
         <SectionHeader
-          index="07"
+          index="08"
           title="Een paar routes laten meteen zien hoe breed die capability echt is."
           body="Van merkwereld tot hospitality en van culturele interfaces tot dashboards: dit zijn voorbeelden van de kwaliteit en richting die al tastbaar zijn."
         />
@@ -251,7 +254,7 @@ export default function Home() {
 
       <section className="section-block">
         <SectionHeader
-          index="08"
+          index="09"
           title="Kies hier de juiste instap, dan wordt de volgende stap vanzelf scherper."
           body="Niet iedereen hoeft met hetzelfde traject te beginnen. Daarom maken we ook het contactmoment zelf duidelijker: studio, hosting of door naar tastbare productroutes."
         />
@@ -260,7 +263,7 @@ export default function Home() {
 
       <section className="section-block">
         <SectionHeader
-          index="09"
+          index="10"
           title="Waar je hierna logisch heen beweegt."
           body="`.nl` blijft de commerciële voordeur. Daarna openen `.online` en de hub pas de volgende laag: tastbare routes, live functies, apps en productomgevingen."
         />
@@ -269,7 +272,7 @@ export default function Home() {
 
       <section className="section-block">
         <SectionHeader
-          index="10"
+          index="11"
           title="Onze werkwijze moet van helderheid naar doorgroei bewegen."
           body="We willen niet alleen iets moois opleveren, maar een route neerzetten die logisch kan opschalen zodra een merk of product verder groeit."
         />

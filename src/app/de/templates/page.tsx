@@ -3,6 +3,7 @@ import Link from "next/link";
 import { CtaDock, Footer, ManifestAside, PageHero, SectionHeader, ShowcaseGrid, SiteFrame, Topbar } from "@/components/site-shell";
 import { routeFamilies } from "@/lib/template-route-builder";
 import { templateCategoriesDe, templateShowcasesDe } from "@/lib/site-data";
+import { TemplateGallery } from "@/components/template-gallery";
 
 export default function GermanTemplatesPage() {
   const templateRules = [
@@ -68,9 +69,11 @@ export default function GermanTemplatesPage() {
         }
       />
 
+      <TemplateGallery locale="de" index="01" />
+
       <section className="section-block">
         <SectionHeader
-          index="01"
+          index="02"
           title="Templates sind danach gruppiert, wo sie am meisten helfen."
           body="Es geht nicht darum, Menschen mit Skins zu überfluten. Es geht darum, jeder Zielgruppe eine stärkere Route zu einem besseren Build zu geben."
         />
@@ -87,7 +90,7 @@ export default function GermanTemplatesPage() {
 
       <section className="section-block">
         <SectionHeader
-          index="02"
+          index="03"
           title="Der Builder öffnet sich als geführter Arbeitsbereich, nicht als Free-for-all-Tool."
           body="Zuerst wählst du die Routenfamilie. Erst danach geht es in den Arbeitsbereich mit Paketzugang, Domain-Intake und Modul-Logik."
         />
@@ -118,7 +121,7 @@ export default function GermanTemplatesPage() {
 
       <section className="section-block">
         <SectionHeader
-          index="03"
+          index="04"
           title="Was ein starker template-getragener Start schon auf den ersten Blick beweisen soll."
           body="Nicht als abstraktes Versprechen, sondern durch echte Oberflächen: Suite-Logik, Zielgruppen-Rahmung und Produktdisziplin. Das macht die künftige Builder-Richtung glaubwürdig statt aufgeschoben."
         />
@@ -127,7 +130,7 @@ export default function GermanTemplatesPage() {
 
       <section className="section-block">
         <SectionHeader
-          index="04"
+          index="05"
           title="Was Templates hier tatsächlich leisten sollen."
           body="Nicht jede schnelle Route ist automatisch eine kluge. Die Stärke dieses Systems liegt in besseren Ausgangspositionen, mehr Struktur und einem Weg, der sich später noch weiter öffnen kann."
         />
@@ -144,7 +147,7 @@ export default function GermanTemplatesPage() {
 
       <section className="section-block">
         <SectionHeader
-          index="05"
+          index="06"
           title="Der Builder kommt nach der Fähigkeit, nicht davor."
           body="Die nächste Ebene ist ein strukturierter Editor-, Vorschau- und Publishing-Ablauf auf Basis dieser Template-Systeme. Wir skalieren dieses Versprechen erst, wenn die Produktebene real ist."
         />

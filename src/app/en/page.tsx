@@ -23,6 +23,7 @@ import {
   type ProcessStep,
   type Segment,
 } from "@/lib/site-data";
+import { DomainSection } from "@/components/domain-section";
 
 const processFlow: ProcessStep[] = [
   {
@@ -135,9 +136,11 @@ export default function EnglishHomePage() {
         <SegmentGrid segments={audienceSegmentsEn} locale="en" />
       </section>
 
+      <DomainSection locale="en" index="03" />
+
       <section className="section-block">
         <SectionHeader
-          index="03"
+          index="04"
           title="Built work should function as proof, not as a loose portfolio feed."
           body="The cases show different types of strength: identity-led commerce, hospitality, cultural routes and software-facing systems."
         />
@@ -146,7 +149,7 @@ export default function EnglishHomePage() {
 
       <section className="section-block">
         <SectionHeader
-          index="04"
+          index="05"
           title="A few routes already show how broad that capability really is."
           body="From brand worlds to hospitality and from cultural interfaces to dashboards: these examples make the current quality bar tangible."
         />
@@ -155,7 +158,7 @@ export default function EnglishHomePage() {
 
       <section className="section-block">
         <SectionHeader
-          index="05"
+          index="06"
           title="The system layer underneath should also be visible in the offer."
           body="Hosting, templates and app or portal routes are not side notes. They are part of how a brand stays professionally functional online."
         />
@@ -164,7 +167,7 @@ export default function EnglishHomePage() {
 
       <section className="section-block">
         <SectionHeader
-          index="06"
+          index="07"
           title="Price direction and entry points should feel understandable."
           body="Not everything needs to start as full custom work. We therefore make it visible where a strong base route begins, which add-ons make sense and when a project becomes heavier custom work."
         />
@@ -173,7 +176,7 @@ export default function EnglishHomePage() {
 
       <section className="section-block">
         <SectionHeader
-          index="07"
+          index="08"
           title="Where you move next."
           body="`.nl` remains the commercial front door. After that, `.online` and the hub open the next layer: tangible routes, live features, apps and product environments."
         />
@@ -182,7 +185,7 @@ export default function EnglishHomePage() {
 
       <section className="section-block">
         <SectionHeader
-          index="08"
+          index="09"
           title="Our process should move from clarity into growth."
           body="We do not only want to ship something attractive. We want to set up a route that can scale logically once the brand or product grows further."
         />

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { CtaDock, Footer, ManifestAside, PageHero, SectionHeader, ShowcaseGrid, SiteFrame, Topbar } from "@/components/site-shell";
 import { routeFamilies } from "@/lib/template-route-builder";
 import { templateCategoriesFr, templateShowcasesFr } from "@/lib/site-data";
+import { TemplateGallery } from "@/components/template-gallery";
 
 export default function FrenchTemplatesPage() {
   const templateRules = [
@@ -70,9 +71,11 @@ export default function FrenchTemplatesPage() {
         }
       />
 
+      <TemplateGallery locale="fr" index="01" />
+
       <section className="section-block">
         <SectionHeader
-          index="01"
+          index="02"
           title="Les templates sont regroupés selon là où ils aident le plus."
           body="L'idée n'est pas de noyer les gens sous des skins. L'idée est de donner à chaque audience une route plus forte vers une meilleure construction."
         />
@@ -89,7 +92,7 @@ export default function FrenchTemplatesPage() {
 
       <section className="section-block">
         <SectionHeader
-          index="02"
+          index="03"
           title="Le builder s'ouvre comme un espace de travail guidé, pas comme un outil en libre accès."
           body="Vous choisissez d'abord la famille de route. Ensuite seulement vous entrez dans l'espace de travail avec l'accès au pack, l'intake de domaine et la logique de modules."
         />
@@ -120,7 +123,7 @@ export default function FrenchTemplatesPage() {
 
       <section className="section-block">
         <SectionHeader
-          index="03"
+          index="04"
           title="Ce qu'un départ solide porté par les templates doit déjà prouver à vue."
           body="Pas comme une promesse abstraite, mais à travers de vraies surfaces : logique de suite, cadrage d'audience et discipline produit. C'est ce qui rend la future direction du builder crédible plutôt que reportée."
         />
@@ -129,7 +132,7 @@ export default function FrenchTemplatesPage() {
 
       <section className="section-block">
         <SectionHeader
-          index="04"
+          index="05"
           title="Ce que les templates doivent réellement faire ici."
           body="Toute route rapide n'est pas automatiquement intelligente. La force de ce système réside dans de meilleurs points de départ, plus de structure et une route qui peut encore s'ouvrir plus large plus tard."
         />
@@ -146,7 +149,7 @@ export default function FrenchTemplatesPage() {
 
       <section className="section-block">
         <SectionHeader
-          index="05"
+          index="06"
           title="Le builder vient après la capacité, pas avant."
           body="La couche suivante est un flux d'édition, de prévisualisation et de publication structuré au-dessus de ces systèmes de templates. Nous n'étendons cette promesse qu'une fois la couche produit réelle."
         />

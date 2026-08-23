@@ -4,6 +4,7 @@ import { CtaDock, Footer, ManifestAside, PackageGrid, PageHero, SectionHeader, S
 import { routeFamilies } from "@/lib/template-route-builder";
 import { templateRoutePackages, templateShowcases } from "@/lib/site-data";
 import { CheckoutButton } from "@/components/checkout-button";
+import { TemplateGallery } from "@/components/template-gallery";
 
 export default function TemplatesPage() {
   const templateRules = [
@@ -140,9 +141,11 @@ export default function TemplatesPage() {
         }
       />
 
+      <TemplateGallery locale="nl" index="01" />
+
       <section className="section-block">
         <SectionHeader
-          index="01"
+          index="02"
           title="Niet elke klant heeft maatwerk nodig, maar ook niet elke klant kan met een generiek template wegkomen."
           body="Daarom wordt de template-route opgebouwd per type merk of zaak. Niet als losse skins, maar als sterke starts die al kloppen voor hun context."
         />
@@ -159,7 +162,7 @@ export default function TemplatesPage() {
 
       <section className="section-block">
         <SectionHeader
-          index="02"
+          index="03"
           title="De builder opent als begeleide workspace, niet als vrije speeltuin."
           body="Je kiest eerst de juiste routefamilie. Daarna ga je pas de workspace in, inclusief pakketlaag, domein-intake en modulelogica."
         />
@@ -190,7 +193,7 @@ export default function TemplatesPage() {
 
       <section className="section-block">
         <SectionHeader
-          index="03"
+          index="04"
           title="De basisroute verkoopt de sfeer. Modules verkopen de functie."
           body="Een Le Radel-achtige route kan opnieuw voor een andere camping werken, maar net zo goed voor een andere hospitality- of servicecontext. De fundering blijft sterk, de laag erboven wordt aangepast op doel en gebruik."
         />
@@ -199,7 +202,7 @@ export default function TemplatesPage() {
 
       <section className="section-block">
         <SectionHeader
-          index="04"
+          index="05"
           title="Wat binnen de editor mag bewegen en wat juist vast moet blijven."
           body="De klant moet veel kunnen vormen, maar niet de kwaliteitslat omver trekken. Zo blijft het snel, bruikbaar en onderscheidend tegelijk."
         />
@@ -216,7 +219,7 @@ export default function TemplatesPage() {
 
       <section className="section-block">
         <SectionHeader
-          index="05"
+          index="06"
           title="Functionele modules horen erbovenop te komen, niet verstopt in elk template."
           body="Reservering, aanvraag, menu of agenda zijn geen universele standaardlaag. Ze worden aangeboden waar ze commercieel en praktisch logisch zijn."
         />
@@ -232,7 +235,7 @@ export default function TemplatesPage() {
 
       <section className="section-block">
         <SectionHeader
-          index="06"
+          index="07"
           title="Deze route moet kunnen doorgroeien zonder opnieuw te beginnen."
           body="De template-route is de snelle instap. Daarna moet de klant logisch kunnen opschalen naar modules, extra diepte of uiteindelijk maatwerk."
         />
@@ -248,7 +251,7 @@ export default function TemplatesPage() {
 
       <section className="section-block">
         <SectionHeader
-          index="07"
+          index="08"
           title="Eerst de basisroute, daarna alleen de pluslagen die echt nodig zijn."
           body="Je betaalt hier niet meteen voor een compleet maatwerksysteem. De start blijft compact, extra modules komen alleen erbij waar ze echt iets oplossen en custom werk begint pas zodra de route daar aantoonbaar uit groeit."
         />
@@ -276,7 +279,7 @@ export default function TemplatesPage() {
 
       <section className="section-block">
         <SectionHeader
-          index="08"
+          index="09"
           title="Zo bouwen we de productlaag op zonder hem groter te verkopen dan hij nu is."
           body="We beginnen met een gecureerde editorroute en laten pas daarna preview-, module- en publishlogica verder uitgroeien. Daarmee blijft het geloofwaardig en commercieel bruikbaar."
         />

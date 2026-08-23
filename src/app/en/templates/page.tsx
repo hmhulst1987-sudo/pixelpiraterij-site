@@ -3,6 +3,7 @@ import Link from "next/link";
 import { CtaDock, Footer, ManifestAside, PageHero, SectionHeader, ShowcaseGrid, SiteFrame, Topbar } from "@/components/site-shell";
 import { routeFamilies } from "@/lib/template-route-builder";
 import { templateCategoriesEn, templateShowcasesEn } from "@/lib/site-data";
+import { TemplateGallery } from "@/components/template-gallery";
 
 export default function EnglishTemplatesPage() {
   const templateRules = [
@@ -68,9 +69,11 @@ export default function EnglishTemplatesPage() {
         }
       />
 
+      <TemplateGallery locale="en" index="01" />
+
       <section className="section-block">
         <SectionHeader
-          index="01"
+          index="02"
           title="Templates are grouped by where they help most."
           body="The point is not to flood people with skins. The point is to give each audience a stronger route into a better build."
         />
@@ -87,7 +90,7 @@ export default function EnglishTemplatesPage() {
 
       <section className="section-block">
         <SectionHeader
-          index="02"
+          index="03"
           title="The builder opens as a guided workspace, not a free-for-all tool."
           body="First you choose the route family. Only then do you move into the workspace with package access, domain intake and module logic."
         />
@@ -118,7 +121,7 @@ export default function EnglishTemplatesPage() {
 
       <section className="section-block">
         <SectionHeader
-          index="03"
+          index="04"
           title="What a strong template-backed start should already prove on sight."
           body="Not as an abstract promise, but through real surfaces: suite logic, audience framing and product discipline. That is what makes the future builder direction feel credible instead of deferred."
         />
@@ -127,7 +130,7 @@ export default function EnglishTemplatesPage() {
 
       <section className="section-block">
         <SectionHeader
-          index="04"
+          index="05"
           title="What templates should actually do here."
           body="Not every fast route is automatically a smart one. The strength of this system lies in better starting positions, more structure and a road that can still open wider later."
         />
@@ -144,7 +147,7 @@ export default function EnglishTemplatesPage() {
 
       <section className="section-block">
         <SectionHeader
-          index="05"
+          index="06"
           title="Builder comes after capability, not before it."
           body="The next layer is a structured editor, preview and publishing flow on top of these template systems. We only scale that promise once the product layer is real."
         />

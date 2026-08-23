@@ -23,6 +23,7 @@ import {
   type ProcessStep,
   type Segment,
 } from "@/lib/site-data";
+import { DomainSection } from "@/components/domain-section";
 
 const processFlow: ProcessStep[] = [
   {
@@ -135,9 +136,11 @@ export default function SpanishHomePage() {
         <SegmentGrid segments={audienceSegmentsEs} locale="es" />
       </section>
 
+      <DomainSection locale="es" index="03" />
+
       <section className="section-block">
         <SectionHeader
-          index="03"
+          index="04"
           title="El trabajo construido debe funcionar como prueba, no como un feed de portfolio suelto."
           body="Los casos muestran distintos tipos de fortaleza: comercio guiado por identidad, hospitality, rutas culturales y sistemas orientados a software."
         />
@@ -146,7 +149,7 @@ export default function SpanishHomePage() {
 
       <section className="section-block">
         <SectionHeader
-          index="04"
+          index="05"
           title="Algunas rutas ya muestran lo amplia que es realmente esa capacidad."
           body="De universos de marca a hospitality, de interfaces culturales a dashboards: estos son ejemplos del nivel de calidad y dirección ya tangibles."
         />
@@ -155,7 +158,7 @@ export default function SpanishHomePage() {
 
       <section className="section-block">
         <SectionHeader
-          index="05"
+          index="06"
           title="La capa de sistema debajo también debe ser visible en la oferta."
           body="Hosting, plantillas y rutas de apps o portales no son notas al margen. Forman parte de cómo una marca se mantiene funcionando profesionalmente en línea."
         />
@@ -164,7 +167,7 @@ export default function SpanishHomePage() {
 
       <section className="section-block">
         <SectionHeader
-          index="06"
+          index="07"
           title="La dirección de precios y los puntos de entrada deben sentirse comprensibles."
           body="No todo tiene que empezar como trabajo totalmente a medida. Por eso hacemos visible dónde empieza una ruta base sólida, qué capas adicionales tienen sentido y cuándo un proyecto se convierte en trabajo a medida más pesado."
         />
@@ -173,7 +176,7 @@ export default function SpanishHomePage() {
 
       <section className="section-block">
         <SectionHeader
-          index="07"
+          index="08"
           title="Hacia dónde moverse lógicamente después."
           body="`.nl` sigue siendo la puerta comercial de entrada. Después, `.online` y el hub abren la siguiente capa: rutas tangibles, funciones en vivo, apps y entornos de producto."
         />
@@ -182,7 +185,7 @@ export default function SpanishHomePage() {
 
       <section className="section-block">
         <SectionHeader
-          index="08"
+          index="09"
           title="Nuestro proceso debe avanzar de la claridad hacia el crecimiento."
           body="No solo queremos entregar algo atractivo. Queremos establecer una ruta capaz de escalar lógicamente cuando la marca o el producto crezca aún más."
         />

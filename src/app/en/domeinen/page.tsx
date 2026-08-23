@@ -3,10 +3,10 @@ import { DomainPage } from "@/components/domain-page";
 import { domainPageCopy } from "@/lib/domain-copy";
 
 export const metadata: Metadata = {
-  title: domainPageCopy.nl.metaTitle,
-  description: domainPageCopy.nl.metaDescription,
+  title: domainPageCopy.en.metaTitle,
+  description: domainPageCopy.en.metaDescription,
 };
 
-export default function DomeinenPage() {
-  return <DomainPage locale="nl" />;
+export default function DomainsPage() {
+  return <DomainPage locale="en" />;
 }

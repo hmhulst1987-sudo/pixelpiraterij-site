@@ -23,6 +23,7 @@ import {
   type ProcessStep,
   type Segment,
 } from "@/lib/site-data";
+import { DomainSection } from "@/components/domain-section";
 
 const processFlow: ProcessStep[] = [
   {
@@ -135,9 +136,11 @@ export default function FrenchHomePage() {
         <SegmentGrid segments={audienceSegmentsFr} locale="fr" />
       </section>
 
+      <DomainSection locale="fr" index="03" />
+
       <section className="section-block">
         <SectionHeader
-          index="03"
+          index="04"
           title="Le travail construit doit fonctionner comme une preuve, pas comme un flux de portfolio décousu."
           body="Les cases montrent différents types de force : commerce identitaire, hospitality, routes culturelles et systèmes orientés logiciel."
         />
@@ -146,7 +149,7 @@ export default function FrenchHomePage() {
 
       <section className="section-block">
         <SectionHeader
-          index="04"
+          index="05"
           title="Quelques routes montrent déjà l'étendue réelle de cette capacité."
           body="De l'univers de marque à l'hospitality, des interfaces culturelles aux tableaux de bord : voici des exemples de la qualité et de la direction déjà tangibles."
         />
@@ -155,7 +158,7 @@ export default function FrenchHomePage() {
 
       <section className="section-block">
         <SectionHeader
-          index="05"
+          index="06"
           title="La couche système en dessous doit aussi être visible dans l'offre."
           body="Hébergement, templates et routes app ou portail ne sont pas des à-côtés. Ils font partie de la façon dont une marque reste fonctionnelle en ligne, professionnellement."
         />
@@ -164,7 +167,7 @@ export default function FrenchHomePage() {
 
       <section className="section-block">
         <SectionHeader
-          index="06"
+          index="07"
           title="La direction tarifaire et le point d'entrée doivent être clairs."
           body="Tout ne doit pas être immédiatement du sur-mesure. Nous rendons donc visible où commence une route de base solide, quelles couches additionnelles sont logiques et quand un projet devient un sur-mesure plus lourd."
         />
@@ -173,7 +176,7 @@ export default function FrenchHomePage() {
 
       <section className="section-block">
         <SectionHeader
-          index="07"
+          index="08"
           title="Où aller logiquement ensuite."
           body="`.nl` reste la porte d'entrée commerciale. Ensuite, `.online` et le hub ouvrent la couche suivante : routes tangibles, fonctionnalités en direct, apps et environnements produit."
         />
@@ -182,7 +185,7 @@ export default function FrenchHomePage() {
 
       <section className="section-block">
         <SectionHeader
-          index="08"
+          index="09"
           title="Notre méthode doit avancer de la clarté vers la croissance."
           body="Nous ne voulons pas seulement livrer quelque chose de beau. Nous voulons poser une route capable de grandir logiquement dès qu'une marque ou un produit se développe davantage."
         />

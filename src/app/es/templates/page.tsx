@@ -3,6 +3,7 @@ import Link from "next/link";
 import { CtaDock, Footer, ManifestAside, PageHero, SectionHeader, ShowcaseGrid, SiteFrame, Topbar } from "@/components/site-shell";
 import { routeFamilies } from "@/lib/template-route-builder";
 import { templateCategoriesEs, templateShowcasesEs } from "@/lib/site-data";
+import { TemplateGallery } from "@/components/template-gallery";
 
 export default function SpanishTemplatesPage() {
   const templateRules = [
@@ -68,9 +69,11 @@ export default function SpanishTemplatesPage() {
         }
       />
 
+      <TemplateGallery locale="es" index="01" />
+
       <section className="section-block">
         <SectionHeader
-          index="01"
+          index="02"
           title="Las plantillas se agrupan según dónde ayudan más."
           body="El objetivo no es inundar a la gente con skins. El objetivo es dar a cada audiencia una ruta más fuerte hacia una mejor construcción."
         />
@@ -87,7 +90,7 @@ export default function SpanishTemplatesPage() {
 
       <section className="section-block">
         <SectionHeader
-          index="02"
+          index="03"
           title="El builder se abre como un espacio de trabajo guiado, no como una herramienta de acceso libre."
           body="Primero eliges la familia de ruta. Solo después entras al espacio de trabajo con acceso al plan, intake de dominio y lógica de módulos."
         />
@@ -118,7 +121,7 @@ export default function SpanishTemplatesPage() {
 
       <section className="section-block">
         <SectionHeader
-          index="03"
+          index="04"
           title="Lo que un arranque sólido respaldado por plantillas ya debe demostrar a simple vista."
           body="No como una promesa abstracta, sino a través de superficies reales: lógica de suite, encuadre de audiencia y disciplina de producto. Eso es lo que hace que la futura dirección del builder se sienta creíble en lugar de aplazada."
         />
@@ -127,7 +130,7 @@ export default function SpanishTemplatesPage() {
 
       <section className="section-block">
         <SectionHeader
-          index="04"
+          index="05"
           title="Lo que las plantillas realmente deben hacer aquí."
           body="No toda ruta rápida es automáticamente inteligente. La fuerza de este sistema está en mejores puntos de partida, más estructura y un camino que aún puede abrirse más adelante."
         />
@@ -144,7 +147,7 @@ export default function SpanishTemplatesPage() {
 
       <section className="section-block">
         <SectionHeader
-          index="05"
+          index="06"
           title="El builder llega después de la capacidad, no antes."
           body="La siguiente capa es un flujo estructurado de edición, vista previa y publicación sobre estos sistemas de plantillas. Solo escalamos esa promesa una vez que la capa de producto es real."
         />
