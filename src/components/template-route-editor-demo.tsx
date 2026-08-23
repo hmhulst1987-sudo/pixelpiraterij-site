@@ -386,6 +386,7 @@ export function TemplateRouteEditorDemo({
       config: {
         ...current.config,
         familySlug: nextFamily.slug,
+        themeSlug: nextFamily.defaultThemeSlug,
         brandName: nextCopy.brandName,
         routeSlug: nextCopy.brandName.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, ""),
         heroTitle: nextCopy.heroTitle,

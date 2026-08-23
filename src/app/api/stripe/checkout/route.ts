@@ -62,7 +62,7 @@ export async function POST(request: Request) {
     allow_promotion_codes: true,
     client_reference_id: reference,
     success_url: `${origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `${origin}/hosting?checkout=cancelled`,
+    cancel_url: `${origin}/${productId === "template-route-start" ? "templates" : "hosting"}?checkout=cancelled`,
     metadata: {
       umbrella: "oeuvre_de_vb",
       brand: "pixelpiraterij",

@@ -2733,7 +2733,7 @@ export const templateRoutePackages: PackageTier[] = [
   },
   {
     name: "Route Plus",
-    price: "Meestal + €7,50 tot €12,50 / module / maand",
+    price: "€10 tot €15 / module / maand",
     subtitle: "Alleen de extra laag die echt nodig is. Geen bundel vol functies waar de klant niets aan heeft.",
     stageLabel: "Pluslaag",
     badge: "Alleen indien nodig",
@@ -2785,7 +2785,7 @@ export const templateRoutePackagesEn: PackageTier[] = [
   },
   {
     name: "Route Plus",
-    price: "Usually + €7.50 to €12.50 / module / month",
+    price: "€10 to €15 / module / month",
     subtitle: "Only the extra layer that is actually needed. No bundled feature pile the client will never use.",
     stageLabel: "Add-on",
     badge: "Only when needed",
@@ -2837,7 +2837,7 @@ export const templateRoutePackagesFr: PackageTier[] = [
   },
   {
     name: "Route Plus",
-    price: "En général + 7,50 à 12,50 € / module / mois",
+    price: "10 à 15 € / module / mois",
     subtitle: "Seulement la couche supplémentaire réellement nécessaire. Pas un empilement de fonctionnalités que le client n'utilisera jamais.",
     stageLabel: "Couche plus",
     badge: "Seulement si nécessaire",
@@ -2889,7 +2889,7 @@ export const templateRoutePackagesEs: PackageTier[] = [
   },
   {
     name: "Route Plus",
-    price: "Normalmente + 7,50 a 12,50 € / módulo / mes",
+    price: "10 a 15 € / módulo / mes",
     subtitle: "Solo la capa extra que realmente hace falta. Sin un paquete inflado de funciones que el cliente nunca usará.",
     stageLabel: "Capa adicional",
     badge: "Solo si es necesario",
@@ -2941,7 +2941,7 @@ export const templateRoutePackagesDe: PackageTier[] = [
   },
   {
     name: "Route Plus",
-    price: "Meist + 7,50 bis 12,50 € / Modul / Monat",
+    price: "10 bis 15 € / Modul / Monat",
     subtitle: "Nur die zusätzliche Ebene, die wirklich gebraucht wird. Kein Funktionsbündel, das der Kunde nie nutzen wird.",
     stageLabel: "Plus-Ebene",
     badge: "Nur wenn nötig",

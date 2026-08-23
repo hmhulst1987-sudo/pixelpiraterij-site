@@ -82,6 +82,7 @@ export default async function FrenchTemplateBuilderPage({
                   ))}
                 </div>
                 <p className="route-note">{copy.moduleStrategy}</p>
+                <a href={family.previewUrl} target="_blank" rel="noreferrer" className="btn-secondary">Voir le concept en direct</a>
                 <Link href={`/fr/templates/builder?family=${family.slug}#workspace`} className="btn-secondary">
                   {isActive ? "Espace de travail actif" : "Ouvrir cette route"}
                 </Link>

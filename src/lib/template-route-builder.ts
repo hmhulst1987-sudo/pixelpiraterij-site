@@ -24,6 +24,7 @@ export type RouteFamilyCopy = {
 export type RouteFamily = {
   slug: string;
   previewUrl: string;
+  defaultThemeSlug: string;
   basePrice: number;
   moduleSlugs: string[];
   recommendedModuleSlugs: string[];
@@ -79,6 +80,7 @@ export const routeFamilies: RouteFamily[] = [
   {
     slug: "paperback",
     previewUrl: "https://paperback.pixelpiraterij.online",
+    defaultThemeSlug: "sand",
     basePrice: 39,
     moduleSlugs: ["inquiry", "gallery", "agenda", "newsletter"],
     recommendedModuleSlugs: ["inquiry", "gallery"],
@@ -146,6 +148,7 @@ export const routeFamilies: RouteFamily[] = [
   {
     slug: "sjoerd",
     previewUrl: "https://sjoerd.pixelpiraterij.online",
+    defaultThemeSlug: "night",
     basePrice: 39,
     moduleSlugs: ["reservation", "inquiry", "menu", "newsletter"],
     recommendedModuleSlugs: ["reservation", "newsletter"],
@@ -227,6 +230,7 @@ export const routeFamilies: RouteFamily[] = [
   {
     slug: "computerwinkel",
     previewUrl: "https://computerwinkel.pixelpiraterij.online",
+    defaultThemeSlug: "sea",
     basePrice: 39,
     moduleSlugs: ["reservation", "inquiry", "menu", "newsletter"],
     recommendedModuleSlugs: ["menu", "inquiry"],
@@ -310,6 +314,7 @@ export const routeFamilies: RouteFamily[] = [
 function conceptFamily(input: {
   slug: string;
   previewUrl: string;
+  defaultThemeSlug: string;
   label: string;
   audienceNl: string;
   audienceEn: string;
@@ -351,6 +356,7 @@ function conceptFamily(input: {
   return {
     slug: input.slug,
     previewUrl: input.previewUrl,
+    defaultThemeSlug: input.defaultThemeSlug,
     basePrice: 39,
     moduleSlugs: input.modules,
     recommendedModuleSlugs: input.recommended,
@@ -381,7 +387,7 @@ function conceptFamily(input: {
 
 routeFamilies.push(
   conceptFamily({
-    slug: "rcatelier", previewUrl: "https://rcatelier.pixelpiraterij.online", label: "RC Atelier",
+    slug: "rcatelier", previewUrl: "https://rcatelier.pixelpiraterij.online", defaultThemeSlug: "night", label: "RC Atelier",
     audienceNl: "Voor gespecialiseerde hobbyretail met producten die uitleg, vergelijking en vertrouwen nodig hebben.",
     audienceEn: "For specialist hobby retail with products that need explanation, comparison and trust.",
     heroNl: "Techniek, precisie en een winkel die expertise uitstraalt.", heroEn: "Technology, precision and a store that communicates expertise.",
@@ -391,7 +397,7 @@ routeFamilies.push(
     modules: ["inquiry", "gallery", "newsletter"], recommended: ["gallery", "inquiry"], ctaNl: "Bekijk modellen", ctaEn: "View models",
   }),
   conceptFamily({
-    slug: "tradingplatform", previewUrl: "https://tradingplatform.pixelpiraterij.online", label: "TradingPlatform",
+    slug: "tradingplatform", previewUrl: "https://tradingplatform.pixelpiraterij.online", defaultThemeSlug: "night", label: "TradingPlatform",
     audienceNl: "Voor fintech, dashboards en datagedreven producten die controle en hierarchie moeten uitstralen.",
     audienceEn: "For fintech, dashboards and data-driven products that need to communicate control and hierarchy.",
     heroNl: "Data wordt bruikbaar wanneer de interface richting geeft.", heroEn: "Data becomes useful when the interface provides direction.",
@@ -401,7 +407,7 @@ routeFamilies.push(
     modules: ["inquiry", "newsletter"], recommended: ["inquiry"], ctaNl: "Open dashboard", ctaEn: "Open dashboard",
   }),
   conceptFamily({
-    slug: "hovenier", previewUrl: "https://hovenier.pixelpiraterij.online", label: "Hof & Hei",
+    slug: "hovenier", previewUrl: "https://hovenier.pixelpiraterij.online", defaultThemeSlug: "forest", label: "Hof & Hei",
     audienceNl: "Voor hoveniers en landschapsateliers die vakmanschap, seizoenen en projecten willen verbinden.",
     audienceEn: "For garden and landscape studios connecting craft, seasons and projects.",
     heroNl: "Elke tuin een plan. Elk seizoen zijn eigen ritme.", heroEn: "Every garden a plan. Every season its own rhythm.",
@@ -411,7 +417,7 @@ routeFamilies.push(
     modules: ["inquiry", "gallery", "newsletter"], recommended: ["gallery", "inquiry"], ctaNl: "Bespreek de tuin", ctaEn: "Discuss your garden",
   }),
   conceptFamily({
-    slug: "festival", previewUrl: "https://festival.pixelpiraterij.online", label: "Havenlicht",
+    slug: "festival", previewUrl: "https://festival.pixelpiraterij.online", defaultThemeSlug: "sea", label: "Havenlicht",
     audienceNl: "Voor festivals en culturele evenementen met programma, artiesten en praktische bezoekersinformatie.",
     audienceEn: "For festivals and cultural events with schedules, artists and practical visitor information.",
     heroNl: "Vier podia, een kade en een dag die je zelf samenstelt.", heroEn: "Four stages, one quay and a day you shape yourself.",
@@ -421,7 +427,7 @@ routeFamilies.push(
     modules: ["agenda", "gallery", "newsletter", "inquiry"], recommended: ["agenda", "newsletter"], ctaNl: "Bekijk programma", ctaEn: "View schedule",
   }),
   conceptFamily({
-    slug: "makelaar", previewUrl: "https://makelaar.pixelpiraterij.online", label: "Werf & Vecht",
+    slug: "makelaar", previewUrl: "https://makelaar.pixelpiraterij.online", defaultThemeSlug: "sand", label: "Werf & Vecht",
     audienceNl: "Voor makelaars die aanbod, vergelijking en lokale expertise in een rustige premium route willen combineren.",
     audienceEn: "For estate agents combining listings, comparison and local expertise in a calm premium route.",
     heroNl: "Wonen langs stad en Vecht, helder vergeleken.", heroEn: "Living between city and river, compared clearly.",
@@ -431,7 +437,7 @@ routeFamilies.push(
     modules: ["inquiry", "gallery", "newsletter"], recommended: ["gallery", "inquiry"], ctaNl: "Bekijk aanbod", ctaEn: "View listings",
   }),
   conceptFamily({
-    slug: "stichting", previewUrl: "https://stichting.pixelpiraterij.online", label: "Leeslicht",
+    slug: "stichting", previewUrl: "https://stichting.pixelpiraterij.online", defaultThemeSlug: "clay", label: "Leeslicht",
     audienceNl: "Voor stichtingen en maatschappelijke initiatieven die impact, transparantie en deelname helder moeten maken.",
     audienceEn: "For foundations and social initiatives that need to communicate impact, transparency and participation clearly.",
     heroNl: "Samen lezen opent werelden die anders gesloten blijven.", heroEn: "Reading together opens worlds that would otherwise remain closed.",
@@ -665,7 +671,7 @@ export function createDefaultRouteConfig(locale: Locale, familySlug = routeFamil
     routeId: `${family.slug}-${createdAt.slice(0, 10)}`,
     locale,
     familySlug: family.slug,
-    themeSlug: themeOptions[0].slug,
+    themeSlug: getThemeOption(family.defaultThemeSlug).slug,
     brandName: defaults.brandName,
     routeSlug: slugifyRouteLabel(defaults.brandName),
     heroTitle: defaults.heroTitle,
