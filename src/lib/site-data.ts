@@ -1658,7 +1658,7 @@ export const hostingShowcasesDe: ShowcaseItem[] = [
   },
 ];
 
-export const templateShowcases: ShowcaseItem[] = [
+const legacyTemplateShowcases: ShowcaseItem[] = [
   {
     label: "Template suite",
     title: "Een template-start mag compact zijn, zolang de route erachter slim genoeg is.",
@@ -1714,7 +1714,7 @@ export const templateShowcases: ShowcaseItem[] = [
   },
 ];
 
-export const templateShowcasesEn: ShowcaseItem[] = [
+const legacyTemplateShowcasesEn: ShowcaseItem[] = [
   {
     label: "Template suite",
     title: "A template-backed start can stay compact, as long as the route behind it is smart enough.",
@@ -1770,7 +1770,7 @@ export const templateShowcasesEn: ShowcaseItem[] = [
   },
 ];
 
-export const templateShowcasesFr: ShowcaseItem[] = [
+const legacyTemplateShowcasesFr: ShowcaseItem[] = [
   {
     label: "Suite de templates",
     title: "Un départ template peut rester compact tant que la route derrière est assez intelligente.",
@@ -1826,7 +1826,7 @@ export const templateShowcasesFr: ShowcaseItem[] = [
   },
 ];
 
-export const templateShowcasesEs: ShowcaseItem[] = [
+const legacyTemplateShowcasesEs: ShowcaseItem[] = [
   {
     label: "Suite de plantillas",
     title: "Un arranque con plantilla puede seguir siendo compacto mientras la ruta detrás sea lo bastante inteligente.",
@@ -1882,7 +1882,7 @@ export const templateShowcasesEs: ShowcaseItem[] = [
   },
 ];
 
-export const templateShowcasesDe: ShowcaseItem[] = [
+const legacyTemplateShowcasesDe: ShowcaseItem[] = [
   {
     label: "Template-Suite",
     title: "Ein Template-Start darf kompakt sein, solange die Route dahinter clever genug ist.",
@@ -1938,7 +1938,7 @@ export const templateShowcasesDe: ShowcaseItem[] = [
   },
 ];
 
-export const studioShowcases: ShowcaseItem[] = [
+const legacyStudioShowcases: ShowcaseItem[] = [
   {
     label: "Identity surface",
     title: "Een flagship-surface moet voelen alsof hij is gemaakt voor dit merk en voor geen ander.",
@@ -1994,7 +1994,7 @@ export const studioShowcases: ShowcaseItem[] = [
   },
 ];
 
-export const studioShowcasesEn: ShowcaseItem[] = [
+const legacyStudioShowcasesEn: ShowcaseItem[] = [
   {
     label: "Identity surface",
     title: "A flagship surface should feel like it was built for this brand and no other.",
@@ -2050,7 +2050,7 @@ export const studioShowcasesEn: ShowcaseItem[] = [
   },
 ];
 
-export const studioShowcasesFr: ShowcaseItem[] = [
+const legacyStudioShowcasesFr: ShowcaseItem[] = [
   {
     label: "Surface d'identité",
     title: "Une surface flagship doit donner l'impression d'avoir été conçue pour cette marque, et pour aucune autre.",
@@ -2106,7 +2106,7 @@ export const studioShowcasesFr: ShowcaseItem[] = [
   },
 ];
 
-export const studioShowcasesEs: ShowcaseItem[] = [
+const legacyStudioShowcasesEs: ShowcaseItem[] = [
   {
     label: "Superficie de identidad",
     title: "Una superficie flagship debe sentirse como si se hubiera construido para esta marca y para ninguna otra.",
@@ -2162,7 +2162,7 @@ export const studioShowcasesEs: ShowcaseItem[] = [
   },
 ];
 
-export const studioShowcasesDe: ShowcaseItem[] = [
+const legacyStudioShowcasesDe: ShowcaseItem[] = [
   {
     label: "Identity-Oberfläche",
     title: "Eine Flagship-Oberfläche soll sich anfühlen, als sei sie für genau diese Marke gebaut – und für keine andere.",
@@ -2217,6 +2217,61 @@ export const studioShowcasesDe: ShowcaseItem[] = [
     },
   },
 ];
+
+const templateRouteCopy: Record<Locale, Array<Omit<ShowcaseItem, "visual">>> = {
+  nl: [
+    { label: "Service route", title: "Hof & Hei maakt een specialistische dienst direct tastbaar.", body: "Een tuin- en landschapsatelier waarin beeld, expertise en het beplantingsplan samen de route bepalen.", bullets: ["Rustige servicepositionering", "Inhoud vanuit echte vakkennis", "Heldere route naar contact"] },
+    { label: "Event route", title: "Havenlicht brengt programma, sfeer en planning in één wereld.", body: "Een festivalroute met een werkende tijdtafel die overlappende acts signaleert zonder de visuele energie te verliezen.", bullets: ["Programma als functionele kern", "Eigen festivalidentiteit", "Mobiel bruikbare tijdtafel"] },
+    { label: "Listings route", title: "Werf & Vecht maakt woningaanbod vergelijkbaar zonder kil te worden.", body: "Een makelaarsroute met filterbaar aanbod, prijs-per-m²-vergelijking en voldoende ruimte voor vertrouwen en verhaal.", bullets: ["Filterbaar aanbod", "Vergelijkbare marktinformatie", "Premium maar benaderbare presentatie"] },
+    { label: "Culturele route", title: "Digital Paperback Atelier geeft boeken een eigen redactionele omgeving.", body: "Een uitgeverijroute waarin catalogus, auteurschap en editorial ritme belangrijker zijn dan een generiek winkelraster.", bullets: ["Redactionele hiërarchie", "Ruimte voor catalogus en auteurs", "Culturele identiteit met structuur"] },
+  ],
+  en: [
+    { label: "Service route", title: "Hof & Hei makes a specialist service immediately tangible.", body: "A garden and landscape studio where imagery, expertise and the planting plan shape the route together.", bullets: ["Calm service positioning", "Content rooted in real expertise", "Clear path to contact"] },
+    { label: "Event route", title: "Havenlicht combines programme, atmosphere and planning in one world.", body: "A festival route with a working timetable that flags overlapping acts without losing its visual energy.", bullets: ["Programme as functional core", "Distinct festival identity", "Mobile-friendly timetable"] },
+    { label: "Listings route", title: "Werf & Vecht makes listings comparable without becoming cold.", body: "An estate route with filters, price-per-square-metre comparison and room for trust and narrative.", bullets: ["Filterable listings", "Comparable market information", "Premium yet approachable presentation"] },
+    { label: "Cultural route", title: "Digital Paperback Atelier gives books an editorial home.", body: "A publishing route where catalogue, authorship and editorial rhythm matter more than a generic shop grid.", bullets: ["Editorial hierarchy", "Room for catalogue and authors", "Cultural identity with structure"] },
+  ],
+  fr: [
+    { label: "Route service", title: "Hof & Hei rend un service spécialisé immédiatement tangible.", body: "Un atelier de jardin et paysage où l'image, l'expertise et le plan de plantation structurent ensemble le parcours.", bullets: ["Positionnement service serein", "Contenu fondé sur le savoir-faire", "Chemin clair vers le contact"] },
+    { label: "Route événement", title: "Havenlicht réunit programme, atmosphère et planning dans un même univers.", body: "Un parcours festival avec un véritable horaire qui signale les concerts simultanés sans perdre son énergie visuelle.", bullets: ["Programme comme cœur fonctionnel", "Identité de festival propre", "Horaire adapté au mobile"] },
+    { label: "Route annonces", title: "Werf & Vecht rend les biens comparables sans devenir froid.", body: "Une route immobilière avec filtres, comparaison au m² et assez d'espace pour la confiance et le récit.", bullets: ["Annonces filtrables", "Informations de marché comparables", "Présentation premium et accessible"] },
+    { label: "Route culturelle", title: "Digital Paperback Atelier offre aux livres un cadre éditorial.", body: "Une route d'édition où le catalogue, les auteurs et le rythme éditorial priment sur une grille de boutique générique.", bullets: ["Hiérarchie éditoriale", "Place pour catalogue et auteurs", "Identité culturelle structurée"] },
+  ],
+  es: [
+    { label: "Ruta de servicios", title: "Hof & Hei hace tangible un servicio especializado desde el primer momento.", body: "Un estudio de jardín y paisaje donde imagen, experiencia y plan de plantación construyen juntos la ruta.", bullets: ["Posicionamiento sereno", "Contenido basado en experiencia real", "Camino claro al contacto"] },
+    { label: "Ruta de eventos", title: "Havenlicht une programa, ambiente y planificación en un mismo mundo.", body: "Una ruta de festival con un horario funcional que detecta actuaciones solapadas sin perder energía visual.", bullets: ["Programa como núcleo funcional", "Identidad propia de festival", "Horario cómodo en móvil"] },
+    { label: "Ruta de listados", title: "Werf & Vecht permite comparar viviendas sin resultar fría.", body: "Una ruta inmobiliaria con filtros, comparación por m² y espacio suficiente para confianza y relato.", bullets: ["Listados filtrables", "Información de mercado comparable", "Presentación premium y cercana"] },
+    { label: "Ruta cultural", title: "Digital Paperback Atelier da a los libros un entorno editorial propio.", body: "Una ruta editorial donde catálogo, autoría y ritmo importan más que una cuadrícula de tienda genérica.", bullets: ["Jerarquía editorial", "Espacio para catálogo y autores", "Identidad cultural estructurada"] },
+  ],
+  de: [
+    { label: "Service-Route", title: "Hof & Hei macht eine spezialisierte Dienstleistung sofort greifbar.", body: "Ein Garten- und Landschaftsatelier, in dem Bild, Fachwissen und Pflanzplan gemeinsam die Route bestimmen.", bullets: ["Ruhige Servicepositionierung", "Inhalt aus echter Fachkenntnis", "Klarer Weg zum Kontakt"] },
+    { label: "Event-Route", title: "Havenlicht verbindet Programm, Atmosphäre und Planung in einer Welt.", body: "Eine Festivalroute mit funktionierendem Zeitplan, der Überschneidungen erkennt, ohne visuelle Energie zu verlieren.", bullets: ["Programm als funktionaler Kern", "Eigene Festivalidentität", "Mobil nutzbarer Zeitplan"] },
+    { label: "Listings-Route", title: "Werf & Vecht macht Immobilien vergleichbar, ohne kühl zu wirken.", body: "Eine Maklerroute mit Filtern, Quadratmeterpreis-Vergleich und Raum für Vertrauen und Geschichte.", bullets: ["Filterbare Objekte", "Vergleichbare Marktinformation", "Premium und zugänglich"] },
+    { label: "Kulturelle Route", title: "Digital Paperback Atelier gibt Büchern einen redaktionellen Rahmen.", body: "Eine Verlagsroute, in der Katalog, Autorenschaft und Rhythmus wichtiger sind als ein generisches Shop-Raster.", bullets: ["Redaktionelle Hierarchie", "Raum für Katalog und Autoren", "Kulturelle Identität mit Struktur"] },
+  ],
+};
+
+const templateRouteVisuals: ProofVisual[] = [
+  { src: "/templates/showcases/hovenier.jpg", alt: "Hof & Hei template-route voor tuin en landschap.", fit: "cover", position: "center top", tone: "light" },
+  { src: "/templates/showcases/festival.jpg", alt: "Havenlicht template-route voor een festival.", fit: "cover", position: "center top", tone: "dark" },
+  { src: "/templates/showcases/makelaar.jpg", alt: "Werf & Vecht template-route voor woningaanbod.", fit: "cover", position: "center top", tone: "light" },
+  { src: "/templates/showcases/paperback.jpg", alt: "Digital Paperback Atelier template-route voor een uitgeverij.", fit: "cover", position: "center top", tone: "light" },
+];
+
+function buildTemplateRouteShowcases(locale: Locale): ShowcaseItem[] {
+  return templateRouteCopy[locale].map((item, index) => ({ ...item, visual: templateRouteVisuals[index] }));
+}
+
+export const templateShowcases = buildTemplateRouteShowcases("nl");
+export const templateShowcasesEn = buildTemplateRouteShowcases("en");
+export const templateShowcasesFr = buildTemplateRouteShowcases("fr");
+export const templateShowcasesEs = buildTemplateRouteShowcases("es");
+export const templateShowcasesDe = buildTemplateRouteShowcases("de");
+export const studioShowcases = templateShowcases;
+export const studioShowcasesEn = templateShowcasesEn;
+export const studioShowcasesFr = templateShowcasesFr;
+export const studioShowcasesEs = templateShowcasesEs;
+export const studioShowcasesDe = templateShowcasesDe;
 
 export const aboutShowcases: ShowcaseItem[] = [
   {

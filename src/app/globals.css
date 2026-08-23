@@ -534,6 +534,24 @@ html[data-theme="night"] .marquee-chip {
   margin-top: 6rem;
 }
 
+.section-block > .section-head + :is(
+  .segment-grid,
+  .package-grid,
+  .system-grid,
+  .stack-board,
+  .signal-panel,
+  .showcase-grid,
+  .proof-case-grid,
+  .route-editor-shell
+) {
+  margin-top: clamp(1.65rem, 3vw, 2.15rem);
+}
+
+.section-block > :is(.signal-panel, .segment-grid, .system-grid, .package-grid, .stack-board) +
+  :is(.signal-panel, .segment-grid, .system-grid, .package-grid, .stack-board) {
+  margin-top: clamp(1rem, 2vw, 1.35rem);
+}
+
 .section-head {
   display: grid;
   gap: 1rem;
@@ -633,7 +651,7 @@ html[data-theme="night"] .contraband-card {
 
 .segment-card,
 .package-card {
-  padding: 1.25rem;
+  padding: clamp(1.35rem, 2.2vw, 1.7rem);
 }
 
 .route-editor-shell {
@@ -1864,8 +1882,8 @@ html[data-theme="night"] .showcase-visual {
 .proof-case-copy,
 .showcase-copy {
   display: grid;
-  gap: 1rem;
-  padding: 1.25rem;
+  gap: 1.15rem;
+  padding: clamp(1.4rem, 2.3vw, 1.8rem);
 }
 
 .proof-case-head {
@@ -1905,6 +1923,62 @@ html[data-theme="night"] .showcase-visual {
 .showcase-visual {
   min-height: 18rem;
   border-bottom: 1px solid var(--color-line);
+}
+
+.showcase-scroll-image {
+  position: absolute;
+  inset: 0;
+  display: block;
+  background-image: var(--showcase-preview);
+  background-repeat: no-repeat;
+  background-size: 100% auto;
+  background-position: var(--showcase-position);
+}
+
+.proof-scroll-image {
+  position: absolute;
+  inset: 0;
+  display: block;
+  background-image: var(--proof-preview);
+  background-repeat: no-repeat;
+  background-position: var(--proof-position);
+  background-size: 100% auto;
+}
+
+.proof-scroll-image.is-contain {
+  inset: 1rem;
+  background-size: contain;
+}
+
+.proof-visual-frame:hover .proof-scroll-image:not(.is-contain),
+.proof-visual-frame:focus-visible .proof-scroll-image:not(.is-contain) {
+  animation: showcase-scroll 8s ease-in-out infinite alternate;
+}
+
+.proof-visual-frame:focus-visible {
+  outline: 3px solid var(--color-signal);
+  outline-offset: 3px;
+}
+
+.showcase-scroll-image.is-contain {
+  inset: 1rem;
+  background-size: contain;
+  background-position: center;
+}
+
+.showcase-card:hover .showcase-scroll-image:not(.is-contain),
+.showcase-visual:focus-visible .showcase-scroll-image:not(.is-contain) {
+  animation: showcase-scroll 8s ease-in-out infinite alternate;
+}
+
+.showcase-visual:focus-visible {
+  outline: 2px solid var(--color-signal);
+  outline-offset: -2px;
+}
+
+@keyframes showcase-scroll {
+  from { background-position: center top; }
+  to { background-position: center bottom; }
 }
 
 .showcase-card {
@@ -2026,7 +2100,7 @@ html[data-theme="night"] .stack-board--clean .stack-row {
 }
 
 .system-card {
-  padding: 1.25rem;
+  padding: clamp(1.4rem, 2.2vw, 1.7rem);
 }
 
 .system-title {

@@ -310,14 +310,17 @@ export function ProofCaseGrid({ items }: { items: ProofCase[] }) {
                 <div
                   key={`${item.name}-${visual.src}`}
                   className={`proof-visual-frame${index === 0 ? " is-primary" : ""}${visual.tone === "light" ? " is-light" : ""}`}
+                  role="img"
+                  aria-label={visual.alt}
+                  tabIndex={0}
                 >
-                  <Image
-                    src={visual.src}
-                    alt={visual.alt}
-                    fill
-                    sizes="(min-width: 1024px) 40vw, 100vw"
-                    className={`proof-image${visual.fit === "contain" ? " is-contain" : ""}`}
-                    style={visual.position ? { objectPosition: visual.position } : undefined}
+                  <span
+                    aria-hidden="true"
+                    className={`proof-scroll-image${visual.fit === "contain" ? " is-contain" : ""}`}
+                    style={{
+                      ["--proof-preview" as string]: `url(${visual.src})`,
+                      ["--proof-position" as string]: visual.position ?? "center top",
+                    }}
                   />
                 </div>
               ))}
@@ -350,14 +353,19 @@ export function ShowcaseGrid({ items }: { items: ShowcaseItem[] }) {
     <div className="showcase-grid">
       {items.map((item) => (
         <article key={item.title} className="showcase-card">
-          <div className={`showcase-visual${item.visual.tone === "light" ? " is-light" : ""}`}>
-            <Image
-              src={item.visual.src}
-              alt={item.visual.alt}
-              fill
-              sizes="(min-width: 1024px) 50vw, 100vw"
-              className={`showcase-image${item.visual.fit === "contain" ? " is-contain" : ""}`}
-              style={item.visual.position ? { objectPosition: item.visual.position } : undefined}
+          <div
+            className={`showcase-visual${item.visual.tone === "light" ? " is-light" : ""}`}
+            role="img"
+            aria-label={item.visual.alt}
+            tabIndex={0}
+          >
+            <span
+              className={`showcase-scroll-image${item.visual.fit === "contain" ? " is-contain" : ""}`}
+              style={{
+                ["--showcase-preview" as string]: `url(${item.visual.src})`,
+                ["--showcase-position" as string]: item.visual.position ?? "center top",
+              }}
+              aria-hidden="true"
             />
           </div>
 
