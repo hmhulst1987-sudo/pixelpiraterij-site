@@ -1940,7 +1940,7 @@ html[data-theme="night"] .showcase-visual {
 .stack-row {
   display: grid;
   gap: 0.9rem;
-  padding: 1.15rem 0;
+  padding: 1.35rem 1.5rem;
   background: var(--color-paper-strong);
 }
 
@@ -2178,7 +2178,7 @@ html[data-theme="night"] .btn-secondary:focus-visible {
   .stack-row {
     grid-template-columns: 9rem 1fr;
     align-items: start;
-    padding: 1.3rem 0;
+    padding: 1.45rem 1.7rem;
   }
 
   .segment-grid,
