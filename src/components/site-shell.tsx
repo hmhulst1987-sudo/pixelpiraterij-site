@@ -476,6 +476,12 @@ export function Footer() {
         <p className="mt-3 max-w-xl text-sm leading-7 text-[var(--color-fog-muted)]">
           {chrome.footerBlurb}
         </p>
+        <p className="mt-3 max-w-xl text-xs leading-6 text-[var(--color-fog-muted)]">
+          Oeuvre de VB · SIREN 108 331 687 · SIRET 10833168700013 · APE 6201Z · 47 rue Vivienne, 75002 Paris, France
+        </p>
+        <p className="mt-2 text-xs leading-6 text-[var(--color-fog-muted)]">
+          <Link href="/legal">Juridische informatie</Link> · <a href="mailto:info@pixelpiraterij.nl">info@pixelpiraterij.nl</a>
+        </p>
       </div>
       <div className="footer-links">
         {nav.map((item) => (
