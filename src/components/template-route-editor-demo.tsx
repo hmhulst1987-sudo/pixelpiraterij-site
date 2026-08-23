@@ -47,7 +47,9 @@ export function TemplateRouteEditorDemo({
   initialFamilySlug?: string;
 }) {
   const defaultFamilySlug = routeFamilies.some((family) => family.slug === initialFamilySlug) ? initialFamilySlug : undefined;
-  const [workspace, setWorkspace] = useState<TemplateRouteWorkspace>(() => createDefaultWorkspace(locale, defaultFamilySlug));
+  const [workspace, setWorkspace] = useState<TemplateRouteWorkspace>(() =>
+    createDefaultWorkspace(locale, defaultFamilySlug, "2000-01-01T00:00:00.000Z"),
+  );
   const [statusTone, setStatusTone] = useState<StatusTone>("idle");
   const [hasStoredDraft, setHasStoredDraft] = useState(false);
   const [isCheckingDomain, setIsCheckingDomain] = useState(false);
@@ -57,6 +59,8 @@ export function TemplateRouteEditorDemo({
   const [registrarPreparation, setRegistrarPreparation] = useState<RegistrarPreparation | null>(null);
   const [previewViewport, setPreviewViewport] = useState<PreviewViewport>("phone");
   const [previewFocus, setPreviewFocus] = useState<PreviewFocus>(null);
+  const [isOpeningCheckout, setIsOpeningCheckout] = useState(false);
+  const [checkoutError, setCheckoutError] = useState("");
 
   useEffect(() => {
     const storedWorkspace = readStoredWorkspace(locale);
@@ -85,6 +89,30 @@ export function TemplateRouteEditorDemo({
   const serializedWorkspace = serializeWorkspace(workspace);
   const canUseWorkspaceTools = activePackage.builderUnlocked;
   const canPrepareRegistrar = activePackage.launchQueueEnabled && workspace.domainIntake.status === "ready_for_lookup";
+
+  async function openCheckout() {
+    setIsOpeningCheckout(true);
+    setCheckoutError("");
+    try {
+      const response = await fetch("/api/stripe/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          product: "template-route-start",
+          configuration: {
+            familySlug: config.familySlug,
+            selectedModules: config.selectedModules,
+          },
+        }),
+      });
+      const result = (await response.json()) as { url?: string; error?: string };
+      if (!response.ok || !result.url) throw new Error(result.error || "Checkout kon niet worden geopend.");
+      window.location.assign(result.url);
+    } catch (error) {
+      setCheckoutError(error instanceof Error ? error.message : "Checkout kon niet worden geopend.");
+      setIsOpeningCheckout(false);
+    }
+  }
 
   const copy = {
     nl: {
@@ -765,6 +793,9 @@ export function TemplateRouteEditorDemo({
                   );
                 })}
               </div>
+              <a className="btn-secondary" href={currentFamily.previewUrl} target="_blank" rel="noreferrer">
+                {locale === "nl" ? "Bekijk het volledige live concept" : "View the complete live concept"}
+              </a>
             </div>
           </div>
 
@@ -913,7 +944,7 @@ export function TemplateRouteEditorDemo({
                       </div>
                     </div>
                     <div className="route-editor-side-meta">
-                      <span className="route-editor-module-price">+ {formatEuro(tier.monthlyFee)}</span>
+                      <span className="route-editor-module-price">{locale === "nl" ? "Inbegrepen" : "Included"}</span>
                       <span className="route-editor-side-note">
                         {copy.projectLimitLabel}: {tier.projectLimit}
                       </span>
@@ -1286,6 +1317,14 @@ export function TemplateRouteEditorDemo({
                           {copy.ctaLabel}: {activeFlow.ctaLabel}
                         </span>
                       </div>
+                    </div>
+                    <div className="route-builder-toolbar">
+                      <button type="button" className="route-builder-tool is-primary" onClick={openCheckout} disabled={isOpeningCheckout}>
+                        {isOpeningCheckout
+                          ? (locale === "nl" ? "Checkout openen..." : "Opening checkout...")
+                          : (locale === "nl" ? "Start deze route" : "Start this route")}
+                      </button>
+                      {checkoutError ? <p className="route-editor-hint">{checkoutError}</p> : null}
                     </div>
                   </div>
                 </div>

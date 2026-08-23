@@ -104,7 +104,7 @@ export const routePackageTiers: RoutePackageTier[] = [
   },
   {
     slug: "route_plus",
-    monthlyFee: 15,
+    monthlyFee: 0,
     projectLimit: 2,
     builderUnlocked: true,
     launchQueueEnabled: false,
@@ -127,7 +127,7 @@ export const routePackageTiers: RoutePackageTier[] = [
   },
   {
     slug: "managed_launch",
-    monthlyFee: 35,
+    monthlyFee: 0,
     projectLimit: 4,
     builderUnlocked: true,
     launchQueueEnabled: true,
@@ -166,12 +166,12 @@ export function createEmptyDomainIntake(): DomainIntake {
   };
 }
 
-export function createDefaultWorkspace(locale: Locale, familySlug?: string): TemplateRouteWorkspace {
+export function createDefaultWorkspace(locale: Locale, familySlug?: string, timestamp?: string): TemplateRouteWorkspace {
   return {
     version: 2,
     locale,
     packageSlug: "kickstart",
-    config: createDefaultRouteConfig(locale, familySlug),
+    config: createDefaultRouteConfig(locale, familySlug, timestamp),
     domainIntake: createEmptyDomainIntake(),
     launchProfile: createDefaultLaunchProfile(),
   };

@@ -82,6 +82,9 @@ export default async function TemplateBuilderPage({
                   ))}
                 </div>
                 <p className="route-note">{copy.moduleStrategy}</p>
+                <a href={family.previewUrl} target="_blank" rel="noreferrer" className="btn-secondary">
+                  Bekijk live concept
+                </a>
                 <Link href={`/templates/builder?family=${family.slug}#workspace`} className="btn-secondary">
                   {isActive ? "Actieve workspace" : "Open deze route"}
                 </Link>
@@ -111,7 +114,7 @@ export default async function TemplateBuilderPage({
             <article key={tier.slug} className="package-card">
               <p className="section-tag">Toegang</p>
               <h3 className="segment-title">{tier.copy.nl.label}</h3>
-              <p className="package-price">{tier.monthlyFee === 0 ? "Inbegrepen bij intake" : `+ €${tier.monthlyFee} / maand`}</p>
+              <p className="package-price">Inbegrepen in de gekozen route</p>
               <p className="route-note">{tier.copy.nl.description}</p>
               <ul className="feature-list">
                 {tier.copy.nl.features.map((feature) => (

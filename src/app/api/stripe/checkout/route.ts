@@ -2,6 +2,7 @@ import { randomUUID } from "node:crypto";
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { isPixelProduct, pixelProducts } from "@/lib/stripe-products";
+import { getAvailableModules, getRouteFamily } from "@/lib/template-route-builder";
 
 export const runtime = "nodejs";
 
@@ -23,6 +24,35 @@ export async function POST(request: Request) {
   const reference = `PIXEL-${randomUUID().replaceAll("-", "").slice(0, 12).toUpperCase()}`;
   const origin = new URL(request.url).origin;
   const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = [{ price: recurringPrice, quantity: 1 }];
+  const rawConfiguration =
+    typeof body === "object" && body !== null && "configuration" in body && typeof body.configuration === "object" && body.configuration !== null
+      ? body.configuration
+      : null;
+  const requestedFamily = rawConfiguration && "familySlug" in rawConfiguration && typeof rawConfiguration.familySlug === "string"
+    ? rawConfiguration.familySlug
+    : null;
+  const family = requestedFamily ? getRouteFamily(requestedFamily) : null;
+  const selectedModuleSlugs =
+    rawConfiguration && "selectedModules" in rawConfiguration && Array.isArray(rawConfiguration.selectedModules)
+      ? rawConfiguration.selectedModules.filter((value): value is string => typeof value === "string")
+      : [];
+  const selectedModules = family
+    ? getAvailableModules(family.slug).filter((module) => selectedModuleSlugs.includes(module.slug))
+    : [];
+
+  if (productId === "template-route-start") {
+    for (const module of selectedModules) {
+      lineItems.push({
+        quantity: 1,
+        price_data: {
+          currency: "eur",
+          unit_amount: module.price * 100,
+          recurring: { interval: "month" },
+          product_data: { name: `PixelPiraterij module: ${module.copy.nl.label}` },
+        },
+      });
+    }
+  }
   if (setupPrice) lineItems.push({ price: setupPrice, quantity: 1 });
   const session = await new Stripe(key).checkout.sessions.create({
     mode: "subscription",
@@ -33,8 +63,24 @@ export async function POST(request: Request) {
     client_reference_id: reference,
     success_url: `${origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${origin}/hosting?checkout=cancelled`,
-    metadata: { umbrella: "oeuvre_de_vb", brand: "pixelpiraterij", reference, product: productId },
-    subscription_data: { metadata: { umbrella: "oeuvre_de_vb", brand: "pixelpiraterij", reference, product: productId } },
+    metadata: {
+      umbrella: "oeuvre_de_vb",
+      brand: "pixelpiraterij",
+      reference,
+      product: productId,
+      concept: family?.slug ?? "standard",
+      modules: selectedModules.map((module) => module.slug).join(",") || "none",
+    },
+    subscription_data: {
+      metadata: {
+        umbrella: "oeuvre_de_vb",
+        brand: "pixelpiraterij",
+        reference,
+        product: productId,
+        concept: family?.slug ?? "standard",
+        modules: selectedModules.map((module) => module.slug).join(",") || "none",
+      },
+    },
   });
   return NextResponse.json({ url: session.url });
 }
