@@ -105,7 +105,7 @@ export function Topbar() {
           {allLocales.map((item) => (
             <Link
               key={item}
-              href={getLocalizedHref(pathname, item)}
+              href={pathname === "/legal" ? "/legal" : getLocalizedHref(pathname, item)}
               className={`locale-pill${locale === item ? " is-active" : ""}`}
             >
               {localeLabels[item]}
