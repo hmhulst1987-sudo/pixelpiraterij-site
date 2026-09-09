@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 
 export function proxy(request: NextRequest) {
-  if (request.nextUrl.pathname.startsWith("/studio/leads") || request.nextUrl.pathname.startsWith("/api/leads/discover")) {
+  if (request.nextUrl.pathname.startsWith("/studio/leads") || request.nextUrl.pathname.startsWith("/api/leads/discover") || request.nextUrl.pathname.startsWith("/api/leads/audit")) {
     const expectedUser = process.env.LEADS_ADMIN_USER;
     const expectedPassword = process.env.LEADS_ADMIN_PASSWORD;
     const authorization = request.headers.get("authorization");
