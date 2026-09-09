@@ -15,6 +15,13 @@
 
 Google Places vereist `GOOGLE_PLACES_API_KEY`. Beperk deze sleutel in Google Cloud tot Places API (New), de productieomgeving en een passend budget/quotum. De studio toont bewust eerst “rechtsvorm controleren”; ontdekking is nooit automatisch toestemming.
 
+Benodigde productievariabelen:
+
+- `GOOGLE_PLACES_API_KEY`: beperkte server-key voor Places API (New).
+- `LEADS_ADMIN_USER` en `LEADS_ADMIN_PASSWORD`: toegang tot `/studio/leads`.
+- `LEAD_WEBHOOK_URL` en optioneel `LEAD_WEBHOOK_TOKEN`: duurzame leadopslag.
+- `RESEND_API_KEY`, `DOMAIN_OPERATOR_EMAIL` en `EMAIL_FROM`: melding aan de operator.
+
 ## Verkoopritme
 
 1. Selecteer per dag één branche en één regio.
