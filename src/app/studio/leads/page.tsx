@@ -1,0 +1,3 @@
+import { Footer, PageHero, SiteFrame, Topbar } from "@/components/site-shell";
+import { LeadsStudio } from "./leads-studio";
+export default function LeadsPage() { return <SiteFrame><Topbar /><PageHero kicker="Private sales studio" title={<>Vind bedrijven.<br />Bewijs de kans.<br />Bel correct.</>} body="Officiële Places-discovery, onafhankelijke website-audits en een harde scheiding tussen zakelijke rechtspersonen en ondernemers waarvoor voorafgaande toestemming nodig is." primaryCta={{ href: "#discovery", label: "Start selectie" }} secondaryCta={{ href: "/gratis-websitecheck", label: "Bekijk publieke scan" }} /><section id="discovery" className="section-block"><LeadsStudio /></section><Footer /></SiteFrame>; }
