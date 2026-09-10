@@ -1,3 +1,6 @@
 import { Footer, PageHero, SiteFrame, Topbar } from "@/components/site-shell";
 import { LeadsStudio } from "./leads-studio";
+
+export const dynamic = "force-dynamic";
+
 export default function LeadsPage() { return <SiteFrame><Topbar /><PageHero kicker="Private sales studio" title={<>Zet je route uit.<br />Bewijs de kans.<br />Bel correct.</>} body="Kies een plaats of prikpunt, bepaal je straal en laat de studio lokale bedrijven automatisch vinden, technisch beoordelen en rangschikken." primaryCta={{ href: "#discovery", label: "Start selectie" }} secondaryCta={{ href: "/gratis-websitecheck", label: "Bekijk publieke scan" }} /><section id="discovery" className="section-block"><LeadsStudio mapKey={process.env.GOOGLE_MAPS_BROWSER_KEY || ""} /></section><Footer /></SiteFrame>; }
