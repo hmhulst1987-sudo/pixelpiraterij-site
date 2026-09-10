@@ -11,12 +11,19 @@ Opgeslagen voor herstart op 2026-09-10.
 - Iedere respons meldt exact vijf uitgevoerde Places-verzoeken en eventuele mislukte groepen.
 - De nieuwe route valt onder dezelfde Basic Auth-beveiliging als de leads-pagina.
 
-## Na herstart
+## Afgerond na herstart
 
-- Interactieve Google-kaart en plaatszoeker toevoegen aan `leads-studio.tsx`.
-- Radiuskeuze 5/10/20/25 km toevoegen.
-- Automatische websitescans met beperkte gelijktijdigheid uitvoeren.
-- Kaartmarkeringen, verkoopkansfilters en voortgang tonen.
-- Maandteller in de browser toevoegen en als toolteller benoemen.
-- `GOOGLE_MAPS_BROWSER_KEY` aan `.env.example` toevoegen; browserkey beperken tot Maps JavaScript API, Geocoding API en `pixelpiraterij.nl`.
-- Typecheck, build en functionele tests uitvoeren.
+- Interactieve Google-kaart, plaatszoeker en klikbaar middelpunt toegevoegd.
+- Straalkeuze 5/10/20/25 km toegevoegd.
+- Gevonden websites worden automatisch met beperkte gelijktijdigheid beoordeeld.
+- Kaartmarkeringen, voortgang, samenvatting en verkoopkansfilters toegevoegd.
+- Lokale maandteller toegevoegd; Google Cloud Monitoring blijft leidend voor facturatie.
+- Aparte, op HTTP-referrers beperkte browser-key voor Maps JavaScript aangemaakt.
+- Server-key uitgebreid met Geocoding zonder de productie-IP-restrictie te verwijderen.
+- Typecheck en productiebuild uitgevoerd.
+
+## Productieconfiguratie
+
+- Stel `GOOGLE_MAPS_BROWSER_KEY` in bij de bestaande website-runtime.
+- `GOOGLE_PLACES_API_KEY` blijft uitsluitend server-side en is beperkt tot het productie-IP.
+- Test na deployment een zoekopdracht vanuit `/studio/leads`; lokale Places-tests werken bewust niet met de productie-IP-restrictie.
