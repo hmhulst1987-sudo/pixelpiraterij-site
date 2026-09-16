@@ -2370,9 +2370,25 @@ html[data-theme="night"] .btn-secondary:focus-visible {
     position: static;
   }
 
+  .topbar-inner,
+  .topbar-nav,
+  .theme-switch,
+  .locale-switch,
+  .hero-panel,
+  .manifest-panel {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .theme-switch,
+  .locale-switch {
+    flex-wrap: wrap;
+  }
+
   .hero-title {
     max-width: 12ch;
     font-size: clamp(2.8rem, 12vw, 4.4rem);
+    overflow-wrap: anywhere;
   }
 
   .hero-actions,
