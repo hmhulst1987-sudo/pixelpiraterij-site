@@ -172,8 +172,7 @@ button {
 .topbar-shell {
   display: grid;
   gap: 1rem;
-  position: sticky;
-  top: 1rem;
+  position: relative;
   z-index: 30;
   border: 1px solid var(--color-line);
   border-radius: var(--radius-shell);
@@ -683,7 +682,23 @@ html[data-theme="night"] .contraband-card {
 
 .segment-card,
 .package-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   padding: clamp(1.35rem, 2.2vw, 1.7rem);
+}
+
+.segment-grid > *,
+.package-grid > *,
+.system-grid > *,
+.marquee-band > * {
+  min-width: 0;
+  height: 100%;
+}
+
+.segment-card > :last-child,
+.package-card > :last-child {
+  margin-bottom: 0;
 }
 
 .route-editor-shell {
