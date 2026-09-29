@@ -116,6 +116,7 @@ export function LeadsStudio({ mapKey, previewReady, firecrawlReady }: { mapKey: 
   const [previewBusy, setPreviewBusy] = useState(false);
   const [previewUrl, setPreviewUrl] = useState("");
   const [previewError, setPreviewError] = useState("");
+  const previewActionKey = useRef<string | null>(null);
 
   useEffect(() => {
     void refreshControl();
@@ -324,6 +325,7 @@ export function LeadsStudio({ mapKey, previewReady, firecrawlReady }: { mapKey: 
 
   function openPreviewDraft(place: Place) {
     setDraftPlace(place);
+    previewActionKey.current = null;
     setDraft({ name: place.displayName?.text || "", city: "", service: "", tagline: "", description: "", email: "", phone: "" });
     setVerified(false);
     setPreviewUrl("");
@@ -336,10 +338,11 @@ export function LeadsStudio({ mapKey, previewReady, firecrawlReady }: { mapKey: 
     setPreviewError("");
     setPreviewUrl("");
     try {
+      previewActionKey.current ||= crypto.randomUUID();
       const response = await fetch("/api/leads/preview", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...draft, verified }),
+        body: JSON.stringify({ ...draft, verified, idempotencyKey: previewActionKey.current }),
       });
       const result = await response.json();
       if (!response.ok) throw new Error(result.error || "De preview kon niet worden gemaakt.");
@@ -410,9 +413,9 @@ export function LeadsStudio({ mapKey, previewReady, firecrawlReady }: { mapKey: 
       {draftPlace.websiteUri && <a href={draftPlace.websiteUri} target="_blank" rel="noreferrer">Open oorspronkelijke website</a>}
       <form onSubmit={(event) => { event.preventDefault(); void createPreview(); }}>
         <div className="lead-preview-fields">
-          {([['name', 'Geverifieerde bedrijfsnaam'], ['city', 'Plaats'], ['service', 'Dienst / branche'], ['tagline', 'Voorlopige kop'], ['email', 'Openbaar e-mailadres'], ['phone', 'Openbaar telefoonnummer']] as Array<[keyof PreviewDraft, string]>).map(([key, label]) => <label key={key}>{label}<input value={draft[key]} onChange={(event) => setDraft((current) => ({ ...current, [key]: event.target.value }))} required={key === "name" || key === "service"} /></label>)}
+          {([['name', 'Geverifieerde bedrijfsnaam'], ['city', 'Plaats'], ['service', 'Dienst / branche'], ['tagline', 'Voorlopige kop'], ['email', 'Openbaar e-mailadres'], ['phone', 'Openbaar telefoonnummer']] as Array<[keyof PreviewDraft, string]>).map(([key, label]) => <label key={key}>{label}<input value={draft[key]} onChange={(event) => { previewActionKey.current = null; setDraft((current) => ({ ...current, [key]: event.target.value })); }} required={key === "name" || key === "service"} /></label>)}
         </div>
-        <label className="lead-preview-description">Korte, feitelijk gecontroleerde omschrijving<textarea value={draft.description} onChange={(event) => setDraft((current) => ({ ...current, description: event.target.value }))} maxLength={600} rows={3} /></label>
+        <label className="lead-preview-description">Korte, feitelijk gecontroleerde omschrijving<textarea value={draft.description} onChange={(event) => { previewActionKey.current = null; setDraft((current) => ({ ...current, description: event.target.value })); }} maxLength={600} rows={3} /></label>
         <label className="lead-preview-confirm"><input type="checkbox" checked={verified} onChange={(event) => setVerified(event.target.checked)} required /> Ik heb naam, dienst en contactgegevens op de oorspronkelijke bron gecontroleerd.</label>
         <button className="button-primary" type="submit" disabled={previewBusy || !verified || (!draft.email && !draft.phone)}>{previewBusy ? "Concept wordt gemaakt..." : "Maak private preview"}</button>
       </form>

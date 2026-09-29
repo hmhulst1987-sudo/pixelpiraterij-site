@@ -7,6 +7,7 @@ DECLARE
   smoke_candidate_id bigint;
   places_used integer;
   firecrawl_used integer;
+  smoke_usage_id bigint;
 BEGIN
   IF (SELECT mode FROM lead_control WHERE id = 1) <> 'paused' THEN
     RAISE EXCEPTION 'A fresh lead control database must start paused';
@@ -31,6 +32,17 @@ BEGIN
 
   IF places_used <> 2 OR firecrawl_used <> 3 THEN
     RAISE EXCEPTION 'Usage was not associated with its search run';
+  END IF;
+
+  INSERT INTO lead_usage (period, kind, units)
+  VALUES (to_char(now() AT TIME ZONE 'Europe/Amsterdam', 'YYYY-MM'), 'previews', 1)
+  RETURNING id INTO smoke_usage_id;
+  INSERT INTO lead_preview_requests (request_key, draft_digest, usage_id)
+  VALUES ('00000000-0000-4000-8000-000000000001', repeat('a', 64), smoke_usage_id);
+  UPDATE lead_preview_requests SET preview_path = '/preview/test-smoke/', completed_at = now()
+  WHERE request_key = '00000000-0000-4000-8000-000000000001';
+  IF (SELECT preview_path FROM lead_preview_requests WHERE usage_id = smoke_usage_id) <> '/preview/test-smoke/' THEN
+    RAISE EXCEPTION 'Manual preview ledger did not preserve its result';
   END IF;
 
   INSERT INTO lead_candidates (place_id, source_site_url, site_title, technical_score,

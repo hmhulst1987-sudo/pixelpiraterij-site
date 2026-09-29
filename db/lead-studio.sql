@@ -25,6 +25,15 @@ CREATE TABLE IF NOT EXISTS lead_usage (
 
 CREATE INDEX IF NOT EXISTS lead_usage_period_kind_idx ON lead_usage (period, kind);
 
+CREATE TABLE IF NOT EXISTS lead_preview_requests (
+  request_key uuid PRIMARY KEY,
+  draft_digest char(64) NOT NULL CHECK (draft_digest ~ '^[0-9a-f]{64}$'),
+  usage_id bigint NOT NULL UNIQUE REFERENCES lead_usage(id),
+  preview_path text CHECK (preview_path ~ '^/preview/[a-z0-9-]{1,90}/$'),
+  created_at timestamptz NOT NULL DEFAULT now(),
+  completed_at timestamptz
+);
+
 CREATE TABLE IF NOT EXISTS lead_worker_health (
   id integer PRIMARY KEY CHECK (id = 1),
   last_seen_at timestamptz NOT NULL DEFAULT now()

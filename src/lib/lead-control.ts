@@ -95,3 +95,59 @@ export async function reserveLeadUsage(kind: UsageKind, units = 1, requireRunnin
 export async function finishLeadUsage(id: string, succeeded: boolean, externalStatus?: number) {
   await leadPool().query("UPDATE lead_usage SET outcome = $2, external_status = $3, finished_at = now() WHERE id = $1 AND outcome = 'reserved'", [id, succeeded ? "succeeded" : "failed", externalStatus ?? null]);
 }
+
+export async function reservePreviewRequest(requestKey: string, draftDigest: string) {
+  const client = await leadPool().connect();
+  try {
+    await client.query("BEGIN");
+    const control = await client.query<ControlRow>("SELECT * FROM lead_control WHERE id = 1 FOR UPDATE");
+    const row = control.rows[0];
+    if (!row) throw new LeadControlError("Voer eerst de lead-database-migratie uit.", 503);
+    const previous = await client.query<{ draft_digest: string; usage_id: string; preview_path: string | null; created_at: Date }>(
+      "SELECT draft_digest, usage_id::text, preview_path, created_at FROM lead_preview_requests WHERE request_key = $1", [requestKey]);
+    if (previous.rows[0]) {
+      const existing = previous.rows[0];
+      if (existing.draft_digest !== draftDigest) throw new LeadControlError("Deze conceptaanvraag hoort bij andere gegevens. Start een nieuwe bouwactie.", 409);
+      if (Date.now() - existing.created_at.getTime() > 13 * 86400_000) throw new LeadControlError("Deze conceptaanvraag is verlopen. Start een nieuwe bouwactie.", 410);
+      await client.query("COMMIT");
+      return { usageId: existing.usage_id, previewPath: existing.preview_path };
+    }
+    const period = usagePeriod();
+    const used = await client.query<{ total: string }>("SELECT COALESCE(SUM(units), 0)::text AS total FROM lead_usage WHERE period = $1 AND kind = 'previews'", [period]);
+    if (Number(used.rows[0].total) + 1 > row.previews_limit) throw new LeadControlError("De maandlimiet voor previews is bereikt.", 429);
+    const usage = await client.query<{ id: string }>("INSERT INTO lead_usage (period, kind, units) VALUES ($1, 'previews', 1) RETURNING id::text", [period]);
+    await client.query("INSERT INTO lead_preview_requests (request_key, draft_digest, usage_id) VALUES ($1, $2, $3)", [requestKey, draftDigest, usage.rows[0].id]);
+    await client.query("COMMIT");
+    return { usageId: usage.rows[0].id, previewPath: null };
+  } catch (error) {
+    await client.query("ROLLBACK");
+    throw error;
+  } finally {
+    client.release();
+  }
+}
+
+export async function finishPreviewRequest(requestKey: string, usageId: string, previewPath: string | null, externalStatus?: number) {
+  const client = await leadPool().connect();
+  try {
+    await client.query("BEGIN");
+    const current = await client.query<{ preview_path: string | null }>(
+      "SELECT preview_path FROM lead_preview_requests WHERE request_key = $1 AND usage_id = $2 FOR UPDATE", [requestKey, usageId]);
+    if (!current.rows[0]) throw new LeadControlError("De conceptaanvraag is niet meer beschikbaar.", 409);
+    if (current.rows[0].preview_path && previewPath && current.rows[0].preview_path !== previewPath) {
+      throw new LeadControlError("De conceptaanvraag heeft twee verschillende resultaten opgeleverd.", 409);
+    }
+    if (previewPath) {
+      await client.query("UPDATE lead_preview_requests SET preview_path = $2, completed_at = now() WHERE request_key = $1 AND usage_id = $3", [requestKey, previewPath, usageId]);
+    }
+    const succeeded = Boolean(current.rows[0].preview_path || previewPath);
+    await client.query("UPDATE lead_usage SET outcome = $2, external_status = CASE WHEN $2 = 'succeeded' THEN 201 ELSE $3 END, finished_at = now() WHERE id = $1 AND kind = 'previews'", [usageId, succeeded ? "succeeded" : "failed", externalStatus ?? null]);
+    await client.query("COMMIT");
+    return current.rows[0].preview_path || previewPath;
+  } catch (error) {
+    await client.query("ROLLBACK");
+    throw error;
+  } finally {
+    client.release();
+  }
+}
