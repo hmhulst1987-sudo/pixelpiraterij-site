@@ -8,7 +8,7 @@ import { estimatedGrossMapsUsd, usageKinds, type LeadLimits, type LeadMode, type
 
 type Coordinates = { lat: number; lng: number };
 type Place = { id: string; displayName?: { text: string }; formattedAddress?: string; websiteUri?: string; primaryType?: string; location?: { latitude: number; longitude: number } };
-type Score = { score: number; finalUrl: string; priorities: string[]; qualification: LeadQualification; pagesChecked: { url: string; title: string; status: number }[] };
+type Score = { score: number; finalUrl: string; priorities: string[]; signals?: { label: string; ok: boolean; detail: string }[]; qualification: LeadQualification; pagesChecked: { url: string; title: string; status: number }[] };
 type Filter = "all" | "no-site" | "opportunity" | "unscanned" | "large";
 type PreviewDraft = { name: string; city: string; service: string; tagline: string; description: string; email: string; phone: string };
 type MapLike = { setCenter(position: Coordinates): void; setZoom(zoom: number): void; fitBounds(bounds: unknown): void; addListener(event: string, callback: (event: { latLng?: { lat(): number; lng(): number } }) => void): void };
@@ -33,6 +33,38 @@ declare global {
 const DEFAULT_CENTER = { lat: 51.5719, lng: 4.7683 };
 const usageLabels: Record<UsageKind, string> = { search_runs: "Zoekrondes", places: "Places Enterprise", firecrawl: "Firecrawl", geocode: "Plaatszoekacties", previews: "Handmatige concepten", ai: "AI-verzoeken" };
 const usd = new Intl.NumberFormat("nl-NL", { style: "currency", currency: "USD" });
+
+function SavedCandidateEvidence({ candidate }: { candidate: SavedCandidate }) {
+  const deep = candidate.deep_audit;
+  const screenshots = [
+    { label: "Desktop", url: deep?.desktopScreenshot },
+    { label: "Mobiel", url: deep?.mobileScreenshot },
+  ].filter((item): item is { label: string; url: string } => Boolean(item.url));
+
+  return <details className="lead-deep-audit">
+    <summary>Bekijk bewijs, beelden en onzekerheden</summary>
+    <div className="lead-evidence-grid">
+      <section>
+        <h5>Technische feiten</h5>
+        <small>{candidate.audit.pagesChecked.length} pagina(&apos;s) van de eigen website gecontroleerd.</small>
+        <ul>{(candidate.audit.signals || []).map((signal) => <li key={signal.label}><b>{signal.label}: {signal.ok ? "aanwezig" : "aandachtspunt"}</b><small>{signal.detail}</small></li>)}</ul>
+        <small>{deep?.findings.length ? deep.findings.join(" ") : "Geen extra gerenderde tekstsignalen opgeslagen."}</small>
+      </section>
+      <section>
+        <h5>Visuele controle</h5>
+        {screenshots.length ? <div className="lead-screenshots">{screenshots.map((shot) => <a key={shot.label} href={shot.url} target="_blank" rel="noreferrer"><img src={shot.url} alt={`${shot.label}-opname van ${candidate.site_title}`} /><small>{shot.label}</small></a>)}</div> : <small>Geen gerenderde screenshots beschikbaar.</small>}
+        <small>Screenshots kunnen na 24 uur verlopen. Er is geen automatische esthetische score; beoordeel het ontwerp zelf.</small>
+      </section>
+      <section>
+        <h5>Onzekerheden</h5>
+        <small>{candidate.audit.qualification.sizeReason}</small>
+        <small>{candidate.audit.qualification.scoreReason}</small>
+        {(deep?.warnings || []).map((warning) => <small key={warning}>{warning}</small>)}
+        <small>De score bewijst geen bedrijfsgrootte, contacttoestemming of behoefte aan een nieuwe website.</small>
+      </section>
+    </div>
+  </details>;
+}
 
 function loadMaps(key: string) {
   if (window.google?.maps) return Promise.resolve();
@@ -362,7 +394,7 @@ export function LeadsStudio({ mapKey, previewReady, firecrawlReady }: { mapKey: 
         {message && <p className="form-error">{message}</p>}
       </div>
     </div>
-    {candidates.length > 0 && <section className="lead-saved-candidates"><p className="section-tag">Automatisch beoordeeld · handmatige beslissingen</p><h3>Shortlist uit geplande zoekrondes</h3><div className="lead-saved-grid">{candidates.map((candidate) => <article key={candidate.id}><small>{candidate.status} · {new Date(candidate.last_seen_at).toLocaleDateString("nl-NL")}</small><h4>{candidate.site_title}</h4><a href={candidate.source_site_url} target="_blank" rel="noreferrer">Bekijk oorspronkelijke website</a><p>Kans {candidate.opportunity_score}/100 · techniek {candidate.technical_score}/100 · {candidate.size_class === "likely-large" ? "waarschijnlijk groot" : candidate.size_class === "small-medium" ? "MKB-indicatie" : "grootte onbekend"}</p><small>{candidate.audit.priorities?.join(", ") || "Geen duidelijke technische prioriteit"}</small><div className="lead-candidate-actions"><button type="button" className="audit-button" onClick={() => { void setCandidateStatus(candidate, "shortlisted"); }}>Zet op shortlist</button><button type="button" className="audit-button" onClick={() => { void setCandidateStatus(candidate, "dismissed"); }}>Sla over</button>{previewReady && <button type="button" className="audit-button" onClick={() => openPreviewDraft({ id: candidate.id, displayName: { text: candidate.site_title }, websiteUri: candidate.source_site_url })}>Bouw concept</button>}</div>{candidate.deep_audit?.desktopScreenshot && <small>Gerenderde screenshots beschikbaar; controleer ze vóór een concept.</small>}</article>)}</div></section>}
+    {candidates.length > 0 && <section className="lead-saved-candidates"><p className="section-tag">Automatisch beoordeeld · handmatige beslissingen</p><h3>Shortlist uit geplande zoekrondes</h3><div className="lead-saved-grid">{candidates.map((candidate) => <article key={candidate.id}><small>{candidate.status} · {new Date(candidate.last_seen_at).toLocaleDateString("nl-NL")}</small><h4>{candidate.site_title}</h4><a href={candidate.source_site_url} target="_blank" rel="noreferrer">Bekijk oorspronkelijke website</a><p>Kans {candidate.opportunity_score}/100 · techniek {candidate.technical_score}/100 · {candidate.size_class === "likely-large" ? "waarschijnlijk groot" : candidate.size_class === "small-medium" ? "MKB-indicatie" : "grootte onbekend"}</p><small>{candidate.audit.priorities?.join(", ") || "Geen duidelijke technische prioriteit"}</small><SavedCandidateEvidence candidate={candidate} /><div className="lead-candidate-actions"><button type="button" className="audit-button" onClick={() => { void setCandidateStatus(candidate, "shortlisted"); }}>Zet op shortlist</button><button type="button" className="audit-button" onClick={() => { void setCandidateStatus(candidate, "dismissed"); }}>Sla over</button>{previewReady && <button type="button" className="audit-button" onClick={() => openPreviewDraft({ id: candidate.id, displayName: { text: candidate.site_title }, websiteUri: candidate.source_site_url })}>Bouw concept</button>}</div></article>)}</div></section>}
     {places.length > 0 && <><div className="lead-summary"><div><small>Gevonden</small><strong>{places.length}</strong></div><div><small>Verkoopkansen</small><strong>{opportunities}</strong></div><div><small>Zonder website</small><strong>{places.filter((place) => !place.websiteUri).length}</strong></div><div><small>Gescoord</small><strong>{Object.keys(scores).length}</strong></div></div>
       <div className="lead-filters">{([['opportunity', 'Beste kansen'], ['all', 'Alles'], ['no-site', 'Geen website'], ['unscanned', 'Niet gescand'], ['large', 'Waarschijnlijk groot']] as Array<[Filter, string]>).map(([value, label]) => <button key={value} className={filter === value ? "is-active" : ""} onClick={() => setFilter(value)}>{label}</button>)}</div>
       <div className="lead-table"><div className="lead-table-head"><span>Bedrijf</span><span>Website en scan</span><span>Adres</span><span>Belroute</span></div>{ranked.map((place) => {

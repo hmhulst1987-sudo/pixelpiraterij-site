@@ -156,7 +156,7 @@ async function processRun(client, campaign) {
       if (!place.id || !place.websiteUri) continue;
       if (chainNames.test(place.displayName?.text || "")) continue;
       try {
-        const { audit } = await sitePost("/api/leads/audit", { website: place.websiteUri }, 45000);
+        const { audit } = await sitePost("/api/leads/audit", { website: place.websiteUri, businessName: place.displayName?.text || "" }, 45000);
         websitesScanned += 1;
         const candidateId = await saveCandidate(client, place.id, audit, campaign.runId);
         if (candidateId && audit.qualification?.size !== "likely-large" && audit.qualification?.opportunityScore >= 40) shortlist.push({ candidateId, audit });

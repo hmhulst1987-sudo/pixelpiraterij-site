@@ -8,19 +8,22 @@ if (!databaseUrl) throw new Error("Use only an isolated LEADS_DATABASE_URL for t
 const pool = new pg.Pool({ connectionString: databaseUrl, max: 2 });
 const testName = `worker-smoke-${Date.now()}`;
 const calls = { nearby: 0, audit: 0, deep: 0, unexpected: 0 };
+let auditedBusinessName = null;
 const audit = {
   url: "https://example.com", finalUrl: "https://example.com/", status: 200, score: 45,
   pagesChecked: [{ url: "https://example.com/", title: testName, status: 200 }],
   priorities: ["Mobiele viewport"], qualification: { opportunityScore: 70, size: "small-medium" },
 };
 const server = http.createServer(async (request, response) => {
-  for await (const _chunk of request) { /* Drain the request body. */ }
+  let requestBody = "";
+  for await (const chunk of request) requestBody += chunk;
   response.setHeader("Content-Type", "application/json");
   if (request.url === "/api/leads/nearby") {
     calls.nearby += 1;
     response.end(JSON.stringify({ places: [{ id: testName, websiteUri: "https://example.com", displayName: { text: testName } }], requestCount: 1 }));
   } else if (request.url === "/api/leads/audit") {
     calls.audit += 1;
+    auditedBusinessName = JSON.parse(requestBody).businessName;
     response.end(JSON.stringify({ audit }));
   } else if (request.url === "/api/leads/deep-audit") {
     calls.deep += 1;
@@ -90,6 +93,7 @@ try {
   assert.equal(candidate.rows[0].legal_basis, "none");
   assert.equal(candidate.rows[0].approved_at, null);
   assert.match(candidate.rows[0].body, /afmelden/i);
+  assert.equal(auditedBusinessName, testName);
   assert.deepEqual(calls, { nearby: 1, audit: 1, deep: 1, unexpected: 0 });
 
   await pool.query("UPDATE lead_control SET mode = 'paused' WHERE id = 1");
