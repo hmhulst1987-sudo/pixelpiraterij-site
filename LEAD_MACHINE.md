@@ -1,32 +1,21 @@
 # PixelPiraterij leadmachine
 
-## Veilige werkwijze Nederland
+De afgeschermde leadstudio mag zoeken, openbare bedrijfswebsites analyseren en concepten voorbereiden. **Bouw concept** is per kandidaat een handmatige keuze. Een conceptmail verzenden en een eventueel telefoongesprek zijn afzonderlijke, handmatige beslissingen. De worker staat na installatie standaard gepauzeerd. Zie `LEADS_OPERATIONS.md` voor de technische uitrol en de nog niet afgeronde productievoorwaarden.
 
-- Gebruik Google Places API voor ontdekking; scrape Google Maps niet.
-- Sla van Places duurzaam alleen het Place ID op. Audit de openbare bedrijfswebsite onafhankelijk en bewaar alleen de eigen meetresultaten en notities.
-- Controleer vóór bellen altijd de rechtsvorm en het telefoonnummer. BV, NV, stichting en vereniging mogen via een algemeen zakelijk nummer worden benaderd wanneer het aanbod relevant is.
-- Bel een eenmanszaak, VOF of maatschap alleen als aantoonbare, specifieke toestemming bestaat of binnen de wettelijke klantrelatie-uitzondering. Een KVK-vermelding of NMI-registratie is geen beltoestemming.
-- Leg opt-intekst, versie, tijdstip, bron en bewijs vast. Verwerk een bezwaar direct in een permanente suppressielijst.
-- Respecteer robots.txt, gebruik lage scanfrequenties en scan alleen openbare pagina's.
+## Contactgrenzen voor Nederland
 
-## Inrichting
+- Een vermelding op Google Maps, de KVK of een bedrijfswebsite is geen toestemming voor reclame per e-mail of telefoon.
+- Voor wervende e-mail is vooraf aantoonbare toestemming nodig, behalve waar een toepasselijke bestaande-klant-uitzondering geldt. Leg bron, tekst/versie, tijdstip en toepasselijkheid vast. Toon de afzender en een eenvoudige afmeldmogelijkheid. Een operator die op Goedkeuren drukt, schept geen toestemming van de ontvanger.
+- ACM behandelt natuurlijke personen, waaronder eenmanszaken, vof en maatschappen, bij telemarketing onder de beschermde groep. Ga niet uit van een algemeen recht om die te bellen. Het systeem toont een telefoonnummer niet als beltoestemming en belt nooit automatisch.
+- Controleer een eventuele uitzondering en de rechtsvorm per geval, registreer bewijs, en leg een bezwaar onmiddellijk vast in de e-mail- of telefoonsuppressielijst. Gebruik geen geautomatiseerde contactcampagne.
+- Respecteer robots.txt, een lage scanfrequentie en uitsluitend openbare pagina's. Scheid technische feiten van visuele indruk en onzekerheid; maak geen ongeverifieerde claims over een kandidaat.
 
-`/gratis-websitecheck` is de publieke toestemmingsfunnel. `/studio/leads` is met Basic Auth afgeschermd. De scan mailt de operator en stuurt het volledige record naar `LEAD_WEBHOOK_URL`; koppel die URL aan een beveiligde Cloudflare Worker/D1, CRM of automatisering. Zonder webhook blijft e-mailnotificatie werken, maar is er geen duurzame centrale leadopslag.
+Actuele primaire bronnen: [ACM over reclame per e-mail](https://www.acm.nl/nl/verkoop-aan-consumenten/reclame-en-verleiden/spam-voorkomen-uw-reclame) en [ACM over telemarketing](https://www.acm.nl/nl/verkoop-aan-consumenten/reclame-en-verleiden/verkoop-telemarketing). Toets de concrete verzend- of belwerkwijze opnieuw voordat een kanaal wordt geactiveerd.
 
-Google Places vereist `GOOGLE_PLACES_API_KEY`. Beperk deze sleutel in Google Cloud tot Places API (New), de productieomgeving en een passend budget/quotum. De studio toont bewust eerst “rechtsvorm controleren”; ontdekking is nooit automatisch toestemming.
+## Commerciele werkwijze
 
-Benodigde productievariabelen:
-
-- `GOOGLE_PLACES_API_KEY`: beperkte server-key voor Places API (New).
-- `LEADS_ADMIN_USER` en `LEADS_ADMIN_PASSWORD`: toegang tot `/studio/leads`.
-- `LEAD_WEBHOOK_URL` en optioneel `LEAD_WEBHOOK_TOKEN`: duurzame leadopslag.
-- `RESEND_API_KEY`, `DOMAIN_OPERATOR_EMAIL` en `EMAIL_FROM`: melding aan de operator.
-
-## Verkoopritme
-
-1. Selecteer per dag één branche en één regio.
-2. Verwijder bestaande klanten, suppressies en ongeschikte rechtsvormen.
-3. Scan en beoordeel de website; noteer maximaal drie aantoonbare verbeterpunten.
-4. Bel alleen een toegestane lead. Open met observatie en relevantie, niet met een generieke pitch.
-5. Bied eerst ontwerp/herbouw aan; hosting blijft een heldere optionele beheerlaag.
-6. Registreer uitkomst, bezwaar en opvolgdatum direct.
+1. Kies een lokale campagne en een conservatieve limiet; verifieer eerst de providersleutels en quota.
+2. Laat de worker kandidaten ontdekken en websites technisch beoordelen. Controleer score, bron, rechtsvorm en eventuele onzekerheid zelf.
+3. Kies alleen waar zinvol handmatig **Bouw concept**. Een preview is een privevoorstel, niet een publicatie namens het bedrijf.
+4. Beslis onafhankelijk of en hoe contact wettelijk mogelijk is. Zonder bewijs blijft de verzendknop uit; een afmelding sluit de kandidaat uit.
+5. Bied ontwerp/herbouw aan als hoofdproduct. Hosting en beheer blijven een afzonderlijke optionele dienst.
