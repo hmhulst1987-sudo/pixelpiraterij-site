@@ -45,7 +45,7 @@ async function scrape(url: string, key: string, mobile: boolean, formats: string
   const response = await fetcher("https://api.firecrawl.dev/v2/scrape", {
     method: "POST",
     headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
-    body: JSON.stringify({ url, formats, mobile, location: { country: "NL", languages: ["nl"] }, skipTlsVerification: false, timeout: 30000 }),
+    body: JSON.stringify({ url, formats, mobile, proxy: "basic", location: { country: "NL", languages: ["nl"] }, skipTlsVerification: false, timeout: 30000 }),
     signal: AbortSignal.timeout(35000),
     cache: "no-store",
   });

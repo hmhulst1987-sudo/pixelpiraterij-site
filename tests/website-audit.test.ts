@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { publicAddress } from "../src/lib/website-audit";
+import { auditWebsite, publicAddress } from "../src/lib/website-audit";
 
 function resolved(...addresses: string[]) {
   return async () => addresses.map((address) => ({ address, family: address.includes(":") ? 6 : 4 }));
@@ -24,4 +24,13 @@ test("private and documentation IP ranges are rejected", async () => {
 test("a normal public IPv6 answer is accepted", async () => {
   const result = await publicAddress(new URL("https://example.com"), resolved("2606:4700:4700::1111"));
   assert.equal(result.family, 6);
+});
+
+test("a paused worker does not start a website audit request", async () => {
+  let checks = 0;
+  await assert.rejects(auditWebsite("https://1.1.1.1", "", async () => {
+    checks += 1;
+    throw new Error("De lead-worker staat gepauzeerd.");
+  }), /gepauzeerd/);
+  assert.equal(checks, 1);
 });

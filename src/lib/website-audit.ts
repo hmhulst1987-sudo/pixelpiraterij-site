@@ -71,11 +71,13 @@ async function readLimitedBody(response: Awaited<ReturnType<typeof pinnedFetch>>
   return text + decoder.decode();
 }
 
-async function fetchPage(input: string, expectedHost?: string) {
+async function fetchPage(input: string, expectedHost?: string, beforeRequest?: () => Promise<void>) {
+  await beforeRequest?.();
   let current = await safeUrl(input);
   if (expectedHost && current.hostname !== expectedHost) throw new Error("De link gaat naar een ander domein.");
   const started = Date.now();
   for (let redirects = 0; redirects < 4; redirects += 1) {
+    await beforeRequest?.();
     const pinned = await publicAddress(current);
     const agent = new Agent({ connect: { lookup: (_host, options, callback) => {
       if (typeof options === "object" && options.all) {
@@ -121,10 +123,11 @@ function pageTitle(html: string) {
   return /<title[^>]*>([^<]*)<\/title>/i.exec(html)?.[1]?.trim().slice(0, 120) || "Geen paginatitel";
 }
 
-export async function auditWebsite(input: string, businessName = ""): Promise<WebsiteAudit> {
-  const home = await fetchPage(input);
+export async function auditWebsite(input: string, businessName = "", beforeRequest?: () => Promise<void>): Promise<WebsiteAudit> {
+  const home = await fetchPage(input, undefined, beforeRequest);
   const links = home.ok ? selectContentLinks(home.html, home.url, 3) : [];
-  const internal = await Promise.allSettled(links.map((url) => fetchPage(url, new URL(home.url).hostname)));
+  const internal = await Promise.allSettled(links.map((url) => fetchPage(url, new URL(home.url).hostname, beforeRequest)));
+  await beforeRequest?.();
   const pages = [home, ...internal.filter((result): result is PromiseFulfilledResult<typeof home> => result.status === "fulfilled")
     .map((result) => result.value)];
   const successfulPages = pages.filter((page) => page.ok && page.html.length > 250);
