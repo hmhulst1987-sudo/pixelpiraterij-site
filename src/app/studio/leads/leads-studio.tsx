@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { qualifyLead, type LeadQualification } from "@/lib/lead-qualification";
 import type { DeepAudit } from "@/lib/firecrawl-lead-audit";
 import { selectDeepAuditCandidates } from "@/lib/firecrawl-findings";
+import { estimatedGrossMapsUsd, usageKinds, type LeadLimits, type LeadMode, type LeadUsage, type UsageKind } from "@/lib/lead-control-shared";
 
 type Coordinates = { lat: number; lng: number };
 type Place = { id: string; displayName?: { text: string }; formattedAddress?: string; websiteUri?: string; primaryType?: string; location?: { latitude: number; longitude: number } };
@@ -13,6 +14,10 @@ type PreviewDraft = { name: string; city: string; service: string; tagline: stri
 type MapLike = { setCenter(position: Coordinates): void; setZoom(zoom: number): void; fitBounds(bounds: unknown): void; addListener(event: string, callback: (event: { latLng?: { lat(): number; lng(): number } }) => void): void };
 type MarkerLike = { setMap(map: MapLike | null): void };
 type CircleLike = { setMap(map: MapLike | null): void };
+type ControlSnapshot = { mode: LeadMode; limits: LeadLimits; usage: LeadUsage; period: string; workerLastSeen: string | null };
+type Campaign = { id: string; label: string; latitude: number; longitude: number; radius_m: number; interval_minutes: number; max_candidates: number; enabled: boolean; next_run_at: string };
+type CampaignRun = { id: string; campaign_id: string; status: string; places_found: number; websites_scanned: number; deep_scanned: number; places_requests: number; firecrawl_requests: number; error: string | null; started_at: string };
+type SavedCandidate = { id: string; source_site_url: string; site_title: string; technical_score: number; opportunity_score: number; size_class: string; status: string; audit: Score; deep_audit: DeepAudit | null; last_seen_at: string };
 
 declare global {
   interface Window {
@@ -26,8 +31,8 @@ declare global {
 }
 
 const DEFAULT_CENTER = { lat: 51.5719, lng: 4.7683 };
-const COUNTER_KEY = "pixelpiraterij-places-usage";
-const currentMonth = () => new Date().toISOString().slice(0, 7);
+const usageLabels: Record<UsageKind, string> = { search_runs: "Zoekrondes", places: "Places Enterprise", firecrawl: "Firecrawl", geocode: "Plaatszoekacties", previews: "Handmatige concepten", ai: "AI-verzoeken" };
+const usd = new Intl.NumberFormat("nl-NL", { style: "currency", currency: "USD" });
 
 function loadMaps(key: string) {
   if (window.google?.maps) return Promise.resolve();
@@ -66,7 +71,13 @@ export function LeadsStudio({ mapKey, previewReady, firecrawlReady }: { mapKey: 
   const [scanProgress, setScanProgress] = useState({ done: 0, total: 0 });
   const [deepProgress, setDeepProgress] = useState({ done: 0, total: 0, requests: 0 });
   const [filter, setFilter] = useState<Filter>("opportunity");
-  const [usage, setUsage] = useState(0);
+  const [control, setControl] = useState<ControlSnapshot | null>(null);
+  const [controlError, setControlError] = useState("");
+  const [controlBusy, setControlBusy] = useState(false);
+  const [campaigns, setCampaigns] = useState<Campaign[]>([]);
+  const [campaignRuns, setCampaignRuns] = useState<CampaignRun[]>([]);
+  const [candidates, setCandidates] = useState<SavedCandidate[]>([]);
+  const [pipelineError, setPipelineError] = useState("");
   const [draftPlace, setDraftPlace] = useState<Place | null>(null);
   const [draft, setDraft] = useState<PreviewDraft>({ name: "", city: "", service: "", tagline: "", description: "", email: "", phone: "" });
   const [verified, setVerified] = useState(false);
@@ -75,8 +86,10 @@ export function LeadsStudio({ mapKey, previewReady, firecrawlReady }: { mapKey: 
   const [previewError, setPreviewError] = useState("");
 
   useEffect(() => {
-    const saved = JSON.parse(localStorage.getItem(COUNTER_KEY) || "null") as { month?: string; count?: number } | null;
-    setUsage(saved?.month === currentMonth() ? saved.count || 0 : 0);
+    void refreshControl();
+    void refreshPipeline();
+    const interval = window.setInterval(() => { void refreshControl(); void refreshPipeline(); }, 15000);
+    return () => window.clearInterval(interval);
   }, []);
 
   useEffect(() => {
@@ -117,12 +130,69 @@ export function LeadsStudio({ mapKey, previewReady, firecrawlReady }: { mapKey: 
     if (count > 1) map.current.fitBounds(bounds);
   }, [places]);
 
-  function addUsage(count: number) {
-    setUsage((previous) => {
-      const next = previous + count;
-      localStorage.setItem(COUNTER_KEY, JSON.stringify({ month: currentMonth(), count: next }));
-      return next;
-    });
+  async function refreshControl() {
+    try {
+      const response = await fetch("/api/leads/control", { cache: "no-store" });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || "De meter kon niet laden.");
+      setControl(result as ControlSnapshot);
+      setControlError("");
+    } catch (error) {
+      setControlError(error instanceof Error ? error.message : "De meter kon niet laden.");
+    }
+  }
+
+  async function refreshPipeline() {
+    try {
+      const [campaignResponse, candidateResponse] = await Promise.all([fetch("/api/leads/campaigns", { cache: "no-store" }), fetch("/api/leads/candidates", { cache: "no-store" })]);
+      const [campaignData, candidateData] = await Promise.all([campaignResponse.json(), candidateResponse.json()]);
+      if (!campaignResponse.ok || !candidateResponse.ok) throw new Error(campaignData.error || candidateData.error || "De wachtrij kon niet laden.");
+      setCampaigns(campaignData.campaigns as Campaign[]);
+      setCampaignRuns(campaignData.runs as CampaignRun[]);
+      setCandidates(candidateData.candidates as SavedCandidate[]);
+      setPipelineError("");
+    } catch (error) { setPipelineError(error instanceof Error ? error.message : "De wachtrij kon niet laden."); }
+  }
+
+  async function createCampaign(data: FormData) {
+    setPipelineError("");
+    try {
+      const response = await fetch("/api/leads/campaigns", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ label: String(data.get("label") || "").trim(), latitude: center.lat, longitude: center.lng, radius, intervalHours: Number(data.get("intervalHours")), maxCandidates: Number(data.get("maxCandidates")) }) });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || "Campagne opslaan mislukt.");
+      await refreshPipeline();
+    } catch (error) { setPipelineError(error instanceof Error ? error.message : "Campagne opslaan mislukt."); }
+  }
+
+  async function setCampaignEnabled(campaign: Campaign, enabled: boolean) {
+    try {
+      const response = await fetch("/api/leads/campaigns", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id: campaign.id, enabled }) });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || "Campagne wijzigen mislukt.");
+      await refreshPipeline();
+    } catch (error) { setPipelineError(error instanceof Error ? error.message : "Campagne wijzigen mislukt."); }
+  }
+
+  async function setCandidateStatus(candidate: SavedCandidate, status: string) {
+    try {
+      const response = await fetch("/api/leads/candidates", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id: candidate.id, status }) });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || "Lead wijzigen mislukt.");
+      await refreshPipeline();
+    } catch (error) { setPipelineError(error instanceof Error ? error.message : "Lead wijzigen mislukt."); }
+  }
+
+  async function updateControl(mode: LeadMode, limits?: Partial<LeadLimits>) {
+    setControlBusy(true);
+    setControlError("");
+    try {
+      const response = await fetch("/api/leads/control", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ mode, limits }) });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || "Instellingen opslaan mislukt.");
+      setControl(result as ControlSnapshot);
+    } catch (error) {
+      setControlError(error instanceof Error ? error.message : "Instellingen opslaan mislukt.");
+    } finally { setControlBusy(false); }
   }
 
   async function findLocation(data: FormData) {
@@ -196,6 +266,7 @@ export function LeadsStudio({ mapKey, previewReady, firecrawlReady }: { mapKey: 
         setDeepProgress((current) => ({ ...current, done: current.done + 1 }));
       }
     }
+    await refreshControl();
   }
 
   async function discoverNearby() {
@@ -206,13 +277,13 @@ export function LeadsStudio({ mapKey, previewReady, firecrawlReady }: { mapKey: 
       if (!response.ok) throw new Error(json.error || "Zoeken mislukt.");
       const found = (json.places || []) as Place[];
       setPlaces(found);
-      addUsage(Number(json.requestCount) || 0);
       if (json.failures) setMessage(`${json.failures} van de 5 zoekgroepen gaf geen resultaat; de overige resultaten zijn wel verwerkt.`);
+      if (json.limitReached) setMessage(`De zoekronde stopte vroeg: ${json.limitReached}`);
       const scanned = await auditAll(found);
       if (firecrawlReady) await deepenBest(scanned);
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Zoeken mislukt.");
-    } finally { setBusy(false); }
+    } finally { setBusy(false); await refreshControl(); }
   }
 
   function qualificationFor(place: Place) {
@@ -244,6 +315,7 @@ export function LeadsStudio({ mapKey, previewReady, firecrawlReady }: { mapKey: 
     } catch (error) {
       setPreviewError(error instanceof Error ? error.message : "De preview kon niet worden gemaakt.");
     } finally {
+      await refreshControl();
       setPreviewBusy(false);
     }
   }
@@ -259,6 +331,7 @@ export function LeadsStudio({ mapKey, previewReady, firecrawlReady }: { mapKey: 
     return qualificationFor(b).opportunityScore - qualificationFor(a).opportunityScore;
   });
   const opportunities = places.filter((place) => !auditErrors[place.id] && qualificationFor(place).size !== "likely-large" && qualificationFor(place).opportunityScore >= 40).length;
+  const workerOnline = Boolean(control?.workerLastSeen && Date.now() - new Date(control.workerLastSeen).getTime() < 120000);
 
   return <>
     <div className="lead-map-layout">
@@ -267,14 +340,29 @@ export function LeadsStudio({ mapKey, previewReady, firecrawlReady }: { mapKey: 
         <div className="lead-map-caption"><span>Klik op de kaart om het middelpunt te verplaatsen.</span><b>{radius / 1000} km zoekcirkel</b></div>
       </div>
       <div className="lead-controls">
+        <div className="lead-control-panel">
+          <p className="section-tag">Lead-worker · {control?.period || "geen database"}</p>
+          <div className="lead-control-header"><strong>{control?.mode === "running" ? "Actief" : "Gepauzeerd"}</strong><button type="button" className="audit-button" disabled={!control || controlBusy || busy || (control.mode === "paused" && !workerOnline)} onClick={() => { if (control) void updateControl(control.mode === "running" ? "paused" : "running"); }}>{control?.mode === "running" ? "Pauzeer worker" : "Start worker"}</button></div>
+          <small>{workerOnline ? "Worker verbonden" : "Worker offline: start eerst de aparte service op de VPS."}</small>
+          <small>Start en Pauze sturen alleen de automatische lead-worker. Het dashboard blijft bereikbaar. Betaalde API-verzoeken worden ook op de server gecontroleerd.</small>
+          {control && <div className="lead-control-meters">{usageKinds.map((kind) => <div className="lead-usage" key={kind}><div><small>{usageLabels[kind]}</small><strong>{control.usage[kind]}<span> / {control.limits[kind]} deze maand</span></strong></div><progress max={Math.max(1, control.limits[kind])} value={Math.min(control.usage[kind], control.limits[kind])} /></div>)}</div>}
+          {control && usageKinds.some((kind) => control.limits[kind] > 0 && control.usage[kind] / control.limits[kind] >= .8) && <p className="form-error" role="alert">Waarschuwing: {usageKinds.filter((kind) => control.limits[kind] > 0 && control.usage[kind] / control.limits[kind] >= .8).map((kind) => `${usageLabels[kind]} ${Math.min(100, Math.round(100 * control.usage[kind] / control.limits[kind]))}%`).join(" · ")}. Bij 100% weigert de server nieuwe verzoeken voor die dienst.</p>}
+          {control && <small>Indicatie bruto Google Maps-lijsttarief deze maand: {usd.format(estimatedGrossMapsUsd(control.usage.places, control.usage.geocode))}. Dit is geen factuur: mogelijke gratis SKU-limieten, gedeeld billingverbruik, kaartloads, Firecrawl-abonnement, AI en belastingen ontbreken. <a href="https://developers.google.com/maps/billing-and-pricing/pricing" target="_blank" rel="noreferrer">Actuele Google-tarieven</a> · <a href="https://www.firecrawl.dev/pricing" target="_blank" rel="noreferrer">Firecrawl-credits</a>.</small>}
+          {control && <form className="lead-limit-form" key={JSON.stringify(control.limits)} onSubmit={(event) => { event.preventDefault(); const data = new FormData(event.currentTarget); const limits = Object.fromEntries(usageKinds.map((kind) => [kind, Number(data.get(kind))])) as LeadLimits; void updateControl(control.mode, limits); }}><p className="section-tag">Harde maandlimieten</p><div>{usageKinds.map((kind) => <label key={kind}>{usageLabels[kind]}<input name={kind} type="number" min="0" max="100000" step="1" defaultValue={control.limits[kind]} required /></label>)}</div><button className="audit-button" type="submit" disabled={controlBusy}>Limieten opslaan</button></form>}
+          {controlError && <p className="form-error">{controlError}</p>}
+        </div>
+        <form action={createCampaign} className="lead-campaign-form"><p className="section-tag">Automatische zoekcampagne</p><label>Naam van de campagne<input name="label" placeholder="bijvoorbeeld Breda centrum" maxLength={120} required /></label><div><label>Herhaal elke (uren)<input name="intervalHours" type="number" min="1" max="720" defaultValue="24" required /></label><label>Maximaal te scannen sites<input name="maxCandidates" type="number" min="1" max="100" defaultValue="20" required /></label></div><small>Gebruikt het gekozen middelpunt en de zoekstraal van de kaart. Een nieuwe campagne start pas als de worker op Start staat.</small><button type="submit" className="audit-button" disabled={!control}>Campagne bewaren</button></form>
+        {campaigns.length > 0 && <div className="lead-campaign-list"><p className="section-tag">Geplande campagnes</p>{campaigns.map((campaign) => <div key={campaign.id}><span><b>{campaign.label}</b><small>{campaign.radius_m / 1000} km · iedere {campaign.interval_minutes / 60} uur · maximaal {campaign.max_candidates} sites</small><small>Volgende ronde: {new Date(campaign.next_run_at).toLocaleString("nl-NL")}</small></span><button type="button" className="audit-button" onClick={() => { void setCampaignEnabled(campaign, !campaign.enabled); }}>{campaign.enabled ? "Zet uit" : "Zet aan"}</button></div>)}</div>}
+        {campaignRuns.length > 0 && <div className="lead-campaign-list"><p className="section-tag">Laatste runs</p>{campaignRuns.slice(0, 5).map((run) => <small key={run.id}>{new Date(run.started_at).toLocaleString("nl-NL")} · {run.status} · {run.places_found} gevonden, {run.websites_scanned} websites, {run.deep_scanned} verdiept · {run.places_requests} Places- en {run.firecrawl_requests} Firecrawl-verzoeken · bruto Places {usd.format(estimatedGrossMapsUsd(run.places_requests, 0))}{run.error ? ` · ${run.error}` : ""}</small>)}</div>}
+        {pipelineError && <p className="form-error">{pipelineError}</p>}
         <form action={findLocation} className="lead-form studio-location-search"><label>Plaats<input name="location" placeholder="bijvoorbeeld Breda" /></label><button className="audit-button" type="submit" disabled={!mapKey}>Zet op kaart</button></form>
         <div className="lead-radius"><span>Zoekstraal</span>{[5, 10, 20, 25].map((km) => <button key={km} className={radius === km * 1000 ? "is-active" : ""} onClick={() => setRadius(km * 1000)}>{km} km</button>)}</div>
-        <button className="button-primary" onClick={discoverNearby} disabled={busy || !mapKey}>{busy ? deepProgress.total && scanProgress.done === scanProgress.total ? `Verdiept ${deepProgress.done}/${deepProgress.total} kandidaten` : scanProgress.total ? `Scant ${scanProgress.done}/${scanProgress.total} websites` : "Zoekt bedrijven..." : "Vind en beoordeel lokale bedrijven"}</button>
-        <div className="lead-usage"><div><small>Places Enterprise-verzoeken via deze browser deze maand</small><strong>{usage}<span> / 1.000 gratis verzoeken</span></strong></div><progress max="1000" value={Math.min(usage, 1000)} /><small>Elke zoekactie doet tot vijf verzoeken. Dit is geen harde kostengrens; Google Cloud Billing is leidend.</small></div>
-        <div className="lead-usage"><div><small>Firecrawl-verdieping</small><strong>{deepProgress.requests}<span> verzoeken in deze zoekactie</span></strong></div><small>{firecrawlReady ? "Automatisch voor maximaal tien beste kandidaten: maximaal drie pagina-opvragingen per kandidaat (desktop, mobiel, contact). Geen harde maandgrens; Firecrawl Billing is leidend." : "Nog niet actief. Stel FIRECRAWL_API_KEY als servergeheim in voor screenshots en gerenderde inhoud."}</small></div>
+        <button className="button-primary" onClick={discoverNearby} disabled={busy || !mapKey || !control}>{busy ? deepProgress.total && scanProgress.done === scanProgress.total ? `Verdiept ${deepProgress.done}/${deepProgress.total} kandidaten` : scanProgress.total ? `Scant ${scanProgress.done}/${scanProgress.total} websites` : "Zoekt bedrijven..." : "Vind en beoordeel lokale bedrijven"}</button>
+        <small>{firecrawlReady ? `${deepProgress.requests} Firecrawl-verzoeken in deze zoekronde. De servermeter hierboven is leidend voor de maandlimiet.` : "Firecrawl staat uit totdat de sleutel op de server is ingesteld."}</small>
         {message && <p className="form-error">{message}</p>}
       </div>
     </div>
+    {candidates.length > 0 && <section className="lead-saved-candidates"><p className="section-tag">Automatisch beoordeeld · handmatige beslissingen</p><h3>Shortlist uit geplande zoekrondes</h3><div className="lead-saved-grid">{candidates.map((candidate) => <article key={candidate.id}><small>{candidate.status} · {new Date(candidate.last_seen_at).toLocaleDateString("nl-NL")}</small><h4>{candidate.site_title}</h4><a href={candidate.source_site_url} target="_blank" rel="noreferrer">Bekijk oorspronkelijke website</a><p>Kans {candidate.opportunity_score}/100 · techniek {candidate.technical_score}/100 · {candidate.size_class === "likely-large" ? "waarschijnlijk groot" : candidate.size_class === "small-medium" ? "MKB-indicatie" : "grootte onbekend"}</p><small>{candidate.audit.priorities?.join(", ") || "Geen duidelijke technische prioriteit"}</small><div className="lead-candidate-actions"><button type="button" className="audit-button" onClick={() => { void setCandidateStatus(candidate, "shortlisted"); }}>Zet op shortlist</button><button type="button" className="audit-button" onClick={() => { void setCandidateStatus(candidate, "dismissed"); }}>Sla over</button>{previewReady && <button type="button" className="audit-button" onClick={() => openPreviewDraft({ id: candidate.id, displayName: { text: candidate.site_title }, websiteUri: candidate.source_site_url })}>Bouw concept</button>}</div>{candidate.deep_audit?.desktopScreenshot && <small>Gerenderde screenshots beschikbaar; controleer ze vóór een concept.</small>}</article>)}</div></section>}
     {places.length > 0 && <><div className="lead-summary"><div><small>Gevonden</small><strong>{places.length}</strong></div><div><small>Verkoopkansen</small><strong>{opportunities}</strong></div><div><small>Zonder website</small><strong>{places.filter((place) => !place.websiteUri).length}</strong></div><div><small>Gescoord</small><strong>{Object.keys(scores).length}</strong></div></div>
       <div className="lead-filters">{([['opportunity', 'Beste kansen'], ['all', 'Alles'], ['no-site', 'Geen website'], ['unscanned', 'Niet gescand'], ['large', 'Waarschijnlijk groot']] as Array<[Filter, string]>).map(([value, label]) => <button key={value} className={filter === value ? "is-active" : ""} onClick={() => setFilter(value)}>{label}</button>)}</div>
       <div className="lead-table"><div className="lead-table-head"><span>Bedrijf</span><span>Website en scan</span><span>Adres</span><span>Belroute</span></div>{ranked.map((place) => {

@@ -1,0 +1,70 @@
+BEGIN;
+
+DO $$
+DECLARE
+  campaign_id bigint;
+  smoke_run_id bigint;
+  smoke_candidate_id bigint;
+  places_used integer;
+  firecrawl_used integer;
+BEGIN
+  IF (SELECT mode FROM lead_control WHERE id = 1) <> 'paused' THEN
+    RAISE EXCEPTION 'A fresh lead control database must start paused';
+  END IF;
+
+  INSERT INTO lead_campaigns (label, latitude, longitude, radius_m)
+  VALUES ('Smoke test', 51.5719, 4.7683, 20000)
+  RETURNING id INTO campaign_id;
+
+  INSERT INTO lead_runs (campaign_id, scheduled_for)
+  VALUES (campaign_id, now())
+  RETURNING id INTO smoke_run_id;
+
+  INSERT INTO lead_usage (period, kind, units, run_id)
+  VALUES (to_char(now() AT TIME ZONE 'Europe/Amsterdam', 'YYYY-MM'), 'places', 2, smoke_run_id),
+    (to_char(now() AT TIME ZONE 'Europe/Amsterdam', 'YYYY-MM'), 'firecrawl', 3, smoke_run_id);
+
+  SELECT COALESCE(SUM(units) FILTER (WHERE kind = 'places'), 0),
+    COALESCE(SUM(units) FILTER (WHERE kind = 'firecrawl'), 0)
+  INTO places_used, firecrawl_used
+  FROM lead_usage WHERE lead_usage.run_id = smoke_run_id;
+
+  IF places_used <> 2 OR firecrawl_used <> 3 THEN
+    RAISE EXCEPTION 'Usage was not associated with its search run';
+  END IF;
+
+  INSERT INTO lead_candidates (place_id, source_site_url, site_title, technical_score,
+    opportunity_score, size_class, audit, last_run_id)
+  VALUES ('smoke-place-id', 'https://example.com', 'Example', 40, 60, 'small-medium', '{}'::jsonb, smoke_run_id)
+  RETURNING id INTO smoke_candidate_id;
+
+  INSERT INTO lead_deep_jobs (run_id, candidate_id) VALUES (smoke_run_id, smoke_candidate_id)
+  ON CONFLICT (run_id, candidate_id) DO NOTHING;
+  INSERT INTO lead_deep_jobs (run_id, candidate_id) VALUES (smoke_run_id, smoke_candidate_id)
+  ON CONFLICT (run_id, candidate_id) DO NOTHING;
+  IF (SELECT COUNT(*) FROM lead_deep_jobs WHERE run_id = smoke_run_id) <> 1 THEN
+    RAISE EXCEPTION 'Deep scan queue allowed a duplicate job';
+  END IF;
+
+  INSERT INTO lead_outreach (candidate_id, subject, body, source_url)
+  VALUES (smoke_candidate_id, 'Vraag over uw website', 'Dit is een onverzonden concept.', 'https://example.com');
+  IF EXISTS (SELECT 1 FROM lead_outreach WHERE candidate_id = smoke_candidate_id
+      AND (recipient_email IS NOT NULL OR status <> 'draft' OR legal_basis <> 'none' OR approved_at IS NOT NULL OR revision <> 0)) THEN
+    RAISE EXCEPTION 'Automatically created outreach was sendable';
+  END IF;
+
+  UPDATE lead_outreach SET revision = revision + 1 WHERE candidate_id = smoke_candidate_id AND revision = 0;
+  IF (SELECT revision FROM lead_outreach WHERE candidate_id = smoke_candidate_id) <> 1 THEN
+    RAISE EXCEPTION 'Outreach optimistic revision did not advance';
+  END IF;
+
+  UPDATE lead_runs SET status = 'failed', finished_at = now()
+  WHERE id = smoke_run_id AND status = 'running';
+  IF (SELECT status FROM lead_runs WHERE id = smoke_run_id) <> 'failed' THEN
+    RAISE EXCEPTION 'Interrupted run could not be marked failed';
+  END IF;
+
+  RAISE NOTICE 'Lead schema smoke test passed';
+END $$;
+
+ROLLBACK;

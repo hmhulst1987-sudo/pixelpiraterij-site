@@ -1,5 +1,6 @@
 import dns from "node:dns/promises";
 import net from "node:net";
+import { Agent, fetch as pinnedFetch } from "undici";
 import { qualifyLead, selectContentLinks, type LeadQualification } from "./lead-qualification";
 
 export type WebsiteAudit = {
@@ -19,11 +20,23 @@ function isPrivateIp(ip: string) {
     const [a, b] = ip.split(".").map(Number);
     return a === 0 || a === 10 || a === 127 || a >= 224 || (a === 100 && b >= 64 && b <= 127)
       || (a === 169 && b === 254) || (a === 172 && b >= 16 && b <= 31)
-      || (a === 192 && (b === 168 || b === 0)) || (a === 198 && (b === 18 || b === 19));
+      || (a === 192 && (b === 168 || b === 0)) || (a === 198 && (b === 18 || b === 19 || b === 51))
+      || (a === 203 && b === 0) || (a === 192 && b === 0) || (a === 169 && b === 254);
   }
   const value = ip.toLowerCase();
-  return value === "::1" || value === "::" || value.startsWith("::ffff:")
-    || value.startsWith("fc") || value.startsWith("fd") || /^fe[89ab]/.test(value);
+  const first = Number.parseInt(value.split(":")[0], 16);
+  return !Number.isFinite(first) || first < 0x2000 || first > 0x3fff
+    || value.startsWith("2001:db8:") || value.startsWith("::ffff:");
+}
+
+type AddressLookup = (hostname: string, options: { all: true }) => Promise<Array<{ address: string; family: number }>>;
+
+export async function publicAddress(url: URL, lookup: AddressLookup = dns.lookup) {
+  const addresses = await lookup(url.hostname, { all: true });
+  if (!addresses.length || addresses.some(({ address }) => isPrivateIp(address))) {
+    throw new Error("Dit adres kan niet veilig worden gescand.");
+  }
+  return addresses[0];
 }
 
 export async function safeUrl(input: string) {
@@ -33,14 +46,11 @@ export async function safeUrl(input: string) {
     || (url.port && !["80", "443"].includes(url.port)) || /\.(?:local|internal|localhost)$/i.test(url.hostname)) {
     throw new Error("Gebruik een openbare http(s)-website.");
   }
-  const addresses = await dns.lookup(url.hostname, { all: true });
-  if (!addresses.length || addresses.some(({ address }) => isPrivateIp(address))) {
-    throw new Error("Dit adres kan niet veilig worden gescand.");
-  }
+  await publicAddress(url);
   return url;
 }
 
-async function readLimitedBody(response: Response, limit: number) {
+async function readLimitedBody(response: Awaited<ReturnType<typeof pinnedFetch>>, limit: number) {
   if (!response.body) return "";
   const reader = response.body.getReader();
   const decoder = new TextDecoder();
@@ -57,6 +67,7 @@ async function readLimitedBody(response: Response, limit: number) {
       break;
     }
   }
+  if (bytes >= limit) await reader.cancel();
   return text + decoder.decode();
 }
 
@@ -65,22 +76,38 @@ async function fetchPage(input: string, expectedHost?: string) {
   if (expectedHost && current.hostname !== expectedHost) throw new Error("De link gaat naar een ander domein.");
   const started = Date.now();
   for (let redirects = 0; redirects < 4; redirects += 1) {
-    const response = await fetch(current, {
-      redirect: "manual",
-      headers: { "User-Agent": "PixelPiraterij-Websitecheck/1.0", Accept: "text/html" },
-      signal: AbortSignal.timeout(7000),
-      cache: "no-store",
-    });
-    const location = response.headers.get("location");
-    if ([301, 302, 303, 307, 308].includes(response.status) && location) {
-      current = await safeUrl(new URL(location, current).href);
-      if (expectedHost && current.hostname !== expectedHost) throw new Error("De pagina verwijst naar een ander domein.");
-      continue;
+    const pinned = await publicAddress(current);
+    const agent = new Agent({ connect: { lookup: (_host, options, callback) => {
+      if (typeof options === "object" && options.all) {
+        const allCallback = callback as unknown as (error: null, addresses: Array<{ address: string; family: number }>) => void;
+        allCallback(null, [pinned]);
+      } else {
+        callback(null, pinned.address, pinned.family);
+      }
+    } } });
+    let response: Awaited<ReturnType<typeof pinnedFetch>>;
+    try {
+      response = await pinnedFetch(current.href, {
+        dispatcher: agent,
+        redirect: "manual",
+        headers: { "User-Agent": "PixelPiraterij-Websitecheck/1.0", Accept: "text/html" },
+        signal: AbortSignal.timeout(7000),
+      });
+      const location = response.headers.get("location");
+      if ([301, 302, 303, 307, 308].includes(response.status) && location) {
+        await response.body?.cancel();
+        current = await safeUrl(new URL(location, current).href);
+        if (expectedHost && current.hostname !== expectedHost) throw new Error("De pagina verwijst naar een ander domein.");
+        continue;
+      }
+      const responseMs = Date.now() - started;
+      const type = response.headers.get("content-type") || "";
+      if (type && !type.includes("text/html")) await response.body?.cancel();
+      const html = type.includes("text/html") || type === "" ? await readLimitedBody(response, 750_000) : "";
+      return { url: current.href, status: response.status, ok: response.ok, responseMs, html };
+    } finally {
+      await agent.close();
     }
-    const responseMs = Date.now() - started;
-    const type = response.headers.get("content-type") || "";
-    const html = type.includes("text/html") || type === "" ? await readLimitedBody(response, 750_000) : "";
-    return { url: current.href, status: response.status, ok: response.ok, responseMs, html };
   }
   throw new Error("Te veel doorverwijzingen.");
 }

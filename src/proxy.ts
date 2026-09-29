@@ -1,7 +1,10 @@
 import { NextResponse, type NextRequest } from "next/server";
 
 export function proxy(request: NextRequest) {
-  if (request.nextUrl.pathname.startsWith("/studio/leads") || request.nextUrl.pathname.startsWith("/api/leads/discover") || request.nextUrl.pathname.startsWith("/api/leads/geocode") || request.nextUrl.pathname.startsWith("/api/leads/nearby") || request.nextUrl.pathname.startsWith("/api/leads/audit") || request.nextUrl.pathname.startsWith("/api/leads/deep-audit") || request.nextUrl.pathname.startsWith("/api/leads/preview")) {
+  const workerPath = ["/api/leads/nearby", "/api/leads/audit", "/api/leads/deep-audit"].includes(request.nextUrl.pathname);
+  const workerToken = process.env.LEADS_WORKER_TOKEN;
+  if (workerPath && workerToken && request.headers.get("authorization") === `Bearer ${workerToken}`) return NextResponse.next();
+  if (request.nextUrl.pathname.startsWith("/studio/leads") || request.nextUrl.pathname.startsWith("/api/leads/discover") || request.nextUrl.pathname.startsWith("/api/leads/geocode") || request.nextUrl.pathname.startsWith("/api/leads/nearby") || request.nextUrl.pathname.startsWith("/api/leads/audit") || request.nextUrl.pathname.startsWith("/api/leads/deep-audit") || request.nextUrl.pathname.startsWith("/api/leads/preview") || request.nextUrl.pathname.startsWith("/api/leads/control") || request.nextUrl.pathname.startsWith("/api/leads/campaigns") || request.nextUrl.pathname.startsWith("/api/leads/candidates") || request.nextUrl.pathname.startsWith("/api/leads/outreach")) {
     const expectedUser = process.env.LEADS_ADMIN_USER;
     const expectedPassword = process.env.LEADS_ADMIN_PASSWORD;
     const authorization = request.headers.get("authorization");
