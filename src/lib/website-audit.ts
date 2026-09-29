@@ -1,5 +1,6 @@
 import dns from "node:dns/promises";
 import net from "node:net";
+import { qualifyLead, selectContentLinks, type LeadQualification } from "./lead-qualification";
 
 export type WebsiteAudit = {
   url: string;
@@ -9,56 +10,134 @@ export type WebsiteAudit = {
   responseMs: number;
   signals: { label: string; ok: boolean; detail: string }[];
   priorities: string[];
+  pagesChecked: { url: string; status: number; title: string }[];
+  qualification: LeadQualification;
 };
 
 function isPrivateIp(ip: string) {
   if (net.isIPv4(ip)) {
     const [a, b] = ip.split(".").map(Number);
-    return a === 10 || a === 127 || a === 0 || (a === 169 && b === 254) || (a === 172 && b >= 16 && b <= 31) || (a === 192 && b === 168);
+    return a === 0 || a === 10 || a === 127 || a >= 224 || (a === 100 && b >= 64 && b <= 127)
+      || (a === 169 && b === 254) || (a === 172 && b >= 16 && b <= 31)
+      || (a === 192 && (b === 168 || b === 0)) || (a === 198 && (b === 18 || b === 19));
   }
   const value = ip.toLowerCase();
-  return value === "::1" || value === "::" || value.startsWith("fc") || value.startsWith("fd") || value.startsWith("fe8") || value.startsWith("fe9") || value.startsWith("fea") || value.startsWith("feb");
+  return value === "::1" || value === "::" || value.startsWith("::ffff:")
+    || value.startsWith("fc") || value.startsWith("fd") || /^fe[89ab]/.test(value);
 }
 
 async function safeUrl(input: string) {
   const value = /^https?:\/\//i.test(input) ? input : `https://${input}`;
   const url = new URL(value);
-  if (!["http:", "https:"].includes(url.protocol) || url.username || url.password) throw new Error("Gebruik een openbare http(s)-website.");
+  if (!["http:", "https:"].includes(url.protocol) || url.username || url.password
+    || (url.port && !["80", "443"].includes(url.port)) || /\.(?:local|internal|localhost)$/i.test(url.hostname)) {
+    throw new Error("Gebruik een openbare http(s)-website.");
+  }
   const addresses = await dns.lookup(url.hostname, { all: true });
-  if (!addresses.length || addresses.some(({ address }) => isPrivateIp(address))) throw new Error("Dit adres kan niet veilig worden gescand.");
+  if (!addresses.length || addresses.some(({ address }) => isPrivateIp(address))) {
+    throw new Error("Dit adres kan niet veilig worden gescand.");
+  }
   return url;
 }
 
-export async function auditWebsite(input: string): Promise<WebsiteAudit> {
-  let current = await safeUrl(input);
-  const started = Date.now();
-  let response: Response | undefined;
-  for (let redirects = 0; redirects < 4; redirects += 1) {
-    response = await fetch(current, { redirect: "manual", headers: { "User-Agent": "PixelPiraterij-Websitecheck/1.0" }, signal: AbortSignal.timeout(12000) });
-    if (![301, 302, 303, 307, 308].includes(response.status)) break;
-    const location = response.headers.get("location");
-    if (!location) break;
-    current = await safeUrl(new URL(location, current).href);
+async function readLimitedBody(response: Response, limit: number) {
+  if (!response.body) return "";
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+  let bytes = 0;
+  let text = "";
+  while (bytes < limit) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    const accepted = value.subarray(0, limit - bytes);
+    bytes += accepted.byteLength;
+    text += decoder.decode(accepted, { stream: true });
+    if (accepted.byteLength < value.byteLength) {
+      await reader.cancel();
+      break;
+    }
   }
-  if (!response) throw new Error("De website gaf geen antwoord.");
-  const body = (await response.text()).slice(0, 1_000_000);
-  const html = body.toLowerCase();
-  const year = new Date().getFullYear();
-  const tests: Array<[string, boolean, string]> = [
-    ["Beveiligde verbinding", current.protocol === "https:", current.protocol === "https:" ? "HTTPS is actief." : "De pagina gebruikt geen HTTPS."],
-    ["Mobiele basis", /name=["']viewport["']/.test(html), /name=["']viewport["']/.test(html) ? "Een viewport is ingesteld." : "Geen mobiele viewport gevonden."],
-    ["Zoekresultaat", /<title[^>]*>[^<]{8,}<\/title>/.test(html) && /name=["']description["']/.test(html), "Titel en meta-omschrijving gecontroleerd."],
-    ["Merkherkenning", /rel=["'][^"']*(icon|apple-touch-icon)/.test(html), "Favicon of app-icoon gecontroleerd."],
-    ["Moderne opbouw", !/(<frameset|<frame\s|<marquee|\.swf|application\/x-shockwave-flash)/.test(html), "Geen klassieke verouderde techniek aangetroffen."],
-    ["Duidelijke actie", /(contact|offerte|afspraak|bel ons|reserver|bestel|aanvraag)/.test(html), "Contact- of conversiesignaal gecontroleerd."],
-    ["Recente actualiteit", [year, year - 1, year - 2].some((value) => html.includes(String(value))), "Een jaaraanduiding uit de laatste drie jaar gecontroleerd."],
+  return text + decoder.decode();
+}
+
+async function fetchPage(input: string, expectedHost?: string) {
+  let current = await safeUrl(input);
+  if (expectedHost && current.hostname !== expectedHost) throw new Error("De link gaat naar een ander domein.");
+  const started = Date.now();
+  for (let redirects = 0; redirects < 4; redirects += 1) {
+    const response = await fetch(current, {
+      redirect: "manual",
+      headers: { "User-Agent": "PixelPiraterij-Websitecheck/1.0", Accept: "text/html" },
+      signal: AbortSignal.timeout(7000),
+      cache: "no-store",
+    });
+    const location = response.headers.get("location");
+    if ([301, 302, 303, 307, 308].includes(response.status) && location) {
+      current = await safeUrl(new URL(location, current).href);
+      if (expectedHost && current.hostname !== expectedHost) throw new Error("De pagina verwijst naar een ander domein.");
+      continue;
+    }
+    const responseMs = Date.now() - started;
+    const type = response.headers.get("content-type") || "";
+    const html = type.includes("text/html") || type === "" ? await readLimitedBody(response, 750_000) : "";
+    return { url: current.href, status: response.status, ok: response.ok, responseMs, html };
+  }
+  throw new Error("Te veel doorverwijzingen.");
+}
+
+function textContent(html: string) {
+  return html.replace(/<(?:script|style|noscript|svg)\b[^>]*>[\s\S]*?<\/\s*(?:script|style|noscript|svg)\s*>/gi, " ")
+    .replace(/<[^>]+>/g, " ").replace(/&(?:nbsp|amp|quot|apos|#\d+);/gi, " ").replace(/\s+/g, " ").trim();
+}
+
+function pageTitle(html: string) {
+  return /<title[^>]*>([^<]*)<\/title>/i.exec(html)?.[1]?.trim().slice(0, 120) || "Geen paginatitel";
+}
+
+export async function auditWebsite(input: string, businessName = ""): Promise<WebsiteAudit> {
+  const home = await fetchPage(input);
+  const links = home.ok ? selectContentLinks(home.html, home.url, 3) : [];
+  const internal = await Promise.allSettled(links.map((url) => fetchPage(url, new URL(home.url).hostname)));
+  const pages = [home, ...internal.filter((result): result is PromiseFulfilledResult<typeof home> => result.status === "fulfilled")
+    .map((result) => result.value)];
+  const successfulPages = pages.filter((page) => page.ok && page.html.length > 250);
+  const allHtml = successfulPages.map((page) => page.html).join("\n").toLowerCase();
+  const allText = successfulPages.map((page) => textContent(page.html)).join(" ");
+  const titleOk = /<title[^>]*>[^<]{8,}<\/title>/i.test(home.html);
+  const descriptionOk = /<meta\b[^>]*name=["']description["'][^>]*content=["'][^"']{20,}/i.test(home.html)
+    || /<meta\b[^>]*content=["'][^"']{20,}["'][^>]*name=["']description["']/i.test(home.html);
+  const viewportOk = /<meta\b[^>]*name=["']viewport["']/i.test(home.html);
+  const faviconOk = /<link\b[^>]*rel=["'][^"']*(?:icon|apple-touch-icon)/i.test(home.html);
+  const contactOk = /(?:mailto:|tel:|\bcontact\b|\bneem contact op\b)/i.test(allHtml);
+  const ctaOk = /(?:offerte|afspraak|reserveer|boek nu|aanvraag|bestel|vraag aan|contact opnemen)/i.test(allText);
+  const modernOk = !/(<frameset|<frame\s|<marquee|\.swf|application\/x-shockwave-flash)/i.test(allHtml);
+  const depthOk = links.length === 0 || successfulPages.length >= 2;
+  const speedOk = home.responseMs < 2500;
+  const tests: Array<[string, boolean, string, number]> = [
+    ["Bereikbaarheid", home.ok, `HTTP-status ${home.status}.`, 2],
+    ["Beveiligde verbinding", new URL(home.url).protocol === "https:", "HTTPS gecontroleerd.", 1],
+    ["Mobiele viewport", viewportOk, viewportOk ? "Viewport aanwezig; dit bewijst nog geen goede mobiele layout." : "Geen mobiele viewport gevonden.", 1],
+    ["Zoekresultaat", titleOk && descriptionOk, "Paginatitel en meta-omschrijving gecontroleerd.", 1],
+    ["Merkherkenning", faviconOk, "Favicon of app-icoon gecontroleerd.", 1],
+    ["Moderne opbouw", modernOk, "Geen klassieke verouderde techniek gevonden.", 1],
+    ["Duidelijke actie", ctaOk, "Actietekst op de gecontroleerde pagina's bekeken.", 1],
+    ["Contactmogelijkheid", contactOk, "Contactlink, telefoon of e-mail gecontroleerd.", 1],
+    ["Inhoudelijke pagina's", depthOk, links.length === 0 ? "Geen geschikte binnenpagina's gevonden; dit kan een geldige one-page-site zijn." : `${successfulPages.length} inhoudelijke pagina('s) gevonden; maximaal vier bekeken.`, links.length === 0 ? 0 : 2],
+    ["Antwoordtijd", speedOk, `${home.responseMs} ms tot de HTML-respons; geen volledige render- of Core Web Vitals-meting.`, 1],
   ];
+  const totalWeight = tests.reduce((sum, test) => sum + test[3], 0);
+  const score = Math.round(tests.reduce((sum, test) => sum + (test[1] ? test[3] : 0), 0) / totalWeight * 100);
   const signals = tests.map(([label, ok, detail]) => ({ label, ok, detail }));
-  const responseMs = Date.now() - started;
-  const speedOk = responseMs < 2500;
-  signals.push({ label: "Reactiesnelheid", ok: speedOk, detail: `${responseMs} ms voor de eerste HTML-reactie.` });
-  signals.push({ label: "Bereikbaarheid", ok: response.ok, detail: `HTTP-status ${response.status}.` });
-  const score = Math.round((signals.filter((item) => item.ok).length / signals.length) * 100);
   const priorities = signals.filter((item) => !item.ok).slice(0, 4).map((item) => item.label);
-  return { url: input, finalUrl: current.href, status: response.status, score, responseMs, signals, priorities };
+  return {
+    url: input,
+    finalUrl: home.url,
+    status: home.status,
+    score,
+    responseMs: home.responseMs,
+    signals,
+    priorities,
+    pagesChecked: pages.map((page) => ({ url: page.url, status: page.status, title: pageTitle(page.html) })),
+    qualification: qualifyLead(score, allText, businessName),
+  };
 }

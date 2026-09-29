@@ -10,11 +10,11 @@ type GooglePlace = {
 };
 
 const SEARCH_GROUPS = [
-  ["restaurant", "cafe", "bakery", "bar"],
-  ["clothing_store", "shoe_store", "furniture_store", "florist", "jewelry_store", "book_store"],
-  ["hair_care", "beauty_salon", "spa", "laundry", "car_repair", "real_estate_agency", "travel_agency"],
-  ["lawyer", "accounting", "dentist", "doctor", "physiotherapist"],
-  ["gym", "lodging", "pet_store", "veterinary_care", "home_goods_store"],
+  ["bakery", "cafe", "restaurant", "florist"],
+  ["hair_care", "beauty_salon", "spa", "laundry"],
+  ["car_repair", "furniture_store", "home_goods_store", "pet_store"],
+  ["lodging", "travel_agency", "real_estate_agency"],
+  ["gym", "book_store", "jewelry_store", "shoe_store"],
 ];
 
 export async function POST(request: NextRequest) {
@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
       body: JSON.stringify({
         includedTypes,
         maxResultCount: 20,
-        rankPreference: "POPULARITY",
+        rankPreference: "DISTANCE",
         languageCode: "nl",
         regionCode: "NL",
         locationRestriction: { circle: { center: { latitude, longitude }, radius } },

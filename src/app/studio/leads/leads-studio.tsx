@@ -1,11 +1,13 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { qualifyLead, type LeadQualification } from "@/lib/lead-qualification";
 
 type Coordinates = { lat: number; lng: number };
 type Place = { id: string; displayName?: { text: string }; formattedAddress?: string; websiteUri?: string; primaryType?: string; location?: { latitude: number; longitude: number } };
-type Score = { score: number; priorities: string[] };
-type Filter = "all" | "no-site" | "opportunity" | "unscanned";
+type Score = { score: number; priorities: string[]; qualification: LeadQualification; pagesChecked: { url: string; title: string; status: number }[] };
+type Filter = "all" | "no-site" | "opportunity" | "unscanned" | "large";
+type PreviewDraft = { name: string; city: string; service: string; tagline: string; description: string; email: string; phone: string };
 type MapLike = { setCenter(position: Coordinates): void; setZoom(zoom: number): void; fitBounds(bounds: unknown): void; addListener(event: string, callback: (event: { latLng?: { lat(): number; lng(): number } }) => void): void };
 type MarkerLike = { setMap(map: MapLike | null): void };
 type CircleLike = { setMap(map: MapLike | null): void };
@@ -44,7 +46,7 @@ function loadMaps(key: string) {
   });
 }
 
-export function LeadsStudio({ mapKey }: { mapKey: string }) {
+export function LeadsStudio({ mapKey, previewReady }: { mapKey: string; previewReady: boolean }) {
   const mapElement = useRef<HTMLDivElement>(null);
   const map = useRef<MapLike | null>(null);
   const pin = useRef<MarkerLike | null>(null);
@@ -54,11 +56,18 @@ export function LeadsStudio({ mapKey }: { mapKey: string }) {
   const [radius, setRadius] = useState(20_000);
   const [places, setPlaces] = useState<Place[]>([]);
   const [scores, setScores] = useState<Record<string, Score>>({});
+  const [auditErrors, setAuditErrors] = useState<Record<string, string>>({});
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
   const [scanProgress, setScanProgress] = useState({ done: 0, total: 0 });
-  const [filter, setFilter] = useState<Filter>("all");
+  const [filter, setFilter] = useState<Filter>("opportunity");
   const [usage, setUsage] = useState(0);
+  const [draftPlace, setDraftPlace] = useState<Place | null>(null);
+  const [draft, setDraft] = useState<PreviewDraft>({ name: "", city: "", service: "", tagline: "", description: "", email: "", phone: "" });
+  const [verified, setVerified] = useState(false);
+  const [previewBusy, setPreviewBusy] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState("");
+  const [previewError, setPreviewError] = useState("");
 
   useEffect(() => {
     const saved = JSON.parse(localStorage.getItem(COUNTER_KEY) || "null") as { month?: string; count?: number } | null;
@@ -129,16 +138,19 @@ export function LeadsStudio({ mapKey }: { mapKey: string }) {
   async function auditPlace(place: Place) {
     if (!place.websiteUri) return;
     try {
-      const response = await fetch("/api/leads/audit", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ website: place.websiteUri }) });
+      const response = await fetch("/api/leads/audit", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ website: place.websiteUri, businessName: place.displayName?.text }) });
       const json = await response.json();
-      if (response.ok) setScores((current) => ({ ...current, [place.id]: json.audit }));
+      if (!response.ok) throw new Error(json.error || "Scan niet gelukt.");
+      setScores((current) => ({ ...current, [place.id]: json.audit }));
+    } catch (error) {
+      setAuditErrors((current) => ({ ...current, [place.id]: error instanceof Error ? error.message : "Scan niet gelukt." }));
     } finally {
       setScanProgress((current) => ({ ...current, done: current.done + 1 }));
     }
   }
 
   async function auditAll(found: Place[]) {
-    const websites = found.filter((place) => place.websiteUri);
+    const websites = found.filter((place) => place.websiteUri && qualifyLead(null, "", place.displayName?.text).size !== "likely-large");
     setScanProgress({ done: 0, total: websites.length });
     let cursor = 0;
     async function worker() {
@@ -151,7 +163,7 @@ export function LeadsStudio({ mapKey }: { mapKey: string }) {
   }
 
   async function discoverNearby() {
-    setBusy(true); setMessage(""); setScores({}); setPlaces([]); setScanProgress({ done: 0, total: 0 });
+    setBusy(true); setMessage(""); setScores({}); setAuditErrors({}); setPlaces([]); setScanProgress({ done: 0, total: 0 });
     try {
       const response = await fetch("/api/leads/nearby", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ latitude: center.lat, longitude: center.lng, radius }) });
       const json = await response.json();
@@ -166,17 +178,50 @@ export function LeadsStudio({ mapKey }: { mapKey: string }) {
     } finally { setBusy(false); }
   }
 
+  function qualificationFor(place: Place) {
+    return scores[place.id]?.qualification ?? qualifyLead(null, "", place.displayName?.text);
+  }
+
+  function openPreviewDraft(place: Place) {
+    setDraftPlace(place);
+    setDraft({ name: place.displayName?.text || "", city: "", service: "", tagline: "", description: "", email: "", phone: "" });
+    setVerified(false);
+    setPreviewUrl("");
+    setPreviewError("");
+    requestAnimationFrame(() => document.getElementById("preview-draft")?.scrollIntoView({ behavior: "smooth", block: "start" }));
+  }
+
+  async function createPreview() {
+    setPreviewBusy(true);
+    setPreviewError("");
+    setPreviewUrl("");
+    try {
+      const response = await fetch("/api/leads/preview", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...draft, verified }),
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || "De preview kon niet worden gemaakt.");
+      setPreviewUrl(result.url);
+    } catch (error) {
+      setPreviewError(error instanceof Error ? error.message : "De preview kon niet worden gemaakt.");
+    } finally {
+      setPreviewBusy(false);
+    }
+  }
+
   const ranked = [...places].filter((place) => {
+    const qualification = qualificationFor(place);
     if (filter === "no-site") return !place.websiteUri;
-    if (filter === "opportunity") return !place.websiteUri || (scores[place.id]?.score ?? 101) < 60;
+    if (filter === "opportunity") return !auditErrors[place.id] && qualification.size !== "likely-large" && qualification.opportunityScore >= 40;
     if (filter === "unscanned") return Boolean(place.websiteUri) && !scores[place.id];
+    if (filter === "large") return qualification.size === "likely-large";
     return true;
   }).sort((a, b) => {
-    if (!a.websiteUri && b.websiteUri) return -1;
-    if (a.websiteUri && !b.websiteUri) return 1;
-    return (scores[a.id]?.score ?? 101) - (scores[b.id]?.score ?? 101);
+    return qualificationFor(b).opportunityScore - qualificationFor(a).opportunityScore;
   });
-  const opportunities = places.filter((place) => !place.websiteUri || (scores[place.id]?.score ?? 101) < 60).length;
+  const opportunities = places.filter((place) => !auditErrors[place.id] && qualificationFor(place).size !== "likely-large" && qualificationFor(place).opportunityScore >= 40).length;
 
   return <>
     <div className="lead-map-layout">
@@ -187,14 +232,34 @@ export function LeadsStudio({ mapKey }: { mapKey: string }) {
       <div className="lead-controls">
         <form action={findLocation} className="lead-form studio-location-search"><label>Plaats<input name="location" placeholder="bijvoorbeeld Breda" /></label><button className="audit-button" type="submit" disabled={!mapKey}>Zet op kaart</button></form>
         <div className="lead-radius"><span>Zoekstraal</span>{[5, 10, 20, 25].map((km) => <button key={km} className={radius === km * 1000 ? "is-active" : ""} onClick={() => setRadius(km * 1000)}>{km} km</button>)}</div>
-        <button className="button-primary" onClick={discoverNearby} disabled={busy || !mapKey}>{busy ? scanProgress.total ? `Scant ${scanProgress.done}/${scanProgress.total} websites` : "Zoekt bedrijven..." : "Vind en beoordeel bedrijven"}</button>
-        <div className="lead-usage"><div><small>Places-verzoeken deze maand via deze tool</small><strong>{usage}<span> / 1.000 gratis</span></strong></div><progress max="1000" value={Math.min(usage, 1000)} /><small>Toolteller in deze browser. Google Cloud Monitoring blijft leidend voor het volledige project.</small></div>
+        <button className="button-primary" onClick={discoverNearby} disabled={busy || !mapKey}>{busy ? scanProgress.total ? `Scant ${scanProgress.done}/${scanProgress.total} websites` : "Zoekt bedrijven..." : "Vind en beoordeel lokale bedrijven"}</button>
+        <div className="lead-usage"><div><small>Places Enterprise-verzoeken via deze browser deze maand</small><strong>{usage}<span> / 1.000 gratis verzoeken</span></strong></div><progress max="1000" value={Math.min(usage, 1000)} /><small>Elke zoekactie doet tot vijf verzoeken. Dit is geen harde kostengrens; Google Cloud Billing is leidend.</small></div>
         {message && <p className="form-error">{message}</p>}
       </div>
     </div>
     {places.length > 0 && <><div className="lead-summary"><div><small>Gevonden</small><strong>{places.length}</strong></div><div><small>Verkoopkansen</small><strong>{opportunities}</strong></div><div><small>Zonder website</small><strong>{places.filter((place) => !place.websiteUri).length}</strong></div><div><small>Gescoord</small><strong>{Object.keys(scores).length}</strong></div></div>
-      <div className="lead-filters">{([['all', 'Alles'], ['opportunity', 'Beste kansen'], ['no-site', 'Geen website'], ['unscanned', 'Niet gescand']] as Array<[Filter, string]>).map(([value, label]) => <button key={value} className={filter === value ? "is-active" : ""} onClick={() => setFilter(value)}>{label}</button>)}</div>
-      <div className="lead-table"><div className="lead-table-head"><span>Bedrijf</span><span>Website en scan</span><span>Adres</span><span>Belroute</span></div>{ranked.map((place) => <article key={place.id}><span><b>{place.displayName?.text}</b><small>{place.primaryType?.replaceAll("_", " ")}</small></span><span>{place.websiteUri ? <><a href={place.websiteUri} target="_blank" rel="noreferrer">Website openen</a><b className={scores[place.id]?.score < 60 ? "status-opportunity" : ""}>{scores[place.id] ? `Techniekscore ${scores[place.id].score}/100` : "Scan niet voltooid"}</b>{scores[place.id] && <small>{scores[place.id].priorities.join(", ") || "Geen directe technische aandachtspunten"}</small>}</> : <b className="status-opportunity">Geen website vermeld</b>}</span><span>{place.formattedAddress}</span><span><b className="status-hold">Eerst rechtsvorm controleren</b><small>Eenmanszaak/VOF alleen bellen met aantoonbare opt-in.</small></span></article>)}</div></>}
-    <p className="form-note">De lijst toont verkoopkansen, geen beltoestemming. Bewaar duurzaam alleen het Place ID en je eigen audits/notities; controleer rechtsvorm en bestaande klantrelatie vóór telefonisch contact.</p>
+      <div className="lead-filters">{([['opportunity', 'Beste kansen'], ['all', 'Alles'], ['no-site', 'Geen website'], ['unscanned', 'Niet gescand'], ['large', 'Waarschijnlijk groot']] as Array<[Filter, string]>).map(([value, label]) => <button key={value} className={filter === value ? "is-active" : ""} onClick={() => setFilter(value)}>{label}</button>)}</div>
+      <div className="lead-table"><div className="lead-table-head"><span>Bedrijf</span><span>Website en scan</span><span>Adres</span><span>Belroute</span></div>{ranked.map((place) => {
+        const audit = scores[place.id];
+        const qualification = qualificationFor(place);
+        return <article key={place.id}><span><b>{place.displayName?.text}</b><small>{place.primaryType?.replaceAll("_", " ")}</small></span><span>{place.websiteUri ? <><a href={place.websiteUri} target="_blank" rel="noreferrer">Website openen</a><b className={qualification.opportunityScore >= 40 ? "status-opportunity" : ""}>{audit ? `Kans ${qualification.opportunityScore}/100 · techniek ${audit.score}/100` : qualification.size === "likely-large" ? "Ketenindicatie: scan overgeslagen" : auditErrors[place.id] ? "Scan mislukt" : "Scan loopt of is niet voltooid"}</b>{auditErrors[place.id] && <small>{auditErrors[place.id]}</small>}{audit && <><small>{audit.priorities.join(", ") || "Geen directe technische aandachtspunten"}</small><small title={audit.pagesChecked.map((page) => `${page.title}: ${page.url}`).join("\n")}>{audit.pagesChecked.length} pagina('s) gecontroleerd, inclusief binnenpagina&apos;s</small></>}</> : <b className="status-opportunity">Geen website vermeld · score voorlopig</b>}</span><span>{place.formattedAddress}</span><span><b className={qualification.size === "likely-large" ? "status-hold" : ""}>{qualification.size === "small-medium" ? "MKB-indicatie" : qualification.size === "likely-large" ? "Waarschijnlijk groter bedrijf" : "Grootte onbekend"}</b><small title={qualification.scoreReason}>{qualification.sizeReason}</small><small>Contact pas na handmatige controle van rechtsvorm en toestemming.</small>{previewReady && qualification.size !== "likely-large" && <button type="button" className="audit-button" onClick={() => openPreviewDraft(place)}>Concept voorbereiden</button>}</span></article>;
+      })}</div></>}
+    {previewReady && draftPlace && <section id="preview-draft" className="lead-preview-panel">
+      <p className="section-tag">Private conceptgenerator</p>
+      <h3>Controleer de gegevens voor het concept.</h3>
+      <p>De automatische score helpt bij kiezen. Neem bedrijfsgegevens van de eigen website of bevestig ze met het bedrijf; Google Places-data is geen blijvende bron voor de preview. Dit formulier verstuurt geen leadbericht.</p>
+      {draftPlace.websiteUri && <a href={draftPlace.websiteUri} target="_blank" rel="noreferrer">Open oorspronkelijke website</a>}
+      <form onSubmit={(event) => { event.preventDefault(); void createPreview(); }}>
+        <div className="lead-preview-fields">
+          {([['name', 'Geverifieerde bedrijfsnaam'], ['city', 'Plaats'], ['service', 'Dienst / branche'], ['tagline', 'Voorlopige kop'], ['email', 'Openbaar e-mailadres'], ['phone', 'Openbaar telefoonnummer']] as Array<[keyof PreviewDraft, string]>).map(([key, label]) => <label key={key}>{label}<input value={draft[key]} onChange={(event) => setDraft((current) => ({ ...current, [key]: event.target.value }))} required={key === "name" || key === "service"} /></label>)}
+        </div>
+        <label className="lead-preview-description">Korte, feitelijk gecontroleerde omschrijving<textarea value={draft.description} onChange={(event) => setDraft((current) => ({ ...current, description: event.target.value }))} maxLength={600} rows={3} /></label>
+        <label className="lead-preview-confirm"><input type="checkbox" checked={verified} onChange={(event) => setVerified(event.target.checked)} required /> Ik heb naam, dienst en contactgegevens op de oorspronkelijke bron gecontroleerd.</label>
+        <button className="button-primary" type="submit" disabled={previewBusy || !verified || (!draft.email && !draft.phone)}>{previewBusy ? "Concept wordt gemaakt..." : "Maak private preview"}</button>
+      </form>
+      {previewError && <p className="form-error">{previewError}</p>}
+      {previewUrl && <p className="lead-preview-result"><a href={previewUrl} target="_blank" rel="noreferrer">Open het concept in een nieuw tabblad</a><small>Niet openbaar geadverteerd. Controleer desktop en mobiel voordat je deze link deelt.</small></p>}
+    </section>}
+    <p className="form-note">De beoordeling loopt automatisch over maximaal vier pagina&apos;s. Bedrijfsgrootte is alleen een indicatie, geen vastgesteld personeelsaantal. Deze lijst geeft geen beltoestemming; outreach gebeurt uitsluitend handmatig.</p>
   </>;
 }
