@@ -26,7 +26,7 @@ function isPrivateIp(ip: string) {
     || value.startsWith("fc") || value.startsWith("fd") || /^fe[89ab]/.test(value);
 }
 
-async function safeUrl(input: string) {
+export async function safeUrl(input: string) {
   const value = /^https?:\/\//i.test(input) ? input : `https://${input}`;
   const url = new URL(value);
   if (!["http:", "https:"].includes(url.protocol) || url.username || url.password

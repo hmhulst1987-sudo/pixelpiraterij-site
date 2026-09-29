@@ -2,10 +2,12 @@
 
 import { useEffect, useRef, useState } from "react";
 import { qualifyLead, type LeadQualification } from "@/lib/lead-qualification";
+import type { DeepAudit } from "@/lib/firecrawl-lead-audit";
+import { selectDeepAuditCandidates } from "@/lib/firecrawl-findings";
 
 type Coordinates = { lat: number; lng: number };
 type Place = { id: string; displayName?: { text: string }; formattedAddress?: string; websiteUri?: string; primaryType?: string; location?: { latitude: number; longitude: number } };
-type Score = { score: number; priorities: string[]; qualification: LeadQualification; pagesChecked: { url: string; title: string; status: number }[] };
+type Score = { score: number; finalUrl: string; priorities: string[]; qualification: LeadQualification; pagesChecked: { url: string; title: string; status: number }[] };
 type Filter = "all" | "no-site" | "opportunity" | "unscanned" | "large";
 type PreviewDraft = { name: string; city: string; service: string; tagline: string; description: string; email: string; phone: string };
 type MapLike = { setCenter(position: Coordinates): void; setZoom(zoom: number): void; fitBounds(bounds: unknown): void; addListener(event: string, callback: (event: { latLng?: { lat(): number; lng(): number } }) => void): void };
@@ -46,7 +48,7 @@ function loadMaps(key: string) {
   });
 }
 
-export function LeadsStudio({ mapKey, previewReady }: { mapKey: string; previewReady: boolean }) {
+export function LeadsStudio({ mapKey, previewReady, firecrawlReady }: { mapKey: string; previewReady: boolean; firecrawlReady: boolean }) {
   const mapElement = useRef<HTMLDivElement>(null);
   const map = useRef<MapLike | null>(null);
   const pin = useRef<MarkerLike | null>(null);
@@ -57,9 +59,12 @@ export function LeadsStudio({ mapKey, previewReady }: { mapKey: string; previewR
   const [places, setPlaces] = useState<Place[]>([]);
   const [scores, setScores] = useState<Record<string, Score>>({});
   const [auditErrors, setAuditErrors] = useState<Record<string, string>>({});
+  const [deepAudits, setDeepAudits] = useState<Record<string, DeepAudit>>({});
+  const [deepErrors, setDeepErrors] = useState<Record<string, string>>({});
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
   const [scanProgress, setScanProgress] = useState({ done: 0, total: 0 });
+  const [deepProgress, setDeepProgress] = useState({ done: 0, total: 0, requests: 0 });
   const [filter, setFilter] = useState<Filter>("opportunity");
   const [usage, setUsage] = useState(0);
   const [draftPlace, setDraftPlace] = useState<Place | null>(null);
@@ -136,14 +141,16 @@ export function LeadsStudio({ mapKey, previewReady }: { mapKey: string; previewR
   }
 
   async function auditPlace(place: Place) {
-    if (!place.websiteUri) return;
+    if (!place.websiteUri) return null;
     try {
       const response = await fetch("/api/leads/audit", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ website: place.websiteUri, businessName: place.displayName?.text }) });
       const json = await response.json();
       if (!response.ok) throw new Error(json.error || "Scan niet gelukt.");
       setScores((current) => ({ ...current, [place.id]: json.audit }));
+      return { place, audit: json.audit as Score };
     } catch (error) {
       setAuditErrors((current) => ({ ...current, [place.id]: error instanceof Error ? error.message : "Scan niet gelukt." }));
+      return null;
     } finally {
       setScanProgress((current) => ({ ...current, done: current.done + 1 }));
     }
@@ -151,19 +158,48 @@ export function LeadsStudio({ mapKey, previewReady }: { mapKey: string; previewR
 
   async function auditAll(found: Place[]) {
     const websites = found.filter((place) => place.websiteUri && qualifyLead(null, "", place.displayName?.text).size !== "likely-large");
+    const successful: Array<{ place: Place; audit: Score }> = [];
     setScanProgress({ done: 0, total: websites.length });
     let cursor = 0;
     async function worker() {
       while (cursor < websites.length) {
         const place = websites[cursor++];
-        await auditPlace(place);
+        const result = await auditPlace(place);
+        if (result) successful.push(result);
       }
     }
     await Promise.all(Array.from({ length: Math.min(3, websites.length) }, worker));
+    return successful;
+  }
+
+  async function deepenBest(scanned: Array<{ place: Place; audit: Score }>) {
+    const best = selectDeepAuditCandidates(scanned);
+    setDeepProgress({ done: 0, total: best.length, requests: 0 });
+    for (const { place, audit } of best) {
+      const contactPage = audit.pagesChecked.find((page) => page.status < 400 && /\b(?:contact|bereikbaar|over-ons|about)\b/i.test(new URL(page.url).pathname) && page.url !== audit.finalUrl)?.url;
+      try {
+        const response = await fetch("/api/leads/deep-audit", {
+          method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ website: audit.finalUrl, contactPage }),
+        });
+        const json = await response.json();
+        if (!response.ok) throw new Error(json.error || "Verdieping mislukt.");
+        const deep = json.audit as DeepAudit;
+        setDeepAudits((current) => ({ ...current, [place.id]: deep }));
+        setDeepProgress((current) => ({ done: current.done + 1, total: current.total, requests: current.requests + deep.requestsAttempted }));
+        if (deep.warnings.some((warning) => /sleutel is ongeldig|credits zijn op|verzoeklimiet bereikt/i.test(warning))) {
+          setMessage("Firecrawl is gestopt: controleer de API-sleutel, credits of verzoeklimiet. De goedkope scans blijven zichtbaar.");
+          break;
+        }
+      } catch (error) {
+        setDeepErrors((current) => ({ ...current, [place.id]: error instanceof Error ? error.message : "Verdieping mislukt." }));
+        setDeepProgress((current) => ({ ...current, done: current.done + 1 }));
+      }
+    }
   }
 
   async function discoverNearby() {
-    setBusy(true); setMessage(""); setScores({}); setAuditErrors({}); setPlaces([]); setScanProgress({ done: 0, total: 0 });
+    setBusy(true); setMessage(""); setScores({}); setAuditErrors({}); setDeepAudits({}); setDeepErrors({}); setPlaces([]); setScanProgress({ done: 0, total: 0 }); setDeepProgress({ done: 0, total: 0, requests: 0 });
     try {
       const response = await fetch("/api/leads/nearby", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ latitude: center.lat, longitude: center.lng, radius }) });
       const json = await response.json();
@@ -172,7 +208,8 @@ export function LeadsStudio({ mapKey, previewReady }: { mapKey: string; previewR
       setPlaces(found);
       addUsage(Number(json.requestCount) || 0);
       if (json.failures) setMessage(`${json.failures} van de 5 zoekgroepen gaf geen resultaat; de overige resultaten zijn wel verwerkt.`);
-      await auditAll(found);
+      const scanned = await auditAll(found);
+      if (firecrawlReady) await deepenBest(scanned);
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Zoeken mislukt.");
     } finally { setBusy(false); }
@@ -232,8 +269,9 @@ export function LeadsStudio({ mapKey, previewReady }: { mapKey: string; previewR
       <div className="lead-controls">
         <form action={findLocation} className="lead-form studio-location-search"><label>Plaats<input name="location" placeholder="bijvoorbeeld Breda" /></label><button className="audit-button" type="submit" disabled={!mapKey}>Zet op kaart</button></form>
         <div className="lead-radius"><span>Zoekstraal</span>{[5, 10, 20, 25].map((km) => <button key={km} className={radius === km * 1000 ? "is-active" : ""} onClick={() => setRadius(km * 1000)}>{km} km</button>)}</div>
-        <button className="button-primary" onClick={discoverNearby} disabled={busy || !mapKey}>{busy ? scanProgress.total ? `Scant ${scanProgress.done}/${scanProgress.total} websites` : "Zoekt bedrijven..." : "Vind en beoordeel lokale bedrijven"}</button>
+        <button className="button-primary" onClick={discoverNearby} disabled={busy || !mapKey}>{busy ? deepProgress.total && scanProgress.done === scanProgress.total ? `Verdiept ${deepProgress.done}/${deepProgress.total} kandidaten` : scanProgress.total ? `Scant ${scanProgress.done}/${scanProgress.total} websites` : "Zoekt bedrijven..." : "Vind en beoordeel lokale bedrijven"}</button>
         <div className="lead-usage"><div><small>Places Enterprise-verzoeken via deze browser deze maand</small><strong>{usage}<span> / 1.000 gratis verzoeken</span></strong></div><progress max="1000" value={Math.min(usage, 1000)} /><small>Elke zoekactie doet tot vijf verzoeken. Dit is geen harde kostengrens; Google Cloud Billing is leidend.</small></div>
+        <div className="lead-usage"><div><small>Firecrawl-verdieping</small><strong>{deepProgress.requests}<span> verzoeken in deze zoekactie</span></strong></div><small>{firecrawlReady ? "Automatisch voor maximaal tien beste kandidaten: maximaal drie pagina-opvragingen per kandidaat (desktop, mobiel, contact). Geen harde maandgrens; Firecrawl Billing is leidend." : "Nog niet actief. Stel FIRECRAWL_API_KEY als servergeheim in voor screenshots en gerenderde inhoud."}</small></div>
         {message && <p className="form-error">{message}</p>}
       </div>
     </div>
@@ -242,7 +280,8 @@ export function LeadsStudio({ mapKey, previewReady }: { mapKey: string; previewR
       <div className="lead-table"><div className="lead-table-head"><span>Bedrijf</span><span>Website en scan</span><span>Adres</span><span>Belroute</span></div>{ranked.map((place) => {
         const audit = scores[place.id];
         const qualification = qualificationFor(place);
-        return <article key={place.id}><span><b>{place.displayName?.text}</b><small>{place.primaryType?.replaceAll("_", " ")}</small></span><span>{place.websiteUri ? <><a href={place.websiteUri} target="_blank" rel="noreferrer">Website openen</a><b className={qualification.opportunityScore >= 40 ? "status-opportunity" : ""}>{audit ? `Kans ${qualification.opportunityScore}/100 · techniek ${audit.score}/100` : qualification.size === "likely-large" ? "Ketenindicatie: scan overgeslagen" : auditErrors[place.id] ? "Scan mislukt" : "Scan loopt of is niet voltooid"}</b>{auditErrors[place.id] && <small>{auditErrors[place.id]}</small>}{audit && <><small>{audit.priorities.join(", ") || "Geen directe technische aandachtspunten"}</small><small title={audit.pagesChecked.map((page) => `${page.title}: ${page.url}`).join("\n")}>{audit.pagesChecked.length} pagina('s) gecontroleerd, inclusief binnenpagina&apos;s</small></>}</> : <b className="status-opportunity">Geen website vermeld · score voorlopig</b>}</span><span>{place.formattedAddress}</span><span><b className={qualification.size === "likely-large" ? "status-hold" : ""}>{qualification.size === "small-medium" ? "MKB-indicatie" : qualification.size === "likely-large" ? "Waarschijnlijk groter bedrijf" : "Grootte onbekend"}</b><small title={qualification.scoreReason}>{qualification.sizeReason}</small><small>Contact pas na handmatige controle van rechtsvorm en toestemming.</small>{previewReady && qualification.size !== "likely-large" && <button type="button" className="audit-button" onClick={() => openPreviewDraft(place)}>Concept voorbereiden</button>}</span></article>;
+        const deep = deepAudits[place.id];
+        return <article key={place.id}><span><b>{place.displayName?.text}</b><small>{place.primaryType?.replaceAll("_", " ")}</small></span><span>{place.websiteUri ? <><a href={place.websiteUri} target="_blank" rel="noreferrer">Website openen</a><b className={qualification.opportunityScore >= 40 ? "status-opportunity" : ""}>{audit ? `Kans ${qualification.opportunityScore}/100 · techniek ${audit.score}/100` : qualification.size === "likely-large" ? "Ketenindicatie: scan overgeslagen" : auditErrors[place.id] ? "Scan mislukt" : "Scan loopt of is niet voltooid"}</b>{auditErrors[place.id] && <small>{auditErrors[place.id]}</small>}{audit && <><small>{audit.priorities.join(", ") || "Geen directe technische aandachtspunten"}</small><small title={audit.pagesChecked.map((page) => `${page.title}: ${page.url}`).join("\n")}>{audit.pagesChecked.length} pagina('s) gecontroleerd, inclusief binnenpagina&apos;s</small></>}{deep && <details className="lead-deep-audit"><summary>Gerenderde site en screenshots ({deep.requestsAttempted} verzoeken)</summary><div className="lead-deep-content"><small>{deep.findings.length ? deep.findings.join(" ") : "Geen extra tekstsignalen gevonden. Dit is geen visuele designscore."}</small>{deep.warnings.map((warning) => <small key={warning}>{warning}</small>)}<div className="lead-screenshots">{deep.desktopScreenshot && <a href={deep.desktopScreenshot} target="_blank" rel="noreferrer"><img src={deep.desktopScreenshot} alt={`Desktop-opname van ${deep.website}`} /><small>Desktop</small></a>}{deep.mobileScreenshot && <a href={deep.mobileScreenshot} target="_blank" rel="noreferrer"><img src={deep.mobileScreenshot} alt={`Mobiele opname van ${deep.website}`} /><small>Mobiel</small></a>}</div><small>Screenshots verlopen bij Firecrawl na 24 uur. Controleer visuele kwaliteit zelf voordat je contact opneemt.</small></div></details>}{deepErrors[place.id] && <small>Verdieping mislukt: {deepErrors[place.id]}</small>}</> : <b className="status-opportunity">Geen website vermeld · score voorlopig</b>}</span><span>{place.formattedAddress}</span><span><b className={qualification.size === "likely-large" ? "status-hold" : ""}>{qualification.size === "small-medium" ? "MKB-indicatie" : qualification.size === "likely-large" ? "Waarschijnlijk groter bedrijf" : "Grootte onbekend"}</b><small title={qualification.scoreReason}>{qualification.sizeReason}</small><small>Contact pas na handmatige controle van rechtsvorm en toestemming.</small>{previewReady && qualification.size !== "likely-large" && <button type="button" className="audit-button" onClick={() => openPreviewDraft(place)}>Concept voorbereiden</button>}</span></article>;
       })}</div></>}
     {previewReady && draftPlace && <section id="preview-draft" className="lead-preview-panel">
       <p className="section-tag">Private conceptgenerator</p>
