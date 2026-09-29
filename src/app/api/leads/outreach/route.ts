@@ -18,8 +18,13 @@ export async function GET() {
   try {
     const result = await leadPool().query(`SELECT o.id::text, o.candidate_id::text, o.recipient_email, o.subject, o.body,
       o.source_url, o.legal_basis, o.legal_evidence, o.status, o.revision, o.approved_at, o.attempted_at, o.sent_at,
-      o.provider_message_id, o.last_error, c.site_title, c.opportunity_score
+      o.provider_message_id, o.last_error, c.site_title, c.opportunity_score,
+      call.phone AS call_phone, call.legal_form AS call_legal_form,
+      call.phone_source_url AS call_phone_source_url, call.consent_evidence AS call_consent_evidence,
+      (suppressed.phone IS NOT NULL) AS call_suppressed
       FROM lead_outreach o JOIN lead_candidates c ON c.id = o.candidate_id
+      LEFT JOIN lead_call_reviews call ON call.candidate_id = c.id
+      LEFT JOIN lead_phone_suppression suppressed ON suppressed.phone = call.phone
       ORDER BY o.created_at DESC LIMIT 100`);
     return NextResponse.json({ drafts: result.rows, sendEnabled: process.env.LEADS_OUTREACH_ENABLED === "true" }, { headers: { "Cache-Control": "no-store" } });
   } catch (error) { return failure(error); }

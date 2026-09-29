@@ -90,6 +90,21 @@ CREATE TABLE IF NOT EXISTS lead_candidates (
 
 CREATE INDEX IF NOT EXISTS lead_candidates_score_idx ON lead_candidates (opportunity_score DESC, last_seen_at DESC);
 
+CREATE TABLE IF NOT EXISTS lead_call_reviews (
+  candidate_id bigint PRIMARY KEY REFERENCES lead_candidates(id),
+  phone text NOT NULL CHECK (phone ~ '^\+[0-9]{8,15}$'),
+  legal_form text NOT NULL DEFAULT 'unknown' CHECK (legal_form IN ('unknown', 'natural_person', 'legal_entity')),
+  phone_source_url text NOT NULL,
+  consent_evidence text,
+  reviewed_at timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE TABLE IF NOT EXISTS lead_phone_suppression (
+  phone text PRIMARY KEY CHECK (phone ~ '^\+[0-9]{8,15}$'),
+  reason text NOT NULL,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+
 CREATE TABLE IF NOT EXISTS lead_deep_jobs (
   id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   run_id bigint NOT NULL REFERENCES lead_runs(id),

@@ -50,6 +50,17 @@ BEGIN
   VALUES ('smoke-place-id', 'https://example.com', 'Example', 40, 60, 'small-medium', '{}'::jsonb, smoke_run_id)
   RETURNING id INTO smoke_candidate_id;
 
+  IF EXISTS (SELECT 1 FROM lead_call_reviews WHERE candidate_id = smoke_candidate_id) THEN
+    RAISE EXCEPTION 'Lead unexpectedly had preapproved call evidence';
+  END IF;
+  INSERT INTO lead_call_reviews (candidate_id, phone, legal_form, phone_source_url, consent_evidence)
+  VALUES (smoke_candidate_id, '+31612345678', 'natural_person', 'https://example.com/contact', 'Test-only documented opt-in from the business owner');
+  INSERT INTO lead_phone_suppression (phone, reason) VALUES ('+31612345678', 'Test objection');
+  IF NOT EXISTS (SELECT 1 FROM lead_call_reviews c JOIN lead_phone_suppression s ON s.phone = c.phone
+    WHERE c.candidate_id = smoke_candidate_id) THEN
+    RAISE EXCEPTION 'Telephone suppression did not match the reviewed number';
+  END IF;
+
   INSERT INTO lead_deep_jobs (run_id, candidate_id) VALUES (smoke_run_id, smoke_candidate_id)
   ON CONFLICT (run_id, candidate_id) DO NOTHING;
   INSERT INTO lead_deep_jobs (run_id, candidate_id) VALUES (smoke_run_id, smoke_candidate_id)
