@@ -1,6 +1,8 @@
 # Lead studio pilot: operationele grenzen
 
-Status op 2026-09-29: de featurebranch is lokaal en tegen een geisoleerde testdatabase getest. De worker, previewservice en lead-database zijn niet als afzonderlijke productie-Coolify-services ingericht. Deze tekst is geen bewijs dat het systeem live is.
+Status op 2026-09-30: de featurebranch is lokaal en tegen een geisoleerde testdatabase getest. De worker, previewservice en lead-database zijn niet als afzonderlijke productie-Coolify-services ingericht. Deze tekst is geen bewijs dat het systeem live is.
+
+In Google Cloud bestaat nu het project `pixelpiraterij-leads-chd` onder `chateauduhoux@gmail.com`, maar Google weigert koppeling aan de enige beschikbare billingrekening wegens billing-quota. Het project is daarom onbetaald en heeft geen actieve Places-sleutel. Wijzig de bestaande site-key niet totdat de billingkoppeling en projectquota zijn geverifieerd. In het bestaande project `pixelpiraterij-chd` staat wel budget `47147cdc-5acf-488a-acdb-63d8941f90ee`: EUR 10 per maand, uitsluitend Places API (New) en Geocoding, met waarschuwingen op 50/90/100 procent. Dit is geen hard bestedingsplafond.
 
 ## Diensten
 
