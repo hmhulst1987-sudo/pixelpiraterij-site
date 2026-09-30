@@ -1,5 +1,6 @@
 import pg from "pg";
 import { selectAuditCandidates } from "./lead-candidate-selection.mjs";
+import { validateSiteUrl } from "./lead-worker-url.mjs";
 
 const databaseUrl = process.env.LEADS_DATABASE_URL;
 const siteUrl = process.env.LEADS_SITE_URL;
@@ -7,8 +8,7 @@ const workerToken = process.env.LEADS_WORKER_TOKEN;
 if (!databaseUrl || !siteUrl || !workerToken || workerToken.length < 32) {
   throw new Error("Set LEADS_DATABASE_URL, LEADS_SITE_URL and a 32+ character LEADS_WORKER_TOKEN.");
 }
-const site = new URL(siteUrl);
-if (site.protocol !== "https:" && site.hostname !== "localhost") throw new Error("LEADS_SITE_URL must use HTTPS.");
+const site = validateSiteUrl(siteUrl, process.env.LEADS_PRIVATE_SITE_HOST);
 
 const pool = new pg.Pool({ connectionString: databaseUrl, max: 2, connectionTimeoutMillis: 10000 });
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
