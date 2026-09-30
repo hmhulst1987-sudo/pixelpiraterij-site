@@ -18,7 +18,7 @@ const SMALL_BUSINESS_SIGNALS = [
   /\b(?:one local shop|independent business|family[- ]run business|small team)\b/i,
 ];
 
-const CHAIN_NAMES = /^(?:albert heijn|jumbo|lidl|aldi|action|hema|kruidvat|etos|gamma|praxis|karwei|mediamarkt|mcdonald'?s|burger king|starbucks|subway)(?:\b|\s|[-–])/i;
+const CHAIN_NAMES = /^(?:albert heijn|jumbo|lidl|aldi|action|hema|kruidvat|etos|gamma|praxis|karwei|mediamarkt|mcdonald'?s|burger king|starbucks|subway|kippie)(?:\b|\s|[-–])/i;
 
 export function classifyBusinessSize(text: string, name = ""): { size: BusinessSize; reason: string } {
   if (CHAIN_NAMES.test(name.trim())) {

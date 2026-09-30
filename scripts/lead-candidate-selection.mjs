@@ -1,4 +1,4 @@
-const chainNames = /^(?:albert heijn|jumbo|lidl|aldi|action|hema|kruidvat|etos|gamma|praxis|karwei|mediamarkt|mcdonald'?s|burger king|starbucks|subway)(?:\b|\s|-)/i;
+const chainNames = /^(?:albert heijn|jumbo|lidl|aldi|action|hema|kruidvat|etos|gamma|praxis|karwei|mediamarkt|mcdonald'?s|burger king|starbucks|subway|kippie)(?:\b|\s|-)/i;
 const profileHosts = new Set([
   "facebook.com", "instagram.com", "linkedin.com", "linktr.ee", "tiktok.com", "wa.me", "x.com",
 ]);

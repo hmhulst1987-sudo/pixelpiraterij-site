@@ -7,6 +7,7 @@ const place = (id, type, websiteUri, name = id) => ({ id, primaryType: type, web
 test("filters chains and invalid websites before applying the scan cap", () => {
   const selected = selectAuditCandidates([
     place("chain", "bakery", "https://example-chain.nl", "Albert Heijn Centrum"),
+    place("kippie", "restaurant", "https://www.kippie.nl/winkels/breda", "Kippie Breda"),
     place("social", "bakery", "https://www.facebook.com/localshop"),
     place("missing", "bakery", undefined),
     place("local", "bakery", "https://local-bakery.nl"),
