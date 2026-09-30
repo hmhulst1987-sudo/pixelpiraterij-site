@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { withPreviewBaseHref } from "@/lib/preview-html";
 
 export const runtime = "nodejs";
 
@@ -23,7 +24,9 @@ export async function GET(_request: NextRequest, context: Context) {
     if (!response.ok || Number(response.headers.get("content-length") || 0) > 10_000_000) return new NextResponse("Preview kon niet worden geladen", { status: 502 });
     const content = await response.arrayBuffer();
     if (content.byteLength > 10_000_000) return new NextResponse("Previewbestand te groot", { status: 502 });
-    return new NextResponse(content, {
+    const body = path.length === 0 && response.headers.get("content-type")?.includes("text/html")
+      ? withPreviewBaseHref(new TextDecoder().decode(content), id) : content;
+    return new NextResponse(body, {
       headers: {
         "Content-Type": response.headers.get("content-type") || "application/octet-stream",
         "Cache-Control": "no-store", "X-Robots-Tag": "noindex, nofollow",

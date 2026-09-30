@@ -326,7 +326,7 @@ export function LeadsStudio({ mapKey, previewReady, firecrawlReady }: { mapKey: 
   function openPreviewDraft(candidate: SavedCandidate) {
     setDraftPlace(candidate);
     previewActionKey.current = null;
-    setDraft({ template: "service-editorial", name: candidate.site_title, city: "", service: "", tagline: "", description: "", email: "", phone: "" });
+    setDraft({ template: "service-editorial", name: "", city: "", service: "", tagline: "", description: "", email: "", phone: "" });
     setVerified(false);
     setPreviewUrl("");
     setPreviewError("");
