@@ -22,7 +22,7 @@ De automatische flow ontdekt bedrijven, controleert de eigen website op meerdere
 
 ## Twee handmatige poorten
 
-Een concept ontstaat alleen na de afzonderlijke knop **Bouw concept** en controle van naam, dienst en openbaar contactgegeven. De generator accepteert momenteel alleen de goedgekeurde `service-editorial`-template. De negen geplande startpunten zijn niet gereed. Dezelfde idempotency key en gegevens hergebruiken hetzelfde concept, ook als de opslaglimiet is bereikt. De preview blijft privé en verandert niets aan het domein van de kandidaat.
+Een concept ontstaat alleen na de afzonderlijke knop **Bouw concept** en controle van naam, dienst en openbaar contactgegeven. De lokale generator accepteert nu `service-editorial` en het afzonderlijk geteste `garden-atelier` (Hof & Hei-richting); de andere acht beoogde startpunten zijn niet gereed. Dezelfde idempotency key en gegevens hergebruiken hetzelfde concept, ook als de opslaglimiet is bereikt. De preview blijft privé en verandert niets aan het domein van de kandidaat. Rol bij staging eerst de nieuwe generator-image uit en controleer de interne service, pas daarna de site met de templatekeuze; anders kan de nieuwe keuze tijdelijk een 422 opleveren.
 
 Een conceptmail is geen toestemming om die te versturen. Verzenden vereist een tweede handmatige actie, bewijs van een toepasselijke grondslag, en geen bezwaar/suppressie. Het verzendendpoint staat standaard uit. Telefonisch contact heeft een apart beoordelingsrecord; het systeem belt zelf niet. Zie `LEAD_MACHINE.md` voor de actuele juridische poort.
 

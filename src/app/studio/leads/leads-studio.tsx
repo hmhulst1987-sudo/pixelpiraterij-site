@@ -10,7 +10,7 @@ type Coordinates = { lat: number; lng: number };
 type Place = { id: string; displayName?: { text: string }; formattedAddress?: string; websiteUri?: string; primaryType?: string; location?: { latitude: number; longitude: number } };
 type Score = { score: number; finalUrl: string; priorities: string[]; signals?: { label: string; ok: boolean; detail: string }[]; qualification: LeadQualification; pagesChecked: { url: string; title: string; status: number }[] };
 type Filter = "all" | "no-site" | "opportunity" | "unscanned" | "large";
-type PreviewDraft = { name: string; city: string; service: string; tagline: string; description: string; email: string; phone: string };
+type PreviewDraft = { template: "service-editorial" | "garden-atelier"; name: string; city: string; service: string; tagline: string; description: string; email: string; phone: string };
 type MapLike = { setCenter(position: Coordinates): void; setZoom(zoom: number): void; fitBounds(bounds: unknown): void; addListener(event: string, callback: (event: { latLng?: { lat(): number; lng(): number } }) => void): void };
 type MarkerLike = { setMap(map: MapLike | null): void };
 type CircleLike = { setMap(map: MapLike | null): void };
@@ -111,7 +111,7 @@ export function LeadsStudio({ mapKey, previewReady, firecrawlReady }: { mapKey: 
   const [candidates, setCandidates] = useState<SavedCandidate[]>([]);
   const [pipelineError, setPipelineError] = useState("");
   const [draftPlace, setDraftPlace] = useState<Place | null>(null);
-  const [draft, setDraft] = useState<PreviewDraft>({ name: "", city: "", service: "", tagline: "", description: "", email: "", phone: "" });
+  const [draft, setDraft] = useState<PreviewDraft>({ template: "service-editorial", name: "", city: "", service: "", tagline: "", description: "", email: "", phone: "" });
   const [verified, setVerified] = useState(false);
   const [previewBusy, setPreviewBusy] = useState(false);
   const [previewUrl, setPreviewUrl] = useState("");
@@ -326,7 +326,7 @@ export function LeadsStudio({ mapKey, previewReady, firecrawlReady }: { mapKey: 
   function openPreviewDraft(place: Place) {
     setDraftPlace(place);
     previewActionKey.current = null;
-    setDraft({ name: place.displayName?.text || "", city: "", service: "", tagline: "", description: "", email: "", phone: "" });
+    setDraft({ template: "service-editorial", name: place.displayName?.text || "", city: "", service: "", tagline: "", description: "", email: "", phone: "" });
     setVerified(false);
     setPreviewUrl("");
     setPreviewError("");
@@ -412,8 +412,9 @@ export function LeadsStudio({ mapKey, previewReady, firecrawlReady }: { mapKey: 
       <p>De automatische score helpt bij kiezen. Neem bedrijfsgegevens van de eigen website of bevestig ze met het bedrijf; Google Places-data is geen blijvende bron voor de preview. Dit formulier verstuurt geen leadbericht.</p>
       {draftPlace.websiteUri && <a href={draftPlace.websiteUri} target="_blank" rel="noreferrer">Open oorspronkelijke website</a>}
       <form onSubmit={(event) => { event.preventDefault(); void createPreview(); }}>
+        <label className="lead-preview-template">Ontwerprichting<select value={draft.template} onChange={(event) => { previewActionKey.current = null; setDraft((current) => ({ ...current, template: event.target.value as PreviewDraft["template"] })); }}><option value="service-editorial">Lokale dienstverlener · redactioneel</option><option value="garden-atelier">Tuin en landschap · Hof & Hei-richting</option></select></label>
         <div className="lead-preview-fields">
-          {([['name', 'Geverifieerde bedrijfsnaam'], ['city', 'Plaats'], ['service', 'Dienst / branche'], ['tagline', 'Voorlopige kop'], ['email', 'Openbaar e-mailadres'], ['phone', 'Openbaar telefoonnummer']] as Array<[keyof PreviewDraft, string]>).map(([key, label]) => <label key={key}>{label}<input value={draft[key]} onChange={(event) => { previewActionKey.current = null; setDraft((current) => ({ ...current, [key]: event.target.value })); }} required={key === "name" || key === "service"} /></label>)}
+          {([['name', 'Geverifieerde bedrijfsnaam'], ['city', 'Plaats'], ['service', 'Dienst / branche'], ['tagline', 'Voorlopige kop'], ['email', 'Openbaar e-mailadres'], ['phone', 'Openbaar telefoonnummer']] as Array<[Exclude<keyof PreviewDraft, "template">, string]>).map(([key, label]) => <label key={key}>{label}<input value={draft[key]} onChange={(event) => { previewActionKey.current = null; setDraft((current) => ({ ...current, [key]: event.target.value })); }} required={key === "name" || key === "service"} /></label>)}
         </div>
         <label className="lead-preview-description">Korte, feitelijk gecontroleerde omschrijving<textarea value={draft.description} onChange={(event) => { previewActionKey.current = null; setDraft((current) => ({ ...current, description: event.target.value })); }} maxLength={600} rows={3} /></label>
         <label className="lead-preview-confirm"><input type="checkbox" checked={verified} onChange={(event) => setVerified(event.target.checked)} required /> Ik heb naam, dienst en contactgegevens op de oorspronkelijke bron gecontroleerd.</label>

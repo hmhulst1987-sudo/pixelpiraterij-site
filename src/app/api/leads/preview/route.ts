@@ -15,12 +15,16 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Ongeldige conceptaanvraag. Open het conceptformulier opnieuw." }, { status: 400 });
     }
     if (draft.verified !== true) return NextResponse.json({ error: "Controleer de bedrijfsgegevens eerst bij de oorspronkelijke website." }, { status: 422 });
+    const template = draft.template ?? "service-editorial";
+    if (template !== "service-editorial" && template !== "garden-atelier") {
+      return NextResponse.json({ error: "Kies een beschikbare concepttemplate." }, { status: 422 });
+    }
     const business = Object.fromEntries(["name", "city", "service", "tagline", "description", "phone", "email"]
       .map((key) => [key, typeof draft[key] === "string" ? String(draft[key]).trim() : ""]));
     if (!business.name || !business.service || (!business.phone && !business.email)) {
       return NextResponse.json({ error: "Naam, dienst en een geverifieerd telefoonnummer of e-mailadres zijn verplicht." }, { status: 422 });
     }
-    const payload = JSON.stringify({ template: "service-editorial", ...business });
+    const payload = JSON.stringify({ template, ...business });
     const digest = createHash("sha256").update(payload).digest("hex");
     const reservation = await reservePreviewRequest(draft.idempotencyKey, digest);
     if (reservation.previewPath) {
