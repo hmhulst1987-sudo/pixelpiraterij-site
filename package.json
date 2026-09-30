@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "test": "node --import tsx --test tests/*.test.ts tests/*.test.mjs",
+    "test": "node --import tsx --test tests/*.test.ts tests/*.test.mjs src/lib/*.test.ts",
     "leads:migrate": "node scripts/lead-migrate.mjs",
     "leads:worker": "node scripts/lead-worker.mjs"
   },

@@ -18,7 +18,7 @@ const SMALL_BUSINESS_SIGNALS = [
   /\b(?:one local shop|independent business|family[- ]run business|small team)\b/i,
 ];
 
-const CHAIN_NAMES = /^(?:albert heijn|jumbo|lidl|aldi|action|hema|kruidvat|etos|gamma|praxis|karwei|mediamarkt|mcdonald'?s|burger king|starbucks|subway|kippie)(?:\b|\s|[-–])/i;
+const CHAIN_NAMES = /^(?:albert heijn|jumbo|lidl|aldi|action|hema|kruidvat|etos|gamma|praxis|karwei|mediamarkt|mcdonald'?s|burger king|starbucks|subway|kippie|domino'?s)(?:\b|\s|[-–])/i;
 
 export function classifyBusinessSize(text: string, name = ""): { size: BusinessSize; reason: string } {
   if (CHAIN_NAMES.test(name.trim())) {
@@ -57,8 +57,11 @@ export function selectContentLinks(html: string, pageUrl: string, limit = 3): st
       const href = match[1].replaceAll("&amp;", "&");
       const url = new URL(href, base);
       url.hash = "";
-      url.search = "";
-      if (!(["http:", "https:"].includes(url.protocol)) || url.hostname !== base.hostname || url.pathname === base.pathname) continue;
+      const pageId = url.searchParams.get("page_id");
+      const postId = url.searchParams.get("p");
+      url.search = pageId && /^\d{1,10}$/.test(pageId) ? `?page_id=${pageId}`
+        : postId && /^\d{1,10}$/.test(postId) ? `?p=${postId}` : "";
+      if (!(["http:", "https:"].includes(url.protocol)) || url.hostname !== base.hostname || url.href === base.href) continue;
       if (/\.(?:pdf|jpe?g|png|webp|gif|svg|zip|mp4|css|js)$/i.test(url.pathname)) continue;
       if (/\b(?:privacy|cookie|voorwaarden|terms|login|account|cart|checkout|nieuws|blog|vacature|jobs)\b/i.test(url.pathname)) continue;
       const weight = /\b(?:contact|over-ons|about|diensten|services|aanbod|portfolio|projecten|werk|menu|prijzen|vestigingen|locaties|locations)\b/i.test(url.pathname) ? 2 : 1;

@@ -8,6 +8,8 @@ test("filters chains and invalid websites before applying the scan cap", () => {
   const selected = selectAuditCandidates([
     place("chain", "bakery", "https://example-chain.nl", "Albert Heijn Centrum"),
     place("kippie", "restaurant", "https://www.kippie.nl/winkels/breda", "Kippie Breda"),
+    place("dominos", "restaurant", "https://www.dominos.nl/breda", "Domino's Breda"),
+    place("ok", "car_repair", "https://ok.nl/overzicht-tankstations/", "Tanken bij OK"),
     place("social", "bakery", "https://www.facebook.com/localshop"),
     place("missing", "bakery", undefined),
     place("local", "bakery", "https://local-bakery.nl"),

@@ -1,4 +1,5 @@
-const chainNames = /^(?:albert heijn|jumbo|lidl|aldi|action|hema|kruidvat|etos|gamma|praxis|karwei|mediamarkt|mcdonald'?s|burger king|starbucks|subway|kippie)(?:\b|\s|-)/i;
+const chainNames = /^(?:albert heijn|jumbo|lidl|aldi|action|hema|kruidvat|etos|gamma|praxis|karwei|mediamarkt|mcdonald'?s|burger king|starbucks|subway|kippie|domino'?s)(?:\b|\s|-)/i;
+const chainHosts = new Set(["dominos.nl", "ok.nl"]);
 const profileHosts = new Set([
   "facebook.com", "instagram.com", "linkedin.com", "linktr.ee", "tiktok.com", "wa.me", "x.com",
 ]);
@@ -23,7 +24,7 @@ export function selectAuditCandidates(places, maxCandidates) {
   for (const place of places) {
     if (!place || typeof place.id !== "string" || !place.id || seenPlaces.has(place.id)) continue;
     const host = websiteHost(place.websiteUri);
-    if (!host || seenHosts.has(host) || chainNames.test(place.displayName?.text || "")) continue;
+    if (!host || seenHosts.has(host) || chainHosts.has(host) || chainNames.test(place.displayName?.text || "")) continue;
     seenPlaces.add(place.id);
     seenHosts.add(host);
     const type = place.primaryType || "other";
