@@ -88,6 +88,10 @@ CREATE TABLE IF NOT EXISTS lead_candidates (
   last_run_id bigint REFERENCES lead_runs(id)
 );
 
+ALTER TABLE lead_preview_requests ADD COLUMN IF NOT EXISTS candidate_id bigint REFERENCES lead_candidates(id);
+ALTER TABLE lead_preview_requests ADD COLUMN IF NOT EXISTS source_url text;
+ALTER TABLE lead_preview_requests ADD COLUMN IF NOT EXISTS verified_at timestamptz;
+
 CREATE INDEX IF NOT EXISTS lead_candidates_score_idx ON lead_candidates (opportunity_score DESC, last_seen_at DESC);
 
 CREATE TABLE IF NOT EXISTS lead_call_reviews (

@@ -96,13 +96,22 @@ export async function finishLeadUsage(id: string, succeeded: boolean, externalSt
   await leadPool().query("UPDATE lead_usage SET outcome = $2, external_status = $3, finished_at = now() WHERE id = $1 AND outcome = 'reserved'", [id, succeeded ? "succeeded" : "failed", externalStatus ?? null]);
 }
 
-export async function reservePreviewRequest(requestKey: string, draftDigest: string) {
+export async function reservePreviewRequest(requestKey: string, draftDigest: string, candidateId: string, sourceUrl: string) {
+  if (!/^[1-9]\d{0,17}$/.test(candidateId) || !sourceUrl || sourceUrl.length > 2000) {
+    throw new LeadControlError("Kies een opgeslagen kandidaat met een gecontroleerde bronpagina.", 422);
+  }
   const client = await leadPool().connect();
   try {
     await client.query("BEGIN");
     const control = await client.query<ControlRow>("SELECT * FROM lead_control WHERE id = 1 FOR UPDATE");
     const row = control.rows[0];
     if (!row) throw new LeadControlError("Voer eerst de lead-database-migratie uit.", 503);
+    const candidate = await client.query<{ source_site_url: string; status: string; audit: { pagesChecked?: Array<{ url: string; status: number }> } }>(
+      "SELECT source_site_url, status, audit FROM lead_candidates WHERE id = $1 FOR SHARE", [candidateId]);
+    const sourcePage = candidate.rows[0]?.audit?.pagesChecked?.find((page) => page.url === sourceUrl && page.status >= 200 && page.status < 400);
+    if (!candidate.rows[0] || candidate.rows[0].status === "dismissed" || !sourcePage || sourceUrl !== candidate.rows[0].source_site_url) {
+      throw new LeadControlError("De bron moet de eerder gecontroleerde bedrijfswebsite van deze kandidaat zijn.", 422);
+    }
     const previous = await client.query<{ draft_digest: string; usage_id: string; preview_path: string | null; created_at: Date }>(
       "SELECT draft_digest, usage_id::text, preview_path, created_at FROM lead_preview_requests WHERE request_key = $1", [requestKey]);
     if (previous.rows[0]) {
@@ -116,7 +125,7 @@ export async function reservePreviewRequest(requestKey: string, draftDigest: str
     const used = await client.query<{ total: string }>("SELECT COALESCE(SUM(units), 0)::text AS total FROM lead_usage WHERE period = $1 AND kind = 'previews'", [period]);
     if (Number(used.rows[0].total) + 1 > row.previews_limit) throw new LeadControlError("De maandlimiet voor previews is bereikt.", 429);
     const usage = await client.query<{ id: string }>("INSERT INTO lead_usage (period, kind, units) VALUES ($1, 'previews', 1) RETURNING id::text", [period]);
-    await client.query("INSERT INTO lead_preview_requests (request_key, draft_digest, usage_id) VALUES ($1, $2, $3)", [requestKey, draftDigest, usage.rows[0].id]);
+    await client.query("INSERT INTO lead_preview_requests (request_key, draft_digest, usage_id, candidate_id, source_url, verified_at) VALUES ($1, $2, $3, $4, $5, now())", [requestKey, draftDigest, usage.rows[0].id, candidateId, sourceUrl]);
     await client.query("COMMIT");
     return { usageId: usage.rows[0].id, previewPath: null };
   } catch (error) {

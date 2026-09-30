@@ -25,8 +25,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Naam, dienst en een geverifieerd telefoonnummer of e-mailadres zijn verplicht." }, { status: 422 });
     }
     const payload = JSON.stringify({ template, ...business });
-    const digest = createHash("sha256").update(payload).digest("hex");
-    const reservation = await reservePreviewRequest(draft.idempotencyKey, digest);
+    const candidateId = String(draft.candidateId || "");
+    const sourceUrl = typeof draft.sourceUrl === "string" ? draft.sourceUrl : "";
+    const digest = createHash("sha256").update(JSON.stringify({ payload, candidateId, sourceUrl })).digest("hex");
+    const reservation = await reservePreviewRequest(draft.idempotencyKey, digest, candidateId, sourceUrl);
     if (reservation.previewPath) {
       return NextResponse.json({ url: `/studio/leads/previews${reservation.previewPath.slice("/preview".length)}` });
     }
