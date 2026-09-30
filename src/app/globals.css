@@ -135,6 +135,7 @@ button {
 .lead-form label span { color: var(--color-soft); font-weight: 500; }
 .lead-form input, .lead-form select { min-width: 0; width: 100%; border: 1px solid var(--color-line-strong); border-radius: .85rem; padding: .9rem 1rem; outline: none; background: var(--color-paper-strong); color: var(--color-text); }
 .lead-form input:focus, .lead-form select:focus { border-color: var(--color-signal); box-shadow: 0 0 0 3px var(--tone-signal-wash); }
+.lead-login-section { min-height: 70vh; display: grid; align-items: center; }.lead-login-form { max-width: 34rem; width: 100%; }
 .lead-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 .lead-form .consent-box { display: grid; grid-template-columns: auto 1fr; align-items: start; border: 1px solid var(--color-line); border-radius: 1rem; padding: 1rem; background: var(--color-shell); font-weight: 500; line-height: 1.55; }
 .lead-form .consent-box input { width: 1.1rem; margin-top: .2rem; accent-color: var(--color-signal); }
