@@ -10,7 +10,7 @@ type Coordinates = { lat: number; lng: number };
 type Place = { id: string; displayName?: { text: string }; formattedAddress?: string; websiteUri?: string; primaryType?: string; location?: { latitude: number; longitude: number } };
 type Score = { score: number; finalUrl: string; priorities: string[]; signals?: { label: string; ok: boolean; detail: string }[]; qualification: LeadQualification; pagesChecked: { url: string; title: string; status: number }[] };
 type Filter = "all" | "no-site" | "opportunity" | "unscanned" | "large";
-type PreviewDraft = { template: "service-editorial" | "garden-atelier"; name: string; city: string; service: string; tagline: string; description: string; email: string; phone: string };
+type PreviewDraft = { template: "service-editorial" | "garden-atelier" | "harbor-light"; name: string; city: string; service: string; tagline: string; description: string; email: string; phone: string };
 type MapLike = { setCenter(position: Coordinates): void; setZoom(zoom: number): void; fitBounds(bounds: unknown): void; addListener(event: string, callback: (event: { latLng?: { lat(): number; lng(): number } }) => void): void };
 type MarkerLike = { setMap(map: MapLike | null): void };
 type CircleLike = { setMap(map: MapLike | null): void };
@@ -412,7 +412,7 @@ export function LeadsStudio({ mapKey, previewReady, firecrawlReady }: { mapKey: 
       <p>De automatische score helpt bij kiezen. Neem bedrijfsgegevens van de eigen website of bevestig ze met het bedrijf; Google Places-data is geen blijvende bron voor de preview. Dit formulier verstuurt geen leadbericht.</p>
       {draftPlace.websiteUri && <a href={draftPlace.websiteUri} target="_blank" rel="noreferrer">Open oorspronkelijke website</a>}
       <form onSubmit={(event) => { event.preventDefault(); void createPreview(); }}>
-        <label className="lead-preview-template">Ontwerprichting<select value={draft.template} onChange={(event) => { previewActionKey.current = null; setDraft((current) => ({ ...current, template: event.target.value as PreviewDraft["template"] })); }}><option value="service-editorial">Lokale dienstverlener · redactioneel</option><option value="garden-atelier">Tuin en landschap · Hof & Hei-richting</option></select></label>
+        <label className="lead-preview-template">Ontwerprichting<select value={draft.template} onChange={(event) => { previewActionKey.current = null; setDraft((current) => ({ ...current, template: event.target.value as PreviewDraft["template"] })); }}><option value="service-editorial">Lokale dienstverlener · redactioneel</option><option value="garden-atelier">Tuin en landschap · Hof & Hei-richting</option><option value="harbor-light">Hospitality en evenementen · Havenlicht</option></select></label>
         <div className="lead-preview-fields">
           {([['name', 'Geverifieerde bedrijfsnaam'], ['city', 'Plaats'], ['service', 'Dienst / branche'], ['tagline', 'Voorlopige kop'], ['email', 'Openbaar e-mailadres'], ['phone', 'Openbaar telefoonnummer']] as Array<[Exclude<keyof PreviewDraft, "template">, string]>).map(([key, label]) => <label key={key}>{label}<input value={draft[key]} onChange={(event) => { previewActionKey.current = null; setDraft((current) => ({ ...current, [key]: event.target.value })); }} required={key === "name" || key === "service"} /></label>)}
         </div>
