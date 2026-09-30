@@ -1,4 +1,5 @@
 import pg from "pg";
+import { selectAuditCandidates } from "./lead-candidate-selection.mjs";
 
 const databaseUrl = process.env.LEADS_DATABASE_URL;
 const siteUrl = process.env.LEADS_SITE_URL;
@@ -13,7 +14,6 @@ const pool = new pg.Pool({ connectionString: databaseUrl, max: 2, connectionTime
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const pollMs = Math.min(300000, Math.max(5000, Number(process.env.LEADS_WORKER_POLL_MS) || 60000));
 const lockId = 1935683001;
-const chainNames = /^(?:albert heijn|jumbo|lidl|aldi|action|hema|kruidvat|etos|gamma|praxis|karwei|mediamarkt|mcdonald'?s|burger king|starbucks|subway)(?:\b|\s|-)/i;
 let stopping = false;
 process.on("SIGTERM", () => { stopping = true; });
 process.on("SIGINT", () => { stopping = true; });
@@ -151,10 +151,8 @@ async function processRun(client, campaign) {
     const places = Array.isArray(result.places) ? result.places : [];
     placesFound = places.length;
     const shortlist = [];
-    for (const place of places.slice(0, campaign.max_candidates)) {
+    for (const place of selectAuditCandidates(places, campaign.max_candidates)) {
       if (stopping || !(await isRunning(client))) { status = "paused"; break; }
-      if (!place.id || !place.websiteUri) continue;
-      if (chainNames.test(place.displayName?.text || "")) continue;
       try {
         const { audit } = await sitePost("/api/leads/audit", { website: place.websiteUri, businessName: place.displayName?.text || "" }, 45000);
         websitesScanned += 1;
