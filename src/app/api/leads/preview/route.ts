@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
     }
     if (draft.verified !== true) return NextResponse.json({ error: "Controleer de bedrijfsgegevens eerst bij de oorspronkelijke website." }, { status: 422 });
     const template = draft.template ?? "service-editorial";
-    if (template !== "service-editorial" && template !== "garden-atelier" && template !== "harbor-light" && template !== "estate-editorial" && template !== "paperback-editorial") {
+    if (template !== "service-editorial" && template !== "garden-atelier" && template !== "harbor-light" && template !== "estate-editorial" && template !== "paperback-editorial" && template !== "reading-foundation") {
       return NextResponse.json({ error: "Kies een beschikbare concepttemplate." }, { status: 422 });
     }
     const business = Object.fromEntries(["name", "city", "service", "tagline", "description", "phone", "email"]
