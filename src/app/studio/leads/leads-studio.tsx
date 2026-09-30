@@ -92,6 +92,7 @@ export function LeadsStudio({ mapKey, previewReady, firecrawlReady }: { mapKey: 
   const circle = useRef<CircleLike | null>(null);
   const resultMarkers = useRef<MarkerLike[]>([]);
   const [center, setCenter] = useState(DEFAULT_CENTER);
+  const [centerSelected, setCenterSelected] = useState(false);
   const [radius, setRadius] = useState(20_000);
   const [places, setPlaces] = useState<Place[]>([]);
   const [scores, setScores] = useState<Record<string, Score>>({});
@@ -132,7 +133,10 @@ export function LeadsStudio({ mapKey, previewReady, firecrawlReady }: { mapKey: 
       if (!active || !mapElement.current || !window.google) return;
       map.current = new window.google.maps.Map(mapElement.current, { center: DEFAULT_CENTER, zoom: 11, mapTypeControl: false, streetViewControl: false, fullscreenControl: false });
       map.current.addListener("click", (event) => {
-        if (event.latLng) setCenter({ lat: event.latLng.lat(), lng: event.latLng.lng() });
+        if (event.latLng) {
+          setCenter({ lat: event.latLng.lat(), lng: event.latLng.lng() });
+          setCenterSelected(true);
+        }
       });
     }).catch((error: Error) => setMessage(error.message));
     return () => { active = false; };
@@ -237,9 +241,11 @@ export function LeadsStudio({ mapKey, previewReady, firecrawlReady }: { mapKey: 
       const result = await response.json();
       if (!response.ok) throw new Error(result.error);
       setCenter(result.center);
+      setCenterSelected(true);
+      setMessage(`Middelpunt ingesteld voor ${location}. Controleer de straal voordat je een campagne bewaart.`);
       map.current?.setZoom(11);
     } catch {
-      setMessage("Deze plaats kon niet op de kaart worden gevonden.");
+      setMessage("Deze plaats kon niet worden gevonden; het middelpunt is niet gewijzigd.");
     }
   }
 
@@ -371,8 +377,8 @@ export function LeadsStudio({ mapKey, previewReady, firecrawlReady }: { mapKey: 
   return <>
     <div className="lead-map-layout">
       <div className="lead-map-panel">
-        {mapKey ? <div ref={mapElement} className="lead-map" aria-label="Google Maps zoekgebied" /> : <div className="lead-map lead-map-missing">Stel `GOOGLE_MAPS_BROWSER_KEY` in om de kaart te laden.</div>}
-        <div className="lead-map-caption"><span>Klik op de kaart om het middelpunt te verplaatsen.</span><b>{radius / 1000} km zoekcirkel</b></div>
+        {mapKey ? <div ref={mapElement} className="lead-map" aria-label="Google Maps zoekgebied" /> : <div className="lead-map lead-map-missing">De kaart is optioneel. Vul hieronder een plaats in om het zoekgebied te bepalen.</div>}
+        <div className="lead-map-caption"><span>{centerSelected ? `Middelpunt: ${center.lat.toFixed(4)}, ${center.lng.toFixed(4)}` : mapKey ? "Kies een punt op de kaart of vul een plaats in." : "Vul eerst een plaats in."}</span><b>{radius / 1000} km zoekcirkel</b></div>
       </div>
       <div className="lead-controls">
         <div className="lead-control-panel">
@@ -386,13 +392,13 @@ export function LeadsStudio({ mapKey, previewReady, firecrawlReady }: { mapKey: 
           {control && <form className="lead-limit-form" key={JSON.stringify(control.limits)} onSubmit={(event) => { event.preventDefault(); const data = new FormData(event.currentTarget); const limits = Object.fromEntries(usageKinds.map((kind) => [kind, Number(data.get(kind))])) as LeadLimits; void updateControl(control.mode, limits); }}><p className="section-tag">Harde maandlimieten</p><div>{usageKinds.map((kind) => <label key={kind}>{usageLabels[kind]}<input name={kind} type="number" min="0" max="100000" step="1" defaultValue={control.limits[kind]} required /></label>)}</div><button className="audit-button" type="submit" disabled={controlBusy}>Limieten opslaan</button></form>}
           {controlError && <p className="form-error">{controlError}</p>}
         </div>
-        <form action={createCampaign} className="lead-campaign-form"><p className="section-tag">Automatische zoekcampagne</p><label>Naam van de campagne<input name="label" placeholder="bijvoorbeeld Breda centrum" maxLength={120} required /></label><div><label>Herhaal elke (uren)<input name="intervalHours" type="number" min="1" max="720" defaultValue="24" required /></label><label>Maximaal te scannen sites<input name="maxCandidates" type="number" min="1" max="100" defaultValue="20" required /></label></div><small>Gebruikt het gekozen middelpunt en de zoekstraal van de kaart. Een nieuwe campagne start pas als de worker op Start staat.</small><button type="submit" className="audit-button" disabled={!control}>Campagne bewaren</button></form>
+        <form action={createCampaign} className="lead-campaign-form"><p className="section-tag">Automatische zoekcampagne</p><label>Naam van de campagne<input name="label" placeholder="bijvoorbeeld Breda centrum" maxLength={120} required /></label><div><label>Herhaal elke (uren)<input name="intervalHours" type="number" min="1" max="720" defaultValue="24" required /></label><label>Maximaal te scannen sites<input name="maxCandidates" type="number" min="1" max="100" defaultValue="20" required /></label></div><small>Kies eerst een plaats of kaartpunt. De campagne gebruikt dat middelpunt en de ingestelde zoekstraal; zij start pas als de worker op Start staat.</small><button type="submit" className="audit-button" disabled={!control || !centerSelected}>Campagne bewaren</button></form>
         {campaigns.length > 0 && <div className="lead-campaign-list"><p className="section-tag">Geplande campagnes</p>{campaigns.map((campaign) => <div key={campaign.id}><span><b>{campaign.label}</b><small>{campaign.radius_m / 1000} km · iedere {campaign.interval_minutes / 60} uur · maximaal {campaign.max_candidates} sites</small><small>Volgende ronde: {new Date(campaign.next_run_at).toLocaleString("nl-NL")}</small></span><button type="button" className="audit-button" onClick={() => { void setCampaignEnabled(campaign, !campaign.enabled); }}>{campaign.enabled ? "Zet uit" : "Zet aan"}</button></div>)}</div>}
         {campaignRuns.length > 0 && <div className="lead-campaign-list"><p className="section-tag">Laatste runs</p>{campaignRuns.slice(0, 5).map((run) => <small key={run.id}>{new Date(run.started_at).toLocaleString("nl-NL")} · {run.status} · {run.places_found} gevonden, {run.websites_scanned} websites, {run.deep_scanned} verdiept · {run.places_requests} Places- en {run.firecrawl_requests} Firecrawl-verzoeken · bruto Places {usd.format(estimatedGrossMapsUsd(run.places_requests, 0))}{run.error ? ` · ${run.error}` : ""}</small>)}</div>}
         {pipelineError && <p className="form-error">{pipelineError}</p>}
-        <form action={findLocation} className="lead-form studio-location-search"><label>Plaats<input name="location" placeholder="bijvoorbeeld Breda" /></label><button className="audit-button" type="submit" disabled={!mapKey}>Zet op kaart</button></form>
+        <form action={findLocation} className="lead-form studio-location-search"><label>Plaats<input name="location" placeholder="bijvoorbeeld Breda" /></label><button className="audit-button" type="submit">Bepaal middelpunt</button></form>
         <div className="lead-radius"><span>Zoekstraal</span>{[5, 10, 20, 25].map((km) => <button key={km} className={radius === km * 1000 ? "is-active" : ""} onClick={() => setRadius(km * 1000)}>{km} km</button>)}</div>
-        <button className="button-primary" onClick={discoverNearby} disabled={busy || !mapKey || !control}>{busy ? deepProgress.total && scanProgress.done === scanProgress.total ? `Verdiept ${deepProgress.done}/${deepProgress.total} kandidaten` : scanProgress.total ? `Scant ${scanProgress.done}/${scanProgress.total} websites` : "Zoekt bedrijven..." : "Vind en beoordeel lokale bedrijven"}</button>
+        <button className="button-primary" onClick={discoverNearby} disabled={busy || !centerSelected || !control}>{busy ? deepProgress.total && scanProgress.done === scanProgress.total ? `Verdiept ${deepProgress.done}/${deepProgress.total} kandidaten` : scanProgress.total ? `Scant ${scanProgress.done}/${scanProgress.total} websites` : "Zoekt bedrijven..." : "Vind en beoordeel lokale bedrijven"}</button>
         <small>{firecrawlReady ? `${deepProgress.requests} Firecrawl-verzoeken in deze zoekronde. De servermeter hierboven is leidend voor de maandlimiet.` : "Firecrawl staat uit totdat de sleutel op de server is ingesteld."}</small>
         {message && <p className="form-error">{message}</p>}
       </div>
