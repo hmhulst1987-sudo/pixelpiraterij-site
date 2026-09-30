@@ -1,12 +1,12 @@
 # Lead studio pilot: operationele grenzen
 
-Status op 2026-09-30: de featurebranch is lokaal en tegen een geisoleerde testdatabase getest. De worker, previewservice en lead-database zijn niet als afzonderlijke productie-Coolify-services ingericht. Deze tekst is geen bewijs dat het systeem live is.
+Status op 2026-09-30: de site, worker, private previewservice en PostgreSQL draaien als afzonderlijke services in Coolify `pixelpiraterij / leads-staging` op de bestaande Chateau du Houx VPS. De site is alleen via een loopbackpoort en SSH-tunnel bereikbaar; de worker en previewservice hebben geen publieke route. De worker staat in de stagingdatabase op `paused`. Dit is geen productie-uitrol en er is nog geen echte Places-zoekronde gedaan.
 
 In Google Cloud bestaat nu het project `pixelpiraterij-leads-chd` onder `chateauduhoux@gmail.com`, maar Google weigert koppeling aan de enige beschikbare billingrekening wegens billing-quota. Het project is daarom onbetaald en heeft geen actieve Places-sleutel. Wijzig de bestaande site-key niet totdat de billingkoppeling en projectquota zijn geverifieerd. In het bestaande project `pixelpiraterij-chd` staat wel budget `47147cdc-5acf-488a-acdb-63d8941f90ee`: EUR 10 per maand, uitsluitend Places API (New) en Geocoding, met waarschuwingen op 50/90/100 procent. Dit is geen hard bestedingsplafond.
 
 ## Diensten
 
-- De publieke Next.js-site bevat de afgeschermde `/studio/leads`-interface en de lead-API's. `LEADS_ADMIN_USER` en `LEADS_ADMIN_PASSWORD` moeten beide zijn ingesteld; de worker gebruikt een aparte `LEADS_WORKER_TOKEN` van minimaal 32 tekens.
+- De afzonderlijke staging-Next.js-service bevat de afgeschermde `/studio/leads`-interface en de lead-API's. `LEADS_ADMIN_USER` en `LEADS_ADMIN_PASSWORD` moeten beide zijn ingesteld; de browser gebruikt een ondertekende, maximaal 12 uur geldige sessiecookie na aanmelden via `/studio/leads/login`. De worker gebruikt een aparte `LEADS_WORKER_TOKEN` van minimaal 32 tekens. De publieke PixelPiraterij-site blijft apart.
 - De worker bouwt uit `Dockerfile.lead-worker`, heeft geen publieke poort, en krijgt `LEADS_DATABASE_URL`, `LEADS_SITE_URL` en dezelfde `LEADS_WORKER_TOKEN` als de site. Zijn Docker-healthcheck leest de databaseheartbeat; een recente heartbeat is nodig voordat Start kan worden ingeschakeld.
 - De lead-database gebruikt `db/lead-studio.sql` en start in modus `paused`. Gebruik een aparte database en een eigen rol; migreer niet de bestaande app-databases als bijwerking.
 - De private generator bouwt uit `Dockerfile.pixelpiraterij` in de websitegenerator-branch. De site gebruikt `PREVIEW_SERVICE_URL` op het interne netwerk en `PREVIEW_SERVICE_TOKEN`; de generator krijgt dezelfde token en een persistent `/data/previews`-volume. De image controleert `/healthz` intern. Publiceer de generator niet rechtstreeks onder een domein. Concepten verlopen na 14 dagen.
@@ -30,7 +30,7 @@ Een conceptmail is geen toestemming om die te versturen. Verzenden vereist een t
 
 1. Controleer de Coolify-login en capaciteit op de bestaande Chateau du Houx VPS. Maak een afzonderlijke lead-database/rol, worker-service en private previewservice met persistent volume en beperkte secrets; laat de publieke site apart.
 2. Draai `db/lead-studio.sql` op alleen de nieuwe lead-database en `db/lead-studio-smoke.sql` met rollback. Verifieer standaard `paused` en ontbrekende toegang zonder beheergegevens.
-3. Test staging met nagebootste Places/Firecrawl-antwoorden: Start/Pauze, limiet bereikt, crash/herstart, dubbele kandidaten en preview-retry. Controleer preview op desktop en 390px mobiel zonder horizontale overflow.
+3. Test staging met nagebootste Places/Firecrawl-antwoorden: Start/Pauze, limiet bereikt, crash/herstart, dubbele kandidaten en preview-retry. Op 2026-09-30 slaagden `db/lead-studio-smoke.sql` (rollback), `scripts/lead-worker-smoke.mjs` in een afzonderlijke `lead_studio_test`-database en `scripts/lead-control-smoke.ts` via een lokale SSH-tunnel. De laatste controleert gelijktijdige harde reserveringen, conservatief meetellen na falen en preview-idempotentie. Controleer de preview nog op desktop en 390px mobiel zonder horizontale overflow.
 4. Configureer providerquota en waarschuwingen. Doe daarna maximaal een kleine echte zoekronde en een handmatig gekozen preview. Controleer de werkelijke providerregistraties tegen de meter.
 5. Koppel pas daarna de geteste branches aan productie. Verifieer de live route, heartbeat, database-isolatie, privaat previewpad en uitgeschakeld verzenden opnieuw. Geen automatische e-mail of telefoonactie.
 
