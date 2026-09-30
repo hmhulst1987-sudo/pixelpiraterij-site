@@ -7,9 +7,9 @@ In Google Cloud bestaat nu het project `pixelpiraterij-leads-chd` onder `chateau
 ## Diensten
 
 - De publieke Next.js-site bevat de afgeschermde `/studio/leads`-interface en de lead-API's. `LEADS_ADMIN_USER` en `LEADS_ADMIN_PASSWORD` moeten beide zijn ingesteld; de worker gebruikt een aparte `LEADS_WORKER_TOKEN` van minimaal 32 tekens.
-- De worker bouwt uit `Dockerfile.lead-worker`, heeft geen publieke poort, en krijgt `LEADS_DATABASE_URL`, `LEADS_SITE_URL` en dezelfde `LEADS_WORKER_TOKEN` als de site. Een heartbeat in de database is nodig voordat Start kan worden ingeschakeld.
+- De worker bouwt uit `Dockerfile.lead-worker`, heeft geen publieke poort, en krijgt `LEADS_DATABASE_URL`, `LEADS_SITE_URL` en dezelfde `LEADS_WORKER_TOKEN` als de site. Zijn Docker-healthcheck leest de databaseheartbeat; een recente heartbeat is nodig voordat Start kan worden ingeschakeld.
 - De lead-database gebruikt `db/lead-studio.sql` en start in modus `paused`. Gebruik een aparte database en een eigen rol; migreer niet de bestaande app-databases als bijwerking.
-- De private generator bouwt uit `Dockerfile.pixelpiraterij` in de websitegenerator-branch. De site gebruikt `PREVIEW_SERVICE_URL` op het interne netwerk en `PREVIEW_SERVICE_TOKEN`; de generator krijgt dezelfde token en een persistent `/data/previews`-volume. Publiceer de generator niet rechtstreeks onder een domein. Concepten verlopen na 14 dagen.
+- De private generator bouwt uit `Dockerfile.pixelpiraterij` in de websitegenerator-branch. De site gebruikt `PREVIEW_SERVICE_URL` op het interne netwerk en `PREVIEW_SERVICE_TOKEN`; de generator krijgt dezelfde token en een persistent `/data/previews`-volume. De image controleert `/healthz` intern. Publiceer de generator niet rechtstreeks onder een domein. Concepten verlopen na 14 dagen.
 - `GOOGLE_PLACES_API_KEY` en optioneel `FIRECRAWL_API_KEY` staan alleen op de site. Beperk de sleutels bij de providers. `LEADS_OUTREACH_ENABLED` blijft `false` en de AI-limiet blijft 0 totdat beide afzonderlijk zijn beoordeeld.
 
 ## Gedrag en kosten

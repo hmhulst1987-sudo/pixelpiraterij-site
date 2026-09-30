@@ -2,7 +2,8 @@ FROM node:22-alpine
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci --omit=dev --no-audit --no-fund
-COPY scripts/lead-worker.mjs scripts/lead-candidate-selection.mjs ./scripts/
+COPY scripts/lead-worker.mjs scripts/lead-candidate-selection.mjs scripts/lead-worker-health.mjs ./scripts/
 ENV NODE_ENV=production LEADS_WORKER_POLL_MS=60000
 USER node
+HEALTHCHECK --interval=60s --timeout=8s --start-period=90s --retries=3 CMD node scripts/lead-worker-health.mjs
 CMD ["node", "scripts/lead-worker.mjs"]
