@@ -20,6 +20,8 @@ test("does not label an unknown-size business as a small company", () => {
   assert.equal(classifyBusinessSize("", "Kippie Breda").size, "likely-large");
   assert.equal(classifyBusinessSize("", "Domino's Breda").size, "likely-large");
   assert.equal(classifyBusinessSize("", "De Beren Breda").size, "likely-large");
+  assert.equal(classifyBusinessSize("", "HANOS Breda").size, "likely-large");
+  assert.equal(classifyBusinessSize("", "Intratuin Breda").size, "likely-large");
 });
 
 test("a likely large business never ranks as a preferred lead", () => {

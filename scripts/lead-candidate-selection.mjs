@@ -1,7 +1,7 @@
-const chainNames = /^(?:albert heijn|jumbo|lidl|aldi|action|hema|kruidvat|etos|gamma|praxis|karwei|mediamarkt|mcdonald'?s|burger king|starbucks|subway|kippie|domino'?s)(?:\b|\s|-)/i;
-const chainHosts = new Set(["dominos.nl", "ok.nl"]);
+const chainNames = /^(?:albert heijn|jumbo|lidl|aldi|action|hema|kruidvat|etos|gamma|praxis|karwei|mediamarkt|mcdonald'?s|burger king|starbucks|subway|kippie|domino'?s|de beren|hanos|intratuin)(?:\b|\s|-)/i;
+const chainHosts = new Set(["dominos.nl", "ok.nl", "beren.nl", "hanos.nl", "intratuin.nl"]);
 const profileHosts = new Set([
-  "facebook.com", "instagram.com", "linkedin.com", "linktr.ee", "tiktok.com", "wa.me", "x.com",
+  "facebook.com", "instagram.com", "linkedin.com", "linktr.ee", "tiktok.com", "wa.me", "x.com", "salonized.com",
 ]);
 
 function websiteHost(value) {
@@ -9,7 +9,7 @@ function websiteHost(value) {
     const url = new URL(value);
     if (url.protocol !== "https:" && url.protocol !== "http:") return null;
     const host = url.hostname.toLowerCase().replace(/^www\./, "");
-    if (profileHosts.has(host) || host.endsWith(".facebook.com") || host.endsWith(".instagram.com")) return null;
+    if ([...profileHosts].some((profile) => host === profile || host.endsWith(`.${profile}`))) return null;
     return host;
   } catch {
     return null;
