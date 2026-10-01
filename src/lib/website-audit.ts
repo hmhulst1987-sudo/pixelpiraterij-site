@@ -123,6 +123,13 @@ function pageTitle(html: string) {
   return /<title[^>]*>([^<]*)<\/title>/i.exec(html)?.[1]?.trim().slice(0, 120) || "Geen paginatitel";
 }
 
+export function looksLikeLoginWall(html: string, url: string) {
+  const text = textContent(html);
+  const passwordField = /<input\b[^>]*\btype\s*=\s*["']?password\b/i.test(html);
+  return /\/(?:login|sign-?in|aanmelden)(?:\/|\?|$)/i.test(new URL(url).pathname)
+    || (passwordField && text.length < 500 && /\b(?:gebruikersnaam|wachtwoord|username|password|sign\s?in|log\s?in)\b/i.test(text));
+}
+
 export async function auditWebsite(input: string, businessName = "", beforeRequest?: () => Promise<void>): Promise<WebsiteAudit> {
   const home = await fetchPage(input, undefined, beforeRequest);
   const links = home.ok ? selectContentLinks(home.html, home.url, 3) : [];
@@ -133,6 +140,7 @@ export async function auditWebsite(input: string, businessName = "", beforeReque
   const successfulPages = pages.filter((page) => page.ok && page.html.length > 250);
   const allHtml = successfulPages.map((page) => page.html).join("\n").toLowerCase();
   const allText = successfulPages.map((page) => textContent(page.html)).join(" ");
+  const loginWall = looksLikeLoginWall(home.html, home.url);
   const titleOk = /<title[^>]*>[^<]{8,}<\/title>/i.test(home.html);
   const descriptionOk = /<meta\b[^>]*name=["']description["'][^>]*content=["'][^"']{20,}/i.test(home.html)
     || /<meta\b[^>]*content=["'][^"']{20,}["'][^>]*name=["']description["']/i.test(home.html);
@@ -158,7 +166,13 @@ export async function auditWebsite(input: string, businessName = "", beforeReque
   const totalWeight = tests.reduce((sum, test) => sum + test[3], 0);
   const score = Math.round(tests.reduce((sum, test) => sum + (test[1] ? test[3] : 0), 0) / totalWeight * 100);
   const signals = tests.map(([label, ok, detail]) => ({ label, ok, detail }));
+  if (loginWall) signals.unshift({ label: "Openbare inhoud", ok: false, detail: "De homepage toont hoofdzakelijk een inlogscherm; de website is niet betrouwbaar te beoordelen als verkoopkans." });
   const priorities = signals.filter((item) => !item.ok).slice(0, 4).map((item) => item.label);
+  const qualification = qualifyLead(score, allText, businessName);
+  if (loginWall) {
+    qualification.opportunityScore = 0;
+    qualification.scoreReason = "Alleen een inlogscherm zichtbaar: geen betrouwbare kansscore voor de openbare website.";
+  }
   return {
     url: input,
     finalUrl: home.url,
@@ -168,6 +182,6 @@ export async function auditWebsite(input: string, businessName = "", beforeReque
     signals,
     priorities,
     pagesChecked: pages.map((page) => ({ url: page.url, status: page.status, title: pageTitle(page.html) })),
-    qualification: qualifyLead(score, allText, businessName),
+    qualification,
   };
 }

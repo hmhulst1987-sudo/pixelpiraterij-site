@@ -17,7 +17,7 @@ type CircleLike = { setMap(map: MapLike | null): void };
 type ControlSnapshot = { mode: LeadMode; limits: LeadLimits; usage: LeadUsage; period: string; workerLastSeen: string | null };
 type Campaign = { id: string; label: string; latitude: number; longitude: number; radius_m: number; interval_minutes: number; max_candidates: number; enabled: boolean; next_run_at: string };
 type CampaignRun = { id: string; campaign_id: string; status: string; places_found: number; websites_scanned: number; deep_scanned: number; places_requests: number; firecrawl_requests: number; error: string | null; started_at: string };
-type SavedCandidate = { id: string; source_site_url: string; site_title: string; technical_score: number; opportunity_score: number; size_class: string; status: string; audit: Score; deep_audit: DeepAudit | null; last_seen_at: string };
+type SavedCandidate = { id: string; source_site_url: string; site_title: string; technical_score: number; opportunity_score: number; size_class: string; status: string; audit: Score; deep_audit: DeepAudit | null; deep_job_status: string | null; last_seen_at: string };
 
 declare global {
   interface Window {
@@ -52,7 +52,8 @@ function SavedCandidateEvidence({ candidate }: { candidate: SavedCandidate }) {
       </section>
       <section>
         <h5>Visuele controle</h5>
-        {screenshots.length ? <div className="lead-screenshots">{screenshots.map((shot) => <a key={shot.label} href={shot.url} target="_blank" rel="noreferrer"><img src={shot.url} alt={`${shot.label}-opname van ${candidate.site_title}`} /><small>{shot.label}</small></a>)}</div> : <small>Geen gerenderde screenshots beschikbaar.</small>}
+        <a className="lead-site-check-link" href={candidate.source_site_url} target="_blank" rel="noopener noreferrer">Open live website voor eigen beoordeling ↗</a>
+        {screenshots.length ? <div className="lead-screenshots">{screenshots.map((shot) => <a key={shot.label} href={shot.url} target="_blank" rel="noreferrer"><img src={shot.url} alt={`${shot.label}-opname van ${candidate.site_title}`} /><small>{shot.label}</small></a>)}</div> : <small>{candidate.deep_job_status === "pending" ? "Visuele scan staat in de wachtrij. Hiervoor moet de worker actief zijn." : candidate.deep_job_status === "running" ? "Visuele scan wordt uitgevoerd." : candidate.deep_job_status === "failed" || candidate.deep_job_status === "interrupted" ? "Visuele scan is niet voltooid; controleer de live website zelf." : candidate.deep_job_status === "completed" ? "De gerenderde controle leverde geen bewaarde screenshots op." : "Niet geselecteerd voor automatische screenshots; controleer de live website zelf."}</small>}
         <small>Screenshots kunnen na 24 uur verlopen. Er is geen automatische esthetische score; beoordeel het ontwerp zelf.</small>
       </section>
       <section>

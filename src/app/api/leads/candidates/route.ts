@@ -10,7 +10,10 @@ function fail(error: unknown) {
 
 export async function GET() {
   try {
-    const result = await leadPool().query("SELECT id::text, source_site_url, site_title, technical_score, opportunity_score, size_class, status, audit, deep_audit, first_seen_at, last_seen_at FROM lead_candidates WHERE status <> 'dismissed' ORDER BY opportunity_score DESC, last_seen_at DESC LIMIT 100");
+    const result = await leadPool().query(`SELECT c.id::text, c.source_site_url, c.site_title, c.technical_score, c.opportunity_score,
+      c.size_class, c.status, c.audit, c.deep_audit, c.first_seen_at, c.last_seen_at,
+      (SELECT j.status FROM lead_deep_jobs j WHERE j.candidate_id = c.id ORDER BY j.id DESC LIMIT 1) AS deep_job_status
+      FROM lead_candidates c WHERE c.status <> 'dismissed' ORDER BY c.opportunity_score DESC, c.last_seen_at DESC LIMIT 100`);
     return NextResponse.json({ candidates: result.rows }, { headers: { "Cache-Control": "no-store" } });
   } catch (error) { return fail(error); }
 }

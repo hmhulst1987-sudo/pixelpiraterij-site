@@ -182,6 +182,8 @@ button {
 .lead-evidence-grid ul { display: grid; gap: .45rem; margin: 0; padding-left: 1rem; }
 .lead-evidence-grid li { line-height: 1.3; }
 .lead-evidence-grid li small { display: block; }
+.lead-site-check-link { display: inline-flex; width: fit-content; align-items: center; min-height: 2.5rem; padding: .55rem .9rem; border: 1px solid var(--color-line-strong); border-radius: 999px; background: var(--color-paper-strong); color: var(--color-heading); font-weight: 600; text-decoration: none; }
+.lead-site-check-link:hover, .lead-site-check-link:focus-visible { border-color: var(--color-signal); color: var(--color-ember); }
 .lead-deep-content { display: grid; gap: .65rem; margin-top: .8rem; }
 .lead-screenshots { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .6rem; }
 .lead-screenshots a { display: grid; gap: .3rem; min-width: 0; }
