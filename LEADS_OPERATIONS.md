@@ -2,7 +2,7 @@
 
 ## Actuele productiestand (2026-10-01)
 
-De productie-leadstudio op `https://leads.pixelpiraterij.nl/studio/leads` draait achter Cloudflare Access. Sitecommit `987e7a7` is live; de worker bevat de uitsluitingsregels van commit `1684f8a`. De aparte pagina `/studio/leads/shortlist` toont de twee handmatig geselecteerde kandidaten (Me Gusta en Bloemen op 5) met directe links naar hun websites. Zij zijn niet door de nieuwe proef gewijzigd. De app verstuurt geen automatische outreach.
+De productie-leadstudio op `https://leads.pixelpiraterij.nl/studio/leads` draait achter Cloudflare Access. Sitecommit `987e7a7` is live; de worker bevat de uitsluitingsregels van commit `1684f8a`. De aparte pagina `/studio/leads/shortlist` toont momenteel zes handmatig geselecteerde kandidaten met directe links naar hun websites: Nailsroombreda, Kachu's World, Me Gusta, Beunbox, Secretsofzenn en Bloemen op 5. De eigenaar heeft vier kandidaten na de proef handmatig toegevoegd. De app verstuurt geen automatische outreach. De handmatige inhoudelijke triage staat in `C:\Users\Gebruiker\Documents\Codex\2026-07-08\g\LEAD_SHORTLIST_REVIEW_2026-10-01.md`.
 
 Een eenmalige campagne met middelpunt De Hurk, Eindhoven (`51.4312, 5.4494`), straal 20 km en maximaal 20 website-audits is op 2026-10-01 voltooid. De run vond 99 tijdelijke Places-resultaten, controleerde 20 websites en startte 0 Firecrawl-verdiepingen. Daarna is de campagne uitgeschakeld en de worker gepauzeerd. De productiemeter staat op 3/20 zoekrondes, 15/100 Places-verzoeken, 3/300 Firecrawl-credits en 4/25 geocodes; de bruto Places-lijstprijsindicatie is US$ 0,55, geen factuur. Dit zijn de 20 geselecteerde websites uit de gevonden resultaten, niet bewezen de 20 beste bedrijven in de hele cirkel.
 
