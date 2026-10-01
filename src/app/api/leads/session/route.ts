@@ -10,6 +10,7 @@ function sameSecret(actual: string, expected: string) {
 }
 
 export async function POST(request: NextRequest) {
+  if (process.env.LEADS_AUTH_MODE === "cloudflare") return new NextResponse("Niet beschikbaar", { status: 404 });
   const protocol = request.headers.get("x-forwarded-proto") || request.nextUrl.protocol;
   if (!isSameLeadOrigin(request.headers.get("origin"), request.headers.get("host"), protocol)) return new NextResponse("Ongeldige herkomst", { status: 403 });
   let body: { user?: unknown; password?: unknown };
