@@ -41,3 +41,21 @@ test("spreads the first scans across different business types", () => {
   ], 3);
   assert.deepEqual(selected.map((item) => item.id), ["b1", "c1", "r1"]);
 });
+
+test("skips previously audited businesses before applying the scan cap", () => {
+  const selected = selectAuditCandidates([
+    place("old-id", "plumber", "https://old-plumber.nl"),
+    place("old-host", "painter", "https://www.seen-painter.nl/services"),
+    place("new", "electrician", "https://new-electrician.nl"),
+  ], 1, new Set(["old-id"]), new Set(["seen-painter.nl"]));
+  assert.deepEqual(selected.map((item) => item.id), ["new"]);
+});
+
+test("skips directory pages and national chains", () => {
+  const selected = selectAuditCandidates([
+    place("directory", "beauty_salon", "https://nlmapnew.com/details/shop", "Local Shop"),
+    place("shell", "car_repair", "https://find.shell.com/station", "Shell Station"),
+    place("local", "painter", "https://local-painter.nl", "Local Painter"),
+  ], 2);
+  assert.deepEqual(selected.map((item) => item.id), ["local"]);
+});

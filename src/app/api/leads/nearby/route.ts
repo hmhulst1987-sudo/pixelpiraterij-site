@@ -12,12 +12,20 @@ type GooglePlace = {
   location?: { latitude: number; longitude: number };
 };
 
-const SEARCH_GROUPS = [
+const MIXED_SEARCH_GROUPS = [
   ["bakery", "cafe", "restaurant", "florist"],
   ["hair_care", "beauty_salon", "spa", "laundry"],
   ["car_repair", "furniture_store", "home_goods_store", "pet_store"],
   ["lodging", "travel_agency", "real_estate_agency"],
   ["gym", "book_store", "jewelry_store", "shoe_store"],
+];
+
+const LOCAL_SERVICE_GROUPS = [
+  ["electrician", "plumber", "roofing_contractor", "locksmith"],
+  ["painter", "moving_company", "storage", "courier_service"],
+  ["car_repair", "bicycle_store", "hardware_store", "auto_parts_store"],
+  ["furniture_store", "home_goods_store", "real_estate_agency", "tailor"],
+  ["catering_service", "funeral_home", "laundry", "veterinary_care"],
 ];
 
 export async function POST(request: NextRequest) {
@@ -26,6 +34,10 @@ export async function POST(request: NextRequest) {
   const automatic = request.headers.get("authorization")?.startsWith("Bearer ") === true;
 
   const body = await request.json();
+  const searchProfile = body.searchProfile === undefined ? "mixed" : body.searchProfile;
+  if (searchProfile !== "mixed" && searchProfile !== "local-services") {
+    return NextResponse.json({ error: "Ongeldig zoekprofiel." }, { status: 400 });
+  }
   const runId = body.runId === undefined ? undefined : String(body.runId);
   const latitude = Number(body.latitude);
   const longitude = Number(body.longitude);
@@ -40,7 +52,7 @@ export async function POST(request: NextRequest) {
 
   const tasks: Promise<GooglePlace[]>[] = [];
   let limitError: LeadControlError | null = null;
-  for (const includedTypes of SEARCH_GROUPS) {
+  for (const includedTypes of searchProfile === "local-services" ? LOCAL_SERVICE_GROUPS : MIXED_SEARCH_GROUPS) {
     let requestId: string;
     try { requestId = await reserveLeadUsage("places", 1, automatic, runId); }
     catch (error) {

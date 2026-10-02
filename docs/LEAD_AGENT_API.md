@@ -19,6 +19,8 @@ On the configured Windows operator machine, the DPAPI-encrypted values in the ig
 
 `npm run leads:agent -- estimate --label "Eindhoven" --lat 51.4416 --lon 5.4697 --radius 20000 --max 20` checks the proposed maximum usage without starting a search.
 
+Add `--profile local-services` to focus the five Places searches on local trades and service businesses instead of the default mixed retail/hospitality profile. Existing candidates and business hosts are skipped before the 20-site audit cap, so nearby follow-up runs do not repeatedly scan the same businesses.
+
 `npm run leads:agent -- queue --label "Eindhoven" --lat 51.4416 --lon 5.4697 --radius 20000 --max 20 --key UUID --confirm` queues one search. This can trigger paid APIs. The CLI prints the idempotency key; reuse that same key if the response is lost. A different payload with the same key is rejected.
 
 `npm run leads:agent -- runs` lists recent one-shot runs. `npm run leads:agent -- candidates --run ID` lists candidates from one run; `--shortlisted` and `--limit N` are available. `npm run leads:agent -- shortlist ID --confirm` is the only candidate edit. `pause` stops future work; `resume --confirm` restarts it.

@@ -10,6 +10,7 @@ export type AgentSearchInput = {
   longitude: number;
   radius: number;
   maxCandidates: number;
+  searchProfile: "mixed" | "local-services";
 };
 
 export function parseAgentSearchInput(value: unknown): AgentSearchInput | null {
@@ -21,12 +22,15 @@ export function parseAgentSearchInput(value: unknown): AgentSearchInput | null {
   if (typeof input.longitude !== "number" || !Number.isFinite(input.longitude) || Math.abs(input.longitude) > 180) return null;
   if (!Number.isSafeInteger(input.radius) || Number(input.radius) < 500 || Number(input.radius) > AGENT_MAX_RADIUS_M) return null;
   if (!Number.isSafeInteger(input.maxCandidates) || Number(input.maxCandidates) < 1 || Number(input.maxCandidates) > AGENT_MAX_CANDIDATES) return null;
+  const searchProfile = input.searchProfile === undefined ? "mixed" : input.searchProfile;
+  if (searchProfile !== "mixed" && searchProfile !== "local-services") return null;
   return {
     label,
     latitude: input.latitude,
     longitude: input.longitude,
     radius: Number(input.radius),
     maxCandidates: Number(input.maxCandidates),
+    searchProfile,
   };
 }
 
@@ -35,7 +39,8 @@ export function validRequestKey(value: string | null): value is string {
 }
 
 export function agentPayloadDigest(input: AgentSearchInput) {
-  return createHash("sha256").update(JSON.stringify(input)).digest("hex");
+  const { searchProfile, ...legacyInput } = input;
+  return createHash("sha256").update(JSON.stringify(searchProfile === "mixed" ? legacyInput : input)).digest("hex");
 }
 
 export function validAgentBearer(header: string | null, configuredToken = process.env.LEADS_AGENT_TOKEN) {

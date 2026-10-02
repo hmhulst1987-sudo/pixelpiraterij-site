@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { agentPayloadDigest, parseAgentSearchInput, validAgentBearer, validRequestKey } from "../src/lib/lead-agent-shared";
 
-const input = { label: "Eindhoven centrum", latitude: 51.4416, longitude: 5.4697, radius: 20_000, maxCandidates: 20 };
+const input = { label: "Eindhoven centrum", latitude: 51.4416, longitude: 5.4697, radius: 20_000, maxCandidates: 20, searchProfile: "mixed" as const };
 
 test("agent bearer requires the exact independent secret", () => {
   const secret = "this-is-a-dedicated-agent-secret-longer-than-32";
@@ -21,6 +21,8 @@ test("one-shot search input has hard candidate and radius caps", () => {
   assert.equal(parseAgentSearchInput({ ...input, longitude: Infinity }), null);
   assert.equal(parseAgentSearchInput({ ...input, label: " " }), null);
   assert.equal(parseAgentSearchInput({ ...input, radius: "20000" }), null);
+  assert.equal(parseAgentSearchInput({ ...input, searchProfile: "unknown" }), null);
+  assert.deepEqual(parseAgentSearchInput({ ...input, searchProfile: undefined }), input);
 });
 
 test("idempotency keys and payload digest distinguish different searches", () => {
@@ -28,4 +30,5 @@ test("idempotency keys and payload digest distinguish different searches", () =>
   assert.equal(validRequestKey("reused-key"), false);
   assert.equal(agentPayloadDigest(input), agentPayloadDigest({ ...input }));
   assert.notEqual(agentPayloadDigest(input), agentPayloadDigest({ ...input, radius: 15_000 }));
+  assert.notEqual(agentPayloadDigest(input), agentPayloadDigest({ ...input, searchProfile: "local-services" }));
 });

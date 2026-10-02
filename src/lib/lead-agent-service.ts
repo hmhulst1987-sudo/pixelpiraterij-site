@@ -74,9 +74,9 @@ export async function createAgentOneShot(input: AgentSearchInput, requestKey: st
     }
 
     const created = await client.query<{ id: string }>(`INSERT INTO lead_campaigns
-      (label, latitude, longitude, radius_m, max_candidates, one_shot, api_request_key, api_payload_digest)
-      VALUES ($1, $2, $3, $4, $5, true, $6, $7) RETURNING id::text`,
-    [input.label, input.latitude, input.longitude, input.radius, input.maxCandidates, requestKey, digest]);
+      (label, latitude, longitude, radius_m, max_candidates, search_profile, one_shot, api_request_key, api_payload_digest)
+      VALUES ($1, $2, $3, $4, $5, $6, true, $7, $8) RETURNING id::text`,
+    [input.label, input.latitude, input.longitude, input.radius, input.maxCandidates, input.searchProfile, requestKey, digest]);
     await client.query("COMMIT");
     return { campaignId: created.rows[0].id, repeated: false };
   } catch (error) {
@@ -88,7 +88,7 @@ export async function createAgentOneShot(input: AgentSearchInput, requestKey: st
 }
 
 export async function listAgentRuns() {
-  const result = await leadPool().query(`SELECT c.id::text AS campaign_id, c.label, c.latitude, c.longitude,
+  const result = await leadPool().query(`SELECT c.id::text AS campaign_id, c.label, c.latitude, c.longitude, c.search_profile,
     c.radius_m, c.max_candidates, c.enabled, c.created_at, r.id::text AS run_id, r.status,
     r.places_found, r.websites_scanned, r.deep_scanned, r.error, r.started_at, r.finished_at
     FROM lead_campaigns c LEFT JOIN LATERAL (SELECT * FROM lead_runs WHERE campaign_id = c.id ORDER BY id DESC LIMIT 1) r ON true

@@ -17,7 +17,7 @@ function confirmed() { return args.includes("--confirm"); }
 function searchInput() {
   return {
     label: option("label"), latitude: Number(option("lat")), longitude: Number(option("lon")),
-    radius: Number(option("radius")), maxCandidates: Number(option("max")),
+    radius: Number(option("radius")), maxCandidates: Number(option("max")), searchProfile: option("profile") || "mixed",
   };
 }
 
@@ -71,7 +71,7 @@ try {
       await call(`${root}candidates/${id}`, "PATCH", {}, { "X-Leads-Confirm-Shortlist": "confirmed" });
       break;
     }
-    default: throw new Error("Gebruik: status | candidates [--shortlisted] [--limit N] [--run ID] | runs | estimate/queue --label NAAM --lat N --lon N --radius M --max N [--key UUID] [--confirm] | pause | resume --confirm | shortlist ID --confirm");
+    default: throw new Error("Gebruik: status | candidates [--shortlisted] [--limit N] [--run ID] | runs | estimate/queue --label NAAM --lat N --lon N --radius M --max N [--profile mixed|local-services] [--key UUID] [--confirm] | pause | resume --confirm | shortlist ID --confirm");
   }
 } catch (error) {
   process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`);

@@ -54,6 +54,7 @@ CREATE TABLE IF NOT EXISTS lead_campaigns (
 );
 
 ALTER TABLE lead_campaigns ADD COLUMN IF NOT EXISTS one_shot boolean NOT NULL DEFAULT false;
+ALTER TABLE lead_campaigns ADD COLUMN IF NOT EXISTS search_profile text NOT NULL DEFAULT 'mixed';
 ALTER TABLE lead_campaigns ADD COLUMN IF NOT EXISTS api_request_key uuid;
 ALTER TABLE lead_campaigns ADD COLUMN IF NOT EXISTS api_payload_digest char(64);
 CREATE UNIQUE INDEX IF NOT EXISTS lead_campaigns_api_request_key_idx ON lead_campaigns (api_request_key) WHERE api_request_key IS NOT NULL;

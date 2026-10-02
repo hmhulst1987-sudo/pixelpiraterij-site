@@ -1,5 +1,5 @@
 import pg from "pg";
-import { selectAuditCandidates } from "./lead-candidate-selection.mjs";
+import { selectAuditCandidates, websiteHost } from "./lead-candidate-selection.mjs";
 import { validateSiteUrl } from "./lead-worker-url.mjs";
 
 const databaseUrl = process.env.LEADS_DATABASE_URL;
@@ -42,7 +42,7 @@ async function isRunning(client) {
 async function dueRun(client) {
   await client.query("BEGIN");
   try {
-    const campaign = await client.query("SELECT id, latitude, longitude, radius_m, interval_minutes, max_candidates, next_run_at, one_shot FROM lead_campaigns WHERE enabled AND next_run_at <= now() ORDER BY next_run_at, id FOR UPDATE SKIP LOCKED LIMIT 1");
+    const campaign = await client.query("SELECT id, latitude, longitude, radius_m, interval_minutes, max_candidates, next_run_at, one_shot, search_profile FROM lead_campaigns WHERE enabled AND next_run_at <= now() ORDER BY next_run_at, id FOR UPDATE SKIP LOCKED LIMIT 1");
     const row = campaign.rows[0];
     if (!row) { await client.query("COMMIT"); return null; }
     await client.query("UPDATE lead_campaigns SET enabled = CASE WHEN one_shot THEN false ELSE enabled END, next_run_at = CASE WHEN one_shot THEN next_run_at ELSE now() + make_interval(mins => interval_minutes) END, updated_at = now() WHERE id = $1", [row.id]);
@@ -147,11 +147,14 @@ async function processRun(client, campaign) {
   let errorMessage = null;
   try {
     if (!(await isRunning(client))) { status = "paused"; return; }
-    const result = await sitePost("/api/leads/nearby", { latitude: campaign.latitude, longitude: campaign.longitude, radius: campaign.radius_m, runId: String(campaign.runId) });
+    const result = await sitePost("/api/leads/nearby", { latitude: campaign.latitude, longitude: campaign.longitude, radius: campaign.radius_m, searchProfile: campaign.search_profile, runId: String(campaign.runId) });
     const places = Array.isArray(result.places) ? result.places : [];
     placesFound = places.length;
     const shortlist = [];
-    for (const place of selectAuditCandidates(places, campaign.max_candidates)) {
+    const previous = await client.query("SELECT place_id, source_site_url FROM lead_candidates");
+    const existingPlaceIds = new Set(previous.rows.map((row) => row.place_id));
+    const existingHosts = new Set(previous.rows.map((row) => websiteHost(row.source_site_url)).filter(Boolean));
+    for (const place of selectAuditCandidates(places, campaign.max_candidates, existingPlaceIds, existingHosts)) {
       if (stopping || !(await isRunning(client))) { status = "paused"; break; }
       try {
         const { audit } = await sitePost("/api/leads/audit", { website: place.websiteUri, businessName: place.displayName?.text || "" }, 45000);
