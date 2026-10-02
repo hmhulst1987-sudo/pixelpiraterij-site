@@ -51,6 +51,13 @@ try {
       await call(`${root}candidates?${params}`); break;
     }
     case "runs": await call(`${root}runs`); break;
+    case "import": {
+      if (!confirmed()) throw new Error("Gebruik import met --confirm na controle van bedrijf en bron.");
+      await call(`${root}candidates/import`, "POST", {
+        website: option("url"), businessName: option("name"), sourceUrl: option("source"), reviewNote: option("note"),
+      }, { "X-Leads-Confirm-Import": "confirmed" });
+      break;
+    }
     case "estimate": await call(`${root}estimate`, "POST", searchInput()); break;
     case "queue": {
       if (!confirmed()) throw new Error("Een zoekronde kan betaalde API-aanroepen doen. Voeg --confirm toe na de menselijke keuze voor deze run.");
@@ -71,7 +78,7 @@ try {
       await call(`${root}candidates/${id}`, "PATCH", {}, { "X-Leads-Confirm-Shortlist": "confirmed" });
       break;
     }
-    default: throw new Error("Gebruik: status | candidates [--shortlisted] [--limit N] [--run ID] | runs | estimate/queue --label NAAM --lat N --lon N --radius M --max N [--profile mixed|local-services] [--key UUID] [--confirm] | pause | resume --confirm | shortlist ID --confirm");
+    default: throw new Error("Gebruik: status | candidates [--shortlisted] [--limit N] [--run ID] | runs | import --url URL --name NAAM --source URL --note TEKST --confirm | estimate/queue --label NAAM --lat N --lon N --radius M --max N [--profile mixed|local-services] [--key UUID] [--confirm] | pause | resume --confirm | shortlist ID --confirm");
   }
 } catch (error) {
   process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`);

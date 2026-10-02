@@ -1,6 +1,6 @@
 # Leadstudio agent API
 
-The agent API is a narrow machine-to-machine interface for lead review. It does not expose outreach, email sending, preview generation, arbitrary SQL, or a general website scanner.
+The agent API is a narrow machine-to-machine interface for lead review. It does not expose outreach, email sending, preview generation, arbitrary SQL, or a general website scanner. A manual import accepts one publicly found business website at a time after a source and review note are provided, audits that website, and leaves it in `new` status for separate approval.
 
 ## Deployment
 
@@ -24,5 +24,7 @@ Add `--profile local-services` to focus the five Places searches on local trades
 `npm run leads:agent -- queue --label "Eindhoven" --lat 51.4416 --lon 5.4697 --radius 20000 --max 20 --key UUID --confirm` queues one search. This can trigger paid APIs. The CLI prints the idempotency key; reuse that same key if the response is lost. A different payload with the same key is rejected.
 
 `npm run leads:agent -- runs` lists recent one-shot runs. `npm run leads:agent -- candidates --run ID` lists candidates from one run; `--shortlisted` and `--limit N` are available. `npm run leads:agent -- shortlist ID --confirm` is the only candidate edit. `pause` stops future work; `resume --confirm` restarts it.
+
+`npm run leads:agent -- import --url https://example.nl/ --name "Example" --source https://example.nl/ --note "Publicly verified local business; specific website improvement observed." --confirm` imports one manually reviewed public website without using Places or Firecrawl. The server performs its standard SSRF-protected website audit, deduplicates by host, and stores the source and review note in the audit record. This does not automatically shortlist, contact, or email the business. Review the returned candidate ID before `shortlist`.
 
 Maximum per one-shot request: 30 km radius, 20 website audits, 5 planned Places calls, 5 deep jobs, and up to 15 Firecrawl calls. Monthly limits remain authoritative. No search, shortlist, or resume is executed without its explicit confirmation flag and corresponding request header. Email delivery is outside this API and remains a separate manual workflow.
