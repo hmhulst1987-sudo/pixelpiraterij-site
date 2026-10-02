@@ -53,6 +53,11 @@ CREATE TABLE IF NOT EXISTS lead_campaigns (
   updated_at timestamptz NOT NULL DEFAULT now()
 );
 
+ALTER TABLE lead_campaigns ADD COLUMN IF NOT EXISTS one_shot boolean NOT NULL DEFAULT false;
+ALTER TABLE lead_campaigns ADD COLUMN IF NOT EXISTS api_request_key uuid;
+ALTER TABLE lead_campaigns ADD COLUMN IF NOT EXISTS api_payload_digest char(64);
+CREATE UNIQUE INDEX IF NOT EXISTS lead_campaigns_api_request_key_idx ON lead_campaigns (api_request_key) WHERE api_request_key IS NOT NULL;
+
 CREATE INDEX IF NOT EXISTS lead_campaigns_due_idx ON lead_campaigns (next_run_at) WHERE enabled;
 
 CREATE TABLE IF NOT EXISTS lead_runs (

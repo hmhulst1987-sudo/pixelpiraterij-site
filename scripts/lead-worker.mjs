@@ -42,10 +42,10 @@ async function isRunning(client) {
 async function dueRun(client) {
   await client.query("BEGIN");
   try {
-    const campaign = await client.query("SELECT id, latitude, longitude, radius_m, interval_minutes, max_candidates, next_run_at FROM lead_campaigns WHERE enabled AND next_run_at <= now() ORDER BY next_run_at, id FOR UPDATE SKIP LOCKED LIMIT 1");
+    const campaign = await client.query("SELECT id, latitude, longitude, radius_m, interval_minutes, max_candidates, next_run_at, one_shot FROM lead_campaigns WHERE enabled AND next_run_at <= now() ORDER BY next_run_at, id FOR UPDATE SKIP LOCKED LIMIT 1");
     const row = campaign.rows[0];
     if (!row) { await client.query("COMMIT"); return null; }
-    await client.query("UPDATE lead_campaigns SET next_run_at = now() + make_interval(mins => interval_minutes), updated_at = now() WHERE id = $1", [row.id]);
+    await client.query("UPDATE lead_campaigns SET enabled = CASE WHEN one_shot THEN false ELSE enabled END, next_run_at = CASE WHEN one_shot THEN next_run_at ELSE now() + make_interval(mins => interval_minutes) END, updated_at = now() WHERE id = $1", [row.id]);
     const run = await client.query("INSERT INTO lead_runs (campaign_id, scheduled_for) VALUES ($1, $2) RETURNING id", [row.id, row.next_run_at]);
     await client.query("COMMIT");
     return { ...row, runId: run.rows[0].id };

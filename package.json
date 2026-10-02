@@ -8,7 +8,8 @@
     "start": "next start",
     "test": "node --import tsx --test tests/*.test.ts tests/*.test.mjs src/lib/*.test.ts",
     "leads:migrate": "node scripts/lead-migrate.mjs",
-    "leads:worker": "node scripts/lead-worker.mjs"
+    "leads:worker": "node scripts/lead-worker.mjs",
+    "leads:agent": "node scripts/lead-agent-cli.mjs"
   },
   "dependencies": {
     "framer-motion": "^12.39.0",

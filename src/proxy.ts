@@ -1,10 +1,18 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { LEAD_SESSION_COOKIE, verifyLeadSession } from "@/lib/lead-session";
 import { isSameLeadOrigin } from "@/lib/lead-origin";
-import { verifyLeadCloudflareAccess } from "@/lib/cloudflare-lead-access";
+import { verifyLeadAgentCloudflareAccess, verifyLeadCloudflareAccess } from "@/lib/cloudflare-lead-access";
+import { validAgentBearer } from "@/lib/lead-agent-shared";
 
 export async function proxy(request: NextRequest) {
   const path = request.nextUrl.pathname;
+  if (path.startsWith("/api/leads/agent/v1/")) {
+    if (!validAgentBearer(request.headers.get("authorization"))) return new NextResponse("Agent-token vereist", { status: 401, headers: { "Cache-Control": "no-store" } });
+    if (process.env.LEADS_AUTH_MODE === "cloudflare" && !await verifyLeadAgentCloudflareAccess(request.headers.get("cf-access-jwt-assertion"))) {
+      return new NextResponse("Cloudflare Access vereist", { status: 403, headers: { "Cache-Control": "no-store" } });
+    }
+    return NextResponse.next();
+  }
   const workerPath = ["/api/leads/nearby", "/api/leads/audit", "/api/leads/deep-audit"].includes(request.nextUrl.pathname);
   const workerToken = process.env.LEADS_WORKER_TOKEN;
   if (workerPath && workerToken && request.headers.get("authorization") === `Bearer ${workerToken}`) return NextResponse.next();

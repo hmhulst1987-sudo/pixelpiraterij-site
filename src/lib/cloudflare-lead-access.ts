@@ -13,27 +13,43 @@ function accessConfig(): AccessConfig | null {
   return { teamDomain, audience, email };
 }
 
-export async function verifyAccessAssertion(assertion: string | null, config: AccessConfig, keySet: JWTVerifyGetKey) {
-  if (!assertion) return false;
+export async function readAccessAssertion(assertion: string | null, config: AccessConfig, keySet: JWTVerifyGetKey) {
+  if (!assertion) return null;
   try {
     const { payload } = await jwtVerify(assertion, keySet, {
       issuer: config.teamDomain,
       audience: config.audience,
       algorithms: ["RS256"],
     });
-    return payload.type === "app" && typeof payload.email === "string" && payload.email.toLowerCase() === config.email;
+    return payload;
   } catch {
-    return false;
+    return null;
   }
 }
 
-export async function verifyLeadCloudflareAccess(assertion: string | null) {
+export async function verifyAccessAssertion(assertion: string | null, config: AccessConfig, keySet: JWTVerifyGetKey) {
+  const payload = await readAccessAssertion(assertion, config, keySet);
+  return payload?.type === "app" && typeof payload.email === "string" && payload.email.toLowerCase() === config.email;
+}
+
+async function configuredAssertion(assertion: string | null) {
   const config = accessConfig();
-  if (!config) return false;
+  if (!config) return null;
   let keySet = keySets.get(config.teamDomain);
   if (!keySet) {
     keySet = createRemoteJWKSet(new URL(`${config.teamDomain}/cdn-cgi/access/certs`));
     keySets.set(config.teamDomain, keySet);
   }
-  return verifyAccessAssertion(assertion, config, keySet);
+  return readAccessAssertion(assertion, config, keySet);
+}
+
+export async function verifyLeadCloudflareAccess(assertion: string | null) {
+  const config = accessConfig();
+  const payload = await configuredAssertion(assertion);
+  return !!config && payload?.type === "app" && typeof payload.email === "string" && payload.email.toLowerCase() === config.email;
+}
+
+export async function verifyLeadAgentCloudflareAccess(assertion: string | null) {
+  const payload = await configuredAssertion(assertion);
+  return !!payload && (payload.type === "app" || payload.type === "service-token");
 }
