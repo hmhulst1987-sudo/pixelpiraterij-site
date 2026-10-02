@@ -11,6 +11,8 @@ The agent API is a narrow machine-to-machine interface for lead review. It does 
 5. Set `LEADS_AGENT_URL`, `LEADS_AGENT_TOKEN`, `CF_ACCESS_CLIENT_ID`, and `CF_ACCESS_CLIENT_SECRET` in the operator's local environment. Never commit their values.
 6. Verify `npm run leads:agent -- status` and `npm run leads:agent -- runs` before scheduling anything. A read-only check must not consume a Places or Firecrawl request.
 
+On the configured Windows operator machine, the DPAPI-encrypted values in the ignored `.local/lead-agent-credentials.json` can be used with `pwsh -File scripts/lead-agent.ps1 status`. This wrapper restores the process environment after each command. The encrypted file is tied to this Windows user and must not be committed or copied as a portable credential.
+
 ## Commands
 
 `npm run leads:agent -- status` shows pause state, worker heartbeat, monthly usage and remaining limits.
